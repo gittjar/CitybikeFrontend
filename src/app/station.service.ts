@@ -11,7 +11,7 @@ export class StationService {
 
   //get all stations from localhost
   public getStations(): Observable<any> {
-    const BASEURL = 'https://localhost:7297/api/Stations';
+    const BASEURL = '/stations';
     return this.http.get<any>(BASEURL);
   }
 
