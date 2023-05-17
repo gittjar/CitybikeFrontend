@@ -1,0 +1,25 @@
+[{
+    "context": ["/stations"],
+    "target": "https://localhost:7297/api/Stations",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {"^/stations" : ""}
+  },
+  {
+    "context": ["/place"],
+    "target": "",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {"^/place" : ""}
+  },
+  {
+    "context": ["/act"],
+    "target": "",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {"^/act" : ""}
+  }]
+  

@@ -1,1 +1,10 @@
 <p>mapscreen works!</p>
+<div *ngFor="let station of stations">{{station.nimi}}</div>
+
+<!-- TEST QUERY TO DATABASE GET KEYVALUES -->
+<!--
+<div *ngFor="let x of stations | keyvalue">
+    <div>{{x | json}}</div>
+    Object Key {{x.key}} and value: {{x.value}}
+</div>
+-->
