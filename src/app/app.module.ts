@@ -6,11 +6,13 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 
 import { MapscreenComponent } from './mapscreen/mapscreen.component';
+import { BiketripsComponent } from './biketrips/biketrips.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MapscreenComponent
+    MapscreenComponent,
+    BiketripsComponent
   ],
   imports: [
     BrowserModule,

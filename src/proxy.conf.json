@@ -7,12 +7,12 @@
     "pathRewrite": {"^/stations" : ""}
   },
   {
-    "context": ["/place"],
-    "target": "",
+    "context": ["/biketrips"],
+    "target": "https://localhost:7297/api/CitybikeTripsMay2021?$limit=50",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
-    "pathRewrite": {"^/place" : ""}
+    "pathRewrite": {"^/biketrips" : ""}
   },
   {
     "context": ["/act"],
