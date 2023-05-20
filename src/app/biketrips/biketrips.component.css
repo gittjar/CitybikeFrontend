@@ -29,6 +29,8 @@ input {
     height: 50px;
     margin-bottom: 4px;
     border-radius: 8px;
+    color: rgb(28 25 23);
+
 }
 
 .lista {
@@ -54,4 +56,36 @@ input {
 
 .nopeus {
     font-size: 2rem;
+}
+
+.alle15 {
+    padding: 2%;
+    background-image: -webkit-gradient(
+	linear,
+	right top,
+	left top,
+	color-stop(0.5, #1C1917),
+	color-stop(1, #C0AB09)
+);
+background-image: -o-linear-gradient(left, #1C1917 50%, #C0AB09 100%);
+background-image: -moz-linear-gradient(left, #1C1917 50%, #C0AB09 100%);
+background-image: -webkit-linear-gradient(left, #1C1917 50%, #C0AB09 100%);
+background-image: -ms-linear-gradient(left, #1C1917 50%, #C0AB09 100%);
+background-image: linear-gradient(to left, #1C1917 50%, #C0AB09 100%);
+}
+
+.yli15{
+    padding: 2%;
+    background-image: -webkit-gradient(
+	linear,
+	left top,
+	right top,
+	color-stop(0.52, #097830),
+	color-stop(0.87, #1B1917)
+);
+background-image: -o-linear-gradient(right, #097830 52%, #1B1917 87%);
+background-image: -moz-linear-gradient(right, #097830 52%, #1B1917 87%);
+background-image: -webkit-linear-gradient(right, #097830 52%, #1B1917 87%);
+background-image: -ms-linear-gradient(right, #097830 52%, #1B1917 87%);
+background-image: linear-gradient(to right, #097830 52%, #1B1917 87%);
 }

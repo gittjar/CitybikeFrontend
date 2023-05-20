@@ -2,7 +2,7 @@
 
     <aside class="hakupalkki">
         <div class="nav-item">
-            Search and Sort 
+            Etsi ja lajittele            
             <!--
             <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
             -->
@@ -29,7 +29,9 @@
 
          <aside class="keskinopeus">
             Keskinopeus (km/h)<br> 
-            <span class="nopeus">{{(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) | number : '1.1-2'}}</span>
+            <span *ngIf="(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) > 15" class="nopeus yli15">{{(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) | number : '1.1-2'}}</span>
+            <span *ngIf="(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) < 15" class="nopeus alle15">{{(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) | number : '1.1-2'}}</span>
+
         </aside>
         </section>
         
