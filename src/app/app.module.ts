@@ -7,12 +7,16 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { MapscreenComponent } from './mapscreen/mapscreen.component';
 import { BiketripsComponent } from './biketrips/biketrips.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapscreenComponent,
-    BiketripsComponent
+    BiketripsComponent,
+    NavbarComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
