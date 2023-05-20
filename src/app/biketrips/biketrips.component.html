@@ -1,24 +1,43 @@
 <section class="main bg-stone-900 font-mono">
 
     <aside class="hakupalkki">
-        <input>
+        <div class="nav-item">
+            Etsi ja lajittele            
+            <!--
+            <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+            -->
+            <input
+            type="text"
+            class="searchTerm"
+            placeholder="Kirjoita hakusana.."
+          />
+        </div>
     </aside>
 
     <article class="lista">
-    <div *ngFor="let trip of citybiketripsmay2021">
-    Lähtöaika ja paikka: {{trip.departure | date:'MMM d, y (HH:mm)'}} : {{trip.departure_station_name}}
-    <br>
-    Palautusaika ja paikka: {{trip?.return | date:'MMM d, y (HH:mm)'}} : {{trip.return_station_name}}
-    <br>
-    Matkan pituus ja kesto: {{trip?.covered_distance_m / 1000 | number : '1.1-2'}}km ja kesto {{trip?.duration_sec / 60 | number : '1.1-2'}}min
-    <br>
-    Keskinopeus (km/h): {{(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) | number : '1.1-2'}}
-    <hr>
-    <br>
-    </div>
+       
+        <section *ngFor="let trip of citybiketripsmay2021" class="tripcard justify-between">
+
+        <article>
+        Lähtöaika ja paikka: {{trip.departure | date:'MMM d, y (HH:mm)'}} : {{trip.departure_station_name}}
+        <br>
+        Palautusaika ja paikka: {{trip?.return | date:'MMM d, y (HH:mm)'}} : {{trip.return_station_name}}
+        <br>
+        Matkan pituus ja kesto: {{trip?.covered_distance_m / 1000 | number : '1.1-2'}}km ja kesto {{trip?.duration_sec / 60 | number : '1.1-2'}}min
+        <br>
+        </article>
+
+         <aside class="keskinopeus">
+            Keskinopeus (km/h)<br> 
+            <span *ngIf="(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) > 15" class="nopeus yli15">{{(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) | number : '1.1-2'}}</span>
+            <span *ngIf="(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) < 15" class="nopeus alle15">{{(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) | number : '1.1-2'}}</span>
+
+        </aside>
+        </section>
+        
+
     </article>
 </section>
-
 <!--
 <div *ngFor="let x of citybiketripsmay2021 | keyvalue">
     <div>{{x | json}}</div>
