@@ -1,3 +1,14 @@
 .main {
+    display: flex;
+    flex-direction: row;
+}
+
+.hakupalkki {
+    width: 20%;
+}
+
+.lista {
+    width: 80%;
     color: #fde68a
+
 }

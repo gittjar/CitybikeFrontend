@@ -1,16 +1,22 @@
-<section class="main bg-stone-900 font-mono ">
-<div *ngFor="let trip of citybiketripsmay2021">
-    Lähtöaika ja paikka: {{trip.departure | date:'M/d/yy, h:mm a'}} : {{trip.departure_station_name}}
+<section class="main bg-stone-900 font-mono">
+
+    <aside class="hakupalkki">
+        <input>
+    </aside>
+
+    <article class="lista">
+    <div *ngFor="let trip of citybiketripsmay2021">
+    Lähtöaika ja paikka: {{trip.departure | date:'MMM d, y (HH:mm)'}} : {{trip.departure_station_name}}
     <br>
-    Palautusaika ja paikka: {{trip?.return | date:'M/d/yy, h:mm a'}} : {{trip.return_station_name}}
+    Palautusaika ja paikka: {{trip?.return | date:'MMM d, y (HH:mm)'}} : {{trip.return_station_name}}
     <br>
     Matkan pituus ja kesto: {{trip?.covered_distance_m / 1000 | number : '1.1-2'}}km ja kesto {{trip?.duration_sec / 60 | number : '1.1-2'}}min
     <br>
     Keskinopeus (km/h): {{(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) | number : '1.1-2'}}
-
     <hr>
-<br>
-</div>
+    <br>
+    </div>
+    </article>
 </section>
 
 <!--
