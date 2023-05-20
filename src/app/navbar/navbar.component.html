@@ -1,5 +1,5 @@
-<nav class="navi bg-stone-900 flex justify-center">
-   
+<nav class="navi bg-stone-900 flex justify-center" [ngClass]="{ 'sticky': isSticky }">
+    
     <a routerLink="/mapscreen" 
     class="bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-600 to-violet-900 hover:from-pink-500 hover:to-yellow-400"
     >Stations on Map</a>
