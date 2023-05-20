@@ -9,6 +9,7 @@ export class BiketripService {
   constructor(private http: HttpClient) { }
 
   // get biketrips
+  // ?page=$1&limit=50
   public GetBikeTrips(): any {
     const trips = this.http.get('/biketrips');
     return trips;

@@ -1,1 +1,20 @@
 <p>biketrips works!</p>
+<div *ngFor="let trip of citybiketripsmay2021">
+    Lähtöaika ja paikka: {{trip.departure}} : {{trip.departure_station_name}}
+    <br>
+    Palautusaika ja paikka: {{trip?.return}} : {{trip.return_station_name}}
+    <br>
+    Matkan pituus ja kesto: {{trip?.covered_distance_m / 1000 | number : '1.1-2'}}km ja kesto {{trip?.duration_sec / 60 | number : '1.1-2'}}min
+    <br>
+    Keskinopeus (km/h): {{(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) | number : '1.1-2'}}
+
+    <hr>
+<br>
+</div>
+
+<!--
+<div *ngFor="let x of citybiketripsmay2021 | keyvalue">
+    <div>{{x | json}}</div>
+    Object Key {{x.key}} and value: {{x.value}}
+</div>
+-->

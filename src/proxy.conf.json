@@ -8,7 +8,7 @@
   },
   {
     "context": ["/biketrips"],
-    "target": "https://localhost:7297/api/CitybikeTripsMay2021?$limit=50",
+    "target": "https://localhost:7297/api/CitybikeTripsMay2021",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
