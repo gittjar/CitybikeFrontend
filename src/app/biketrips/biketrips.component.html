@@ -3,30 +3,30 @@
     <aside class="hakupalkki">
         <div class="nav-item">
             Etsi ja lajittele <fa-icon [icon]="MagnifyingGlass"></fa-icon>            
-            <!--
-            <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
-            -->
             <input
             type="text"
             class="searchTerm"
             placeholder="Kirjoita hakusana.."
             [(ngModel)]="term"
-          />
+            />
         </div>
 
         <div class="hakunapit">
-            <button (click)="sortA(false)" class="nappi-pisin bg-gradient-to-r from-teal-200 to-green-800 hover:from-sky-700 hover:to-emerald-400 ...">Pisin matka <fa-icon [icon]="ArrowRight"></fa-icon>
+
+            <button (click)="sortA(false)" class="nappi nappi-top bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400">Pisin matka <fa-icon [icon]="ArrowRight"></fa-icon>
             </button>
-            <button (click)="sortA(true)" class="nappi-lyhin bg-gradient-to-r from-teal-200 to-green-800 hover:from-pink-400 hover:to-red-200 ..."><fa-icon [icon]="ArrowLeft"></fa-icon> Lyhin matka</button>
-
-
+            <button (click)="sortA(true)" class="nappi nappi-middle bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400"><fa-icon [icon]="ArrowLeft"></fa-icon> Lyhyin matka</button>
+            <button (click)="sortB(false)" class="nappi nappi-middle bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400">Pisin aika <fa-icon [icon]="ArrowRight"></fa-icon>
+            </button>
+            <button (click)="sortB(true)" class="nappi nappi-bottom bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400"><fa-icon [icon]="ArrowLeft"></fa-icon> Lyhyin aika</button>
         </div>
+
 
     </aside>
 
     <article class="lista">
-       
-        <section *ngFor="let trip of citybiketripsmay2021 | filter:term" class="tripcard justify-between">
+
+        <section *ngFor="let trip of citybiketripsmay2021.data | filter:term" class="tripcard justify-between">
         <article>
 
         Lähtöaika ja paikka: {{trip.departure | date:'MMM d, y (HH:mm)'}} : {{trip.departure_station_name}}
@@ -48,6 +48,7 @@
 
     </article>
 </section>
+
 <!--
 <div *ngFor="let x of citybiketripsmay2021 | keyvalue">
     <div>{{x | json}}</div>
