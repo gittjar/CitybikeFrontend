@@ -10,13 +10,14 @@
             type="text"
             class="searchTerm"
             placeholder="Kirjoita hakusana.."
+            [(ngModel)]="term"
           />
         </div>
     </aside>
 
     <article class="lista">
        
-        <section *ngFor="let trip of citybiketripsmay2021" class="tripcard justify-between">
+        <section *ngFor="let trip of citybiketripsmay2021 | filter:term" class="tripcard justify-between">
 
         <article>
         Lähtöaika ja paikka: {{trip.departure | date:'MMM d, y (HH:mm)'}} : {{trip.departure_station_name}}

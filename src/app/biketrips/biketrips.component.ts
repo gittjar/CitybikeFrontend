@@ -11,6 +11,7 @@ export class BiketripsComponent implements OnInit {
   constructor(private hpservice: BiketripService) {}
 
   citybiketripsmay2021 : any;
+  term = '';
 
   ngOnInit(): void {
     this.GetBikeTripsMay2021();
