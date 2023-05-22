@@ -1,5 +1,4 @@
-
-
+/* STICKY NAVBAR Disabled
 nav {
     position: fixed;
     top: 0;
@@ -14,6 +13,10 @@ nav {
     width: 100%;
     z-index: 999;
   }
+  */
+
+
+
 
   /* Mobile CSS rules */ 
   @media only screen and (max-width: 425px) {
@@ -48,7 +51,7 @@ nav {
     .navi {
         display: flex;
         flex-direction: row;
-        height: 4rem;
+        height: 4.3rem;
     }
     
     
@@ -65,4 +68,6 @@ nav {
         margin-top: 0.5%;
         margin-left: 2%;
     }
+    
+
  }

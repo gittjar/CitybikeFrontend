@@ -26,12 +26,12 @@
 
     <article class="lista">
 
-        <section *ngFor="let trip of citybiketripsmay2021.data | filter:term" class="tripcard justify-between">
+        <section *ngFor="let trip of citybiketripsmay2021?.data | filter:term" class="tripcard justify-between">
         <article>
 
-        Lähtöaika ja paikka: {{trip.departure | date:'MMM d, y (HH:mm)'}} : {{trip.departure_station_name}}
+        Lähtöaika ja paikka: {{trip?.departure | date:'MMM d, y (HH:mm)'}} : {{trip?.departure_station_name}}
         <br>
-        Palautusaika ja paikka: {{trip?.return | date:'MMM d, y (HH:mm)'}} : {{trip.return_station_name}}
+        Palautusaika ja paikka: {{trip?.return | date:'MMM d, y (HH:mm)'}} : {{trip?.return_station_name}}
         <br>
         Matkan pituus ja kesto: {{trip?.covered_distance_m / 1000 | number : '1.1-2'}}km ja kesto {{trip?.duration_sec / 60 | number : '1.1-2'}}min
         <br>
@@ -39,8 +39,8 @@
 
          <aside class="keskinopeus">
             Keskinopeus (km/h)<br> 
-            <span *ngIf="(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) > 15" class="nopeus yli15">{{(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) | number : '1.1-2'}}</span>
-            <span *ngIf="(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) < 15" class="nopeus alle15">{{(trip.covered_distance_m/1000) / (trip.duration_sec / 3600) | number : '1.1-2'}}</span>
+            <span *ngIf="(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) > 15" class="nopeus yli15">{{(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) | number : '1.1-2'}}</span>
+            <span *ngIf="(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) < 15" class="nopeus alle15">{{(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) | number : '1.1-2'}}</span>
 
         </aside>
         </section>

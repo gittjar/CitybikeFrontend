@@ -1,7 +1,6 @@
 .main {
     display: flex;
     flex-direction: row;
-    margin-top: 5%;
     padding-top: 2%;
 }
 
@@ -115,3 +114,39 @@ background-image: -webkit-linear-gradient(right, #097830 52%, #1B1917 87%);
 background-image: -ms-linear-gradient(right, #097830 52%, #1B1917 87%);
 background-image: linear-gradient(to right, #097830 52%, #1B1917 87%);
 }
+
+/* Mobile + tablet CSS rules */ 
+@media only screen and (max-width: 768px) { 
+    .main {
+        display: flex;
+        flex-direction: column;
+    }
+    .hakupalkki {
+        width:100%;
+        margin-left: 1%;
+        margin-right: 1%;
+    }
+
+    .nav-item, .hakunapit {
+        text-align: center;
+        margin-left: 1%;
+        margin-right: 1%;
+    }
+    .lista {
+        width: auto;
+        margin-left: 1%;
+        margin-right: 1%;
+    }
+    .tripcard {
+        border: rgb(250 204 21) 1px solid;
+        padding: 5px;
+        display: flex;
+        flex-direction: row;
+        font-size: 0.8rem;
+    }
+    .nopeus {
+        font-size: 1rem;
+    }
+
+}
+
