@@ -11,14 +11,14 @@
     margin-top: 2%;
 }
 .nav-item {
-    color:#fde68a;
+    color: rgb(250 204 21);    
     margin-left: 7%;
 
 }
 
 /*Inputin säädöt*/
 input {
-    background-color: #fde68a;
+    color: rgb(250 204 21);
     width: 90%;
     padding: 10px;
     box-shadow: 1px 2px;
@@ -30,12 +30,29 @@ input {
     margin-bottom: 4px;
     border-radius: 8px;
     color: rgb(28 25 23);
-
 }
+
+.hakunapit {
+    margin-left: 7%;
+}
+
+.nappi-pisin {
+    width: 90%;
+    height: 45px;
+    border-radius: 8px 8px 0px 0px;
+    margin-bottom: 0.2%;
+}
+.nappi-lyhin {
+    width: 90%;
+    height: 45px;
+    border-radius: 0px 0px 8px 8px;
+}
+
+
 
 .lista {
     width: 80%;
-    color: #fde68a;
+    color: rgb(250 204 21);
     margin-right: 1%;
     margin-top: 2%;
 
@@ -43,11 +60,16 @@ input {
 }
 
 .tripcard {
-    border: #fde68a 1px solid;
+    border: rgb(250 204 21) 1px solid;
     margin: 0.5%;
     padding: 5px;
     display: flex;
     flex-direction: row;
+}
+
+.tripcard:hover {
+    background-color: rgb(44, 35, 28);
+    color: rgb(250 204 21);
 }
 
 .keskinopeus {

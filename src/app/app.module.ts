@@ -11,11 +11,18 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { FooterComponent } from './footer/footer.component';
 
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
+
 
 // locale
+
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeFi from '@angular/common/locales/fi';
+import { CustomFilterPipe } from './custom-filter-pipe.pipe';
 
 registerLocaleData(localeFi);
 
@@ -26,13 +33,17 @@ registerLocaleData(localeFi);
     MapscreenComponent,
     BiketripsComponent,
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
+    CustomFilterPipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    CommonModule
+    CommonModule,
+    FormsModule,
+    FontAwesomeModule
+
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'fi' }], // this provides FIN
   bootstrap: [AppComponent]
