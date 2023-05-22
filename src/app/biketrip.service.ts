@@ -13,7 +13,8 @@ export class BiketripService {
   public GetBikeTrips(): any {
     const trips = this.http.get('/biketrips');
     return trips;
-
   }
 
+
+  
 }
