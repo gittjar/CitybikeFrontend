@@ -15,9 +15,9 @@
         </div>
 
         <div class="hakunapit">
-            <button class="nappi-pisin bg-gradient-to-r from-teal-200 to-green-800 hover:from-sky-700 hover:to-emerald-400 ...">Pisin matka <fa-icon [icon]="ArrowRight"></fa-icon>
+            <button (click)="sortA(false)" class="nappi-pisin bg-gradient-to-r from-teal-200 to-green-800 hover:from-sky-700 hover:to-emerald-400 ...">Pisin matka <fa-icon [icon]="ArrowRight"></fa-icon>
             </button>
-            <button class="nappi-lyhin bg-gradient-to-r from-teal-200 to-green-800 hover:from-pink-400 hover:to-red-200 ..."><fa-icon [icon]="ArrowLeft"></fa-icon> Lyhin matka</button>
+            <button (click)="sortA(true)" class="nappi-lyhin bg-gradient-to-r from-teal-200 to-green-800 hover:from-pink-400 hover:to-red-200 ..."><fa-icon [icon]="ArrowLeft"></fa-icon> Lyhin matka</button>
 
 
         </div>
@@ -27,8 +27,8 @@
     <article class="lista">
        
         <section *ngFor="let trip of citybiketripsmay2021 | filter:term" class="tripcard justify-between">
-
         <article>
+
         Lähtöaika ja paikka: {{trip.departure | date:'MMM d, y (HH:mm)'}} : {{trip.departure_station_name}}
         <br>
         Palautusaika ja paikka: {{trip?.return | date:'MMM d, y (HH:mm)'}} : {{trip.return_station_name}}
