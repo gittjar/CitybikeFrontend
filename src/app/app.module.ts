@@ -13,6 +13,9 @@ import { FooterComponent } from './footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
+
 
 // locale
 
@@ -39,6 +42,7 @@ registerLocaleData(localeFi);
     HttpClientModule,
     CommonModule,
     FormsModule,
+    FontAwesomeModule
 
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'fi' }], // this provides FIN

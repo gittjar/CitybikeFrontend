@@ -67,6 +67,11 @@ input {
     flex-direction: row;
 }
 
+.tripcard:hover {
+    background-color: rgb(44, 35, 28);
+    color: rgb(250 204 21);
+}
+
 .keskinopeus {
     margin-left: 3%;
 }

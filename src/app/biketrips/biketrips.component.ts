@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BiketripService } from '../biketrip.service';
+import { faArrowRight, faArrowLeft, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-biketrips',
@@ -12,6 +14,10 @@ export class BiketripsComponent implements OnInit {
 
   citybiketripsmay2021 : any;
   term = '';
+  // fontawesome
+  ArrowRight = faArrowRight;
+  ArrowLeft = faArrowLeft;
+  MagnifyingGlass = faMagnifyingGlass;
 
   ngOnInit(): void {
     this.GetBikeTripsMay2021();
