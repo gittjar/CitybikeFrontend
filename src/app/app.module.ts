@@ -23,6 +23,7 @@ import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeFi from '@angular/common/locales/fi';
 import { CustomFilterPipe } from './custom-filter-pipe.pipe';
+import { MainpageComponent } from './mainpage/mainpage.component';
 
 registerLocaleData(localeFi);
 
@@ -34,7 +35,8 @@ registerLocaleData(localeFi);
     BiketripsComponent,
     NavbarComponent,
     FooterComponent,
-    CustomFilterPipe
+    CustomFilterPipe,
+    MainpageComponent
   ],
   imports: [
     BrowserModule,
