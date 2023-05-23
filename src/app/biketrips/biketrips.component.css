@@ -34,6 +34,11 @@ input {
 .hakunapit {
     margin-left: 7%;
 }
+.pagenappi {
+    margin: 0.4%;
+    padding: 1%;
+    border: 1px rgb(250 204 21) solid;
+}
 
 .nappi-top {
     width: 90%;

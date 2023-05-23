@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BiketripService } from '../biketrip.service';
 import { faArrowRight, faArrowLeft, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -21,14 +22,26 @@ export class BiketripsComponent implements OnInit {
 
   ngOnInit(): void {
    this.GetBikeTripsMay2021();
-  }
+   this.itemsCountFromServer();
+}
+
 
   GetBikeTripsMay2021(): void {
   this.hpservice.GetBikeTrips().subscribe((data: any) =>
     this.citybiketripsmay2021 = data)
 }
 
+
 newPageNumber = 1;
+totalPages!: number;
+totalItems!: number;
+
+itemsCountFromServer(): any {
+  this.hpservice.GetBikeTripsPerPage(this.newPageNumber).subscribe((data: any) => {
+  this.totalPages = data.totalPages;
+  this.totalItems = data.totalItems;
+  })
+}
 
 onPageChangePlus(): any {
 this.increasePageNumber();
