@@ -15,6 +15,11 @@ export class BiketripService {
     return trips;
   }
 
+  public GetBikeTripsPerPage(pagenumber: number): any {
+    const trips = this.http.get('/biketrips?pageNumber='+pagenumber+'&pageSize=200')
+    return trips;
+  }
+
 
   
 }

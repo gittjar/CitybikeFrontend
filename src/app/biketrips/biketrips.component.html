@@ -25,6 +25,11 @@
     </aside>
 
     <article class="lista">
+            <aside class="flex justify-between">
+             <button (click)="onPageChangeMinus()">Edellinen sivu</button>
+               Olet sivulla: {{newPageNumber}} / 
+               <button (click)="onPageChangePlus()">Seuraava sivu</button>
+            </aside>
 
         <section *ngFor="let trip of citybiketripsmay2021?.data | filter:term" class="tripcard justify-between">
         <article>

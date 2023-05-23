@@ -28,6 +28,32 @@ export class BiketripsComponent implements OnInit {
     this.citybiketripsmay2021 = data)
 }
 
+newPageNumber = 1;
+
+onPageChangePlus(): any {
+this.increasePageNumber();
+this.hpservice.GetBikeTripsPerPage(this.newPageNumber).subscribe((data: any) => {
+this.citybiketripsmay2021 = data;
+})
+}
+
+onPageChangeMinus(): any {
+this.decreasePageNumber();
+this.hpservice.GetBikeTripsPerPage(this.newPageNumber).subscribe((data: any) => {
+this.citybiketripsmay2021 = data;
+})
+}
+
+increasePageNumber(): void {
+this.newPageNumber++;
+}
+
+decreasePageNumber(): void {
+if (this.newPageNumber > 1) {
+this.newPageNumber--;
+}
+}
+
   // sorted by distance and put items to uniqueArray
   // sortA = distance
   // serverside --> citybiketripsmay2021.data
