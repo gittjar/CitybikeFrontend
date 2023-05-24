@@ -4,7 +4,7 @@
 }
 
 .kartta {
-    width: 100%;
+    width: 90%;
     border: 1px solid black;
     margin: 0.5%;
 }
@@ -16,6 +16,7 @@
 }
 
 .asemat {
+    width: 10%;
     margin: 0.5%;
     color: rgb(250 204 21);
 

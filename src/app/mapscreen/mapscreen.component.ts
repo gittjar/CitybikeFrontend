@@ -30,15 +30,8 @@ export class MapscreenComponent implements OnInit {
       lat: 60.177038,
       lng: 24.939662,
     },
-    zoom: 13,
+    zoom: 14,
   };
-
-
-
-
-
-
-
 
   ngOnInit(): void {
     this.getAllStations();
@@ -49,12 +42,75 @@ export class MapscreenComponent implements OnInit {
     );
     this.infoWindow = new google.maps.InfoWindow();
 
-   // this.showContent('MyText');
+    this.showContent('MyText');
   }
 
   getAllStations():void {
     this.hpservice.getStations().subscribe((data: any) =>
     this.stations = data)
+  }
+
+  // google maps configurations
+  markers = [] as any;
+
+  showContent(contentType: string) {
+
+    this.markers = []
+  
+    let content: any = null
+  
+  
+    // getPlace in placeservice is configured to show text and it changes here what user gives.
+    if(contentType === "MyText") {
+     // content = this.placeservice.getPlace(this.textid);
+     content = this.hpservice.getStations();
+    }
+    else {
+      console.error("unknown content type");
+      return
+    }
+  
+    console.log("click")
+  
+    content.subscribe((response: any) => {
+      
+        let arr = response as Array<any>
+  
+        arr.forEach((citybikeasema: any) => {
+          this.stations = response;
+          
+          let marker = new google.maps.Marker({
+            position: {
+              lat: citybikeasema?.y,
+              lng: citybikeasema?.x,
+            },
+            label : {text: citybikeasema?.nimi, color: 'Navy', fontWeight: '700', fontFamily: 'Arial', fontSize: '13px' },
+            title : citybikeasema?.osoite + ', ' + citybikeasema?.kaupunki,
+            animation : google.maps.Animation.DROP,
+            icon: {url: '/assets/location-pin.png'},
+          });
+          
+          let markerContent = '<div class="map-infowindow">' +
+                             `<div class="map-infowindow-title">${citybikeasema.nimi}</div>` + 
+                             `<div class="map-infowindow-content">${citybikeasema?.osoite}</div>` + 
+                             `<div class="map-infowindow-content" *ngIf="citybikeasema?.kaupunki.lenght!">${citybikeasema?.kaupunki}, ${citybikeasema?.operaattor}</div>` + 
+                             `<div class="map-infowindow-content"><a href="${""}">Lue lisää ></a></div>
+                             ` + 
+  
+                             `<hr>` + `<br>`+ 
+                             `<div class="map-infowindow-content">Kapasiteetti: ${citybikeasema?.kapasiteet} kpl</div>` + 
+  
+                              '</div>'
+                             
+          // To add the marker to the map, call setMap();
+          marker.setMap(this.map);
+          google.maps.event.addListener(marker, "click", () => {
+           let infowindow = new google.maps.InfoWindow();
+            infowindow.setContent(markerContent)
+            infowindow.open(this.map, marker);    
+          });
+        });
+      }); 
   }
 
   
