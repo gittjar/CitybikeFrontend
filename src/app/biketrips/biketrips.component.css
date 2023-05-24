@@ -40,6 +40,10 @@ input {
     border: 1px rgb(250 204 21) solid;
 }
 
+.pagenappi:hover {
+    border: 1px rgb(250 204 21) dashed;
+}
+
 .nappi-top {
     width: 90%;
     height: 45px;
@@ -130,6 +134,10 @@ background-image: linear-gradient(to right, #097830 52%, #1B1917 87%);
         width:100%;
         margin-left: 1%;
         margin-right: 1%;
+    }
+
+    .pagenappulat {
+        font-size: 0.5rem;
     }
 
     .nav-item, .hakunapit {

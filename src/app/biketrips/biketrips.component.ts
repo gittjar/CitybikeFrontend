@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BiketripService } from '../biketrip.service';
-import { faArrowRight, faArrowLeft, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faArrowLeft, faMagnifyingGlass, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -19,6 +19,8 @@ export class BiketripsComponent implements OnInit {
   ArrowRight = faArrowRight;
   ArrowLeft = faArrowLeft;
   MagnifyingGlass = faMagnifyingGlass;
+  ChevronRight = faChevronRight;
+  ChevronLeft = faChevronLeft;
 
   ngOnInit(): void {
    this.GetBikeTripsMay2021();
