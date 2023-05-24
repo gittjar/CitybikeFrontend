@@ -1,7 +1,8 @@
 <p>mapscreen works!</p>
-<div *ngIf="apiLoaded | async">
-    <google-map></google-map>
+<section class="kartta">
+<div id="map">
   </div>
+</section>
 
 <div *ngFor="let station of stations">{{station.nimi}}</div>
 
