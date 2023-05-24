@@ -1,0 +1,23 @@
+.main {
+    display: flex;
+    flex-direction: row;
+}
+
+.kartta {
+    width: 90%;
+    border: 1px solid black;
+    margin: 0.5%;
+}
+
+#map {
+    height: 600px; /* The height is 400 pixels */
+    width: 100%; /* The width is the width of the web page */
+    margin: 3px;
+}
+
+.asemat {
+    width: 10%;
+    margin: 0.5%;
+    color: rgb(250 204 21);
+
+}

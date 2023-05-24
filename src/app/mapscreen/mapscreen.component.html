@@ -1,8 +1,19 @@
-<p>mapscreen works!</p>
 
+<section class="main bg-stone-900 font-mono">
+    <section class="kartta">
+    <div id="map">
+    </div>
+    </section>
 
-<div *ngFor="let station of stations">{{station.nimi}}</div>
+    <section class="asemat">
+        Citybike<br>
+        Asemat
+        <!--
+    <div *ngFor="let station of stations">{{station.nimi}}</div>
+    -->
+    </section>
 
+</section>
 <!-- TEST QUERY TO DATABASE GET KEYVALUES -->
 <!--
 <div *ngFor="let x of stations | keyvalue">

@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 
 import { MapscreenComponent } from './mapscreen/mapscreen.component';
 import { BiketripsComponent } from './biketrips/biketrips.component';
@@ -14,6 +14,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { GoogleMapsModule } from '@angular/google-maps';
+
 
 
 
@@ -22,7 +24,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeFi from '@angular/common/locales/fi';
-import { CustomFilterPipe } from './custom-filter-pipe.pipe';
+
+import { CustomFilterPipe } from './custom-filter-pipe.pipe'; // search filter
 import { MainpageComponent } from './mainpage/mainpage.component';
 
 registerLocaleData(localeFi);
@@ -42,7 +45,9 @@ registerLocaleData(localeFi);
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    HttpClientJsonpModule,
     CommonModule,
+    GoogleMapsModule,
     FormsModule,
     FontAwesomeModule
 
