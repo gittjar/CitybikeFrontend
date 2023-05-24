@@ -60,7 +60,6 @@ export class MapscreenComponent implements OnInit {
     let content: any = null
   
   
-    // getPlace in placeservice is configured to show text and it changes here what user gives.
     if(contentType === "MyText") {
      // content = this.placeservice.getPlace(this.textid);
      content = this.hpservice.getStations();
@@ -84,20 +83,22 @@ export class MapscreenComponent implements OnInit {
               lat: citybikeasema?.y,
               lng: citybikeasema?.x,
             },
-            label : {text: citybikeasema?.nimi, color: 'Navy', fontWeight: '700', fontFamily: 'Arial', fontSize: '13px' },
+            label : {text: citybikeasema?.nimi,
+            color: 'Navy', fontWeight: '700', fontFamily: 'Arial', fontSize: '14px' },
             title : citybikeasema?.osoite + ', ' + citybikeasema?.kaupunki,
+            opacity: 1.2,
             animation : google.maps.Animation.DROP,
             icon: {url: '/assets/location-pin.png'},
           });
           
           let markerContent = '<div class="map-infowindow">' +
                              `<div class="map-infowindow-title">${citybikeasema.nimi}</div>` + 
-                             `<div class="map-infowindow-content">${citybikeasema?.osoite}</div>` + 
-                             `<div class="map-infowindow-content" *ngIf="citybikeasema?.kaupunki.lenght!">${citybikeasema?.kaupunki}, ${citybikeasema?.operaattor}</div>` + 
+                             `<div class="map-infowindow-content">${citybikeasema?.osoite}, ${citybikeasema?.kaupunki}</div>` + 
                              `<div class="map-infowindow-content"><a href="${""}">Lue lisää ></a></div>
                              ` + 
   
                              `<hr>` + `<br>`+ 
+                             `<div class="map-infowindow-content">Operaattori: ${citybikeasema?.operaattor}</div>` + 
                              `<div class="map-infowindow-content">Kapasiteetti: ${citybikeasema?.kapasiteet} kpl</div>` + 
   
                               '</div>'
