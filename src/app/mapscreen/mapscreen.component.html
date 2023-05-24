@@ -1,11 +1,16 @@
-<p>mapscreen works!</p>
-<section class="kartta">
-<div id="map">
-  </div>
+
+<section class="main bg-stone-900 font-mono">
+    <section class="kartta">
+    <div id="map">
+    </div>
+    </section>
+
+    <section class="asemat">
+        (remember configure routing <br>from server! gives now 30 items..)
+    <div *ngFor="let station of stations.data">{{station.nimi}}</div>
+    </section>
+
 </section>
-
-<div *ngFor="let station of stations">{{station.nimi}}</div>
-
 <!-- TEST QUERY TO DATABASE GET KEYVALUES -->
 <!--
 <div *ngFor="let x of stations | keyvalue">
