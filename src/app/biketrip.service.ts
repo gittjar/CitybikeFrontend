@@ -11,7 +11,7 @@ export class BiketripService {
   // get biketrips
   // ?page=$1&limit=50
   public GetBikeTrips(): any {
-    const trips = this.http.get('/biketrips');
+    const trips = this.http.get('/commontrips');
     return trips;
   }
 

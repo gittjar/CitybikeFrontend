@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { StationService } from '../station.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
+import { BiketripService } from '../biketrip.service';
 
 
 @Component({
@@ -13,10 +14,9 @@ import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 })
 export class MapscreenComponent implements OnInit {
 
-  stations : any
- 
+  stations : any 
 
-  constructor (private hpservice: StationService) {}
+  constructor (private hpservice: StationService, private tripservice: BiketripService) {}
 
   // googlemaps
   mapLoaded!: boolean;
@@ -49,6 +49,11 @@ export class MapscreenComponent implements OnInit {
     this.hpservice.getStations().subscribe((data: any) =>
     this.stations = data)
   }
+
+
+
+
+
 
   // google maps configurations
   markers = [] as any;
@@ -94,13 +99,11 @@ export class MapscreenComponent implements OnInit {
           let markerContent = '<div class="map-infowindow">' +
                              `<div class="map-infowindow-title">${citybikeasema.nimi}</div>` + 
                              `<div class="map-infowindow-content">${citybikeasema?.osoite}, ${citybikeasema?.kaupunki}</div>` + 
-                             `<div class="map-infowindow-content"><a href="${""}">Lue lisää ></a></div>
-                             ` + 
+                             
   
                              `<hr>` + `<br>`+ 
                              `<div class="map-infowindow-content">Operaattori: ${citybikeasema?.operaattor}</div>` + 
-                             `<div class="map-infowindow-content">Kapasiteetti: ${citybikeasema?.kapasiteet} kpl</div>` + 
-  
+                             `<div class="map-infowindow-content">Kapasiteetti: ${citybikeasema?.kapasiteet} kpl</div>` +   
                               '</div>'
                              
           // To add the marker to the map, call setMap();
@@ -113,6 +116,7 @@ export class MapscreenComponent implements OnInit {
         });
       }); 
   }
+  
 
   
 
