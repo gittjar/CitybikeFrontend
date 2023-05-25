@@ -15,11 +15,11 @@
     "pathRewrite": {"^/biketrips" : ""}
   },
   {
-    "context": ["/act"],
-    "target": "",
+    "context": ["/commontrips"],
+    "target": "https://localhost:7297/api/CitybikeTrips",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
-    "pathRewrite": {"^/act" : ""}
+    "pathRewrite": {"^/commontrips" : ""}
   }]
   

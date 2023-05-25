@@ -4,7 +4,7 @@
 }
 
 .kartta {
-    width: 90%;
+    width: 85%;
     border: 1px solid black;
     margin: 0.5%;
 }
@@ -15,9 +15,11 @@
     margin: 3px;
 }
 
-.asemat {
-    width: 10%;
+.asema-data {
+    width: 15%;
     margin: 0.5%;
     color: rgb(250 204 21);
+    font-size: 0.9rem;
+    font-weight: 600;
 
 }
