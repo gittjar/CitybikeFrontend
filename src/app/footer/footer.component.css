@@ -1,7 +1,13 @@
 footer{
     background-color: rgb(28 25 23);
-    color:#fde68a;
+    color: rgb(250 204 21);
     font-size: 1.3rem;
     font-weight: 700;
-    padding-top: 5%;
+    padding: 2%;
+}
+
+a:hover {
+    color: rgb(175, 33, 236);
+    text-decoration: solid;
+
 }

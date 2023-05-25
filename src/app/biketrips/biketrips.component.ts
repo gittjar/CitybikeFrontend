@@ -23,16 +23,14 @@ export class BiketripsComponent implements OnInit {
   ChevronLeft = faChevronLeft;
 
   ngOnInit(): void {
-   this.GetBikeTripsMay2021();
    this.itemsCountFromServer();
+   this.GetBikeTripsMay2021();
 }
-
 
   GetBikeTripsMay2021(): void {
-  this.hpservice.GetBikeTrips().subscribe((data: any) =>
+  this.hpservice.GetBikeTripsPerPage(1).subscribe((data: any) =>
     this.citybiketripsmay2021 = data)
 }
-
 
 newPageNumber = 1;
 totalPages!: number;
@@ -106,6 +104,5 @@ this.newPageNumber--;
     );
     this.citybiketripsmay2021.data = uniqueArray;
     }
-
 
 }
