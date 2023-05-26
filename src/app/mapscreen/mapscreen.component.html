@@ -5,9 +5,19 @@
     </div>
     </section>
     <section class="asema-data">
-        TOP-10 lähtöasemat
+        
+       <h4>Top-10 Lähtöasemat <fa-icon [icon]="ArrowRightFromBracket"></fa-icon> </h4> 
+          <div class="top-asemat" *ngFor="let station of getTopDepartureStations()">
+            {{ station }} ({{ getDepartureStationCount(station) }})
+          </div>
+        
         <br>
-        TOP-10 palautusasemat
+        <h4>TOP-10 Palautusasemat <fa-icon [icon]="RotareLeft"></fa-icon> </h4>
+        <div class="top-asemat" *ngFor="let station of getTopReturnStations()">
+            {{station}} ({{ getReturnStationCount(station) }})
+        </div>
+
+
     </section>
 </section>
 <!-- TEST QUERY TO DATABASE GET KEYVALUES -->

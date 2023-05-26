@@ -5,6 +5,9 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { BiketripService } from '../biketrip.service';
+import { Journey } from '../models/journey.model';
+import { faRotateLeft, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+
 
 
 @Component({
@@ -14,7 +17,9 @@ import { BiketripService } from '../biketrip.service';
 })
 export class MapscreenComponent implements OnInit {
 
-  stations : any 
+  stations : any
+  RotareLeft = faRotateLeft;
+  ArrowRightFromBracket = faArrowRightFromBracket;
 
   constructor (private hpservice: StationService, private tripservice: BiketripService) {}
 
@@ -43,12 +48,59 @@ export class MapscreenComponent implements OnInit {
     this.infoWindow = new google.maps.InfoWindow();
 
     this.showContent('MyText');
+
+    this.getTripData();
+
   }
 
   getAllStations():void {
     this.hpservice.getStations().subscribe((data: any) =>
     this.stations = data)
   }
+
+  getTripData(): void{
+    this.tripservice.GetBikeTrips().subscribe((data: any) =>
+    this.jsonData = data)
+  }
+
+  jsonData: Journey[] = [];
+
+  // top 10 lähtöasemat ja count
+  getTopDepartureStations(): string[] {
+    const stationCountMap = this.jsonData.reduce((countMap, journey) => {
+      const station = journey.departure_station_name;
+      countMap.set(station, (countMap.get(station) || 0) + 1);
+      return countMap;
+    }, new Map<string, number>());
+
+    return Array.from(stationCountMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(entry => entry[0]);
+  }
+
+  getDepartureStationCount(station: string): number {
+    return this.jsonData.filter(journey => journey.departure_station_name === station).length;
+  }
+
+  // top 10 palautusasemat ja count
+  getTopReturnStations(): string[] {
+    const stationCountMap = this.jsonData.reduce((countMap, journey) => {
+      const station = journey.return_station_name;
+      countMap.set(station, (countMap.get(station) || 0) + 1);
+      return countMap;
+    }, new Map<string, number>());
+
+    return Array.from(stationCountMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(entry => entry[0]);
+  }
+
+  getReturnStationCount(station: string): number {
+    return this.jsonData.filter(journey => journey.return_station_name === station).length;
+  }
+  
 
 
 

@@ -4,7 +4,7 @@
 }
 
 .kartta {
-    width: 85%;
+    width: 80%;
     border: 1px solid black;
     margin: 0.5%;
 }
@@ -16,10 +16,34 @@
 }
 
 .asema-data {
-    width: 15%;
+    width: 20%;
     margin: 0.5%;
-    color: rgb(250 204 21);
-    font-size: 0.9rem;
-    font-weight: 600;
-
 }
+
+h4 {
+    color: rgb(250 204 21);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.top-asemat {
+    padding: 0.4%;
+    color: rgb(250 204 21);
+    font-size: 0.8rem;
+}
+
+/* Mobile CSS rules */ 
+@media only screen and (max-width: 425px) 
+{ 
+.main {
+    display: flex;
+    flex-direction: column;
+}
+
+.kartta, .asema-data {
+    width: 100%;
+    margin: 0.5%;
+}
+
+ }
+
