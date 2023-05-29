@@ -155,9 +155,17 @@ export class MapscreenComponent implements OnInit {
   
                              `<hr>` + `<br>`+ 
                              `<div class="map-infowindow-content">Operaattori: ${citybikeasema?.operaattor}</div>` + 
-                             `<div class="map-infowindow-content">Kapasiteetti: ${citybikeasema?.kapasiteet} kpl</div>` +   
-                              '</div>'
+                             `<div class="map-infowindow-content">Kapasiteetti: ${citybikeasema?.kapasiteet} kpl</div>` +  
                              
+                             `<div class="map-infowindow-content">
+                             <a href=/station-details/${citybikeasema?.id}>
+                               Katso lisätiedot >
+                             </a>
+                           </div>` +  
+                              '</div>'
+                  
+                           
+                            
           // To add the marker to the map, call setMap();
           marker.setMap(this.map);
           google.maps.event.addListener(marker, "click", () => {

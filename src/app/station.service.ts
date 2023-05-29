@@ -14,5 +14,10 @@ export class StationService {
     return stations;
   }
 
+  getStation(id: number):any {
+    const station = this.http.get('stations/'+id)
+    return station;
+  }
+
 
 }
