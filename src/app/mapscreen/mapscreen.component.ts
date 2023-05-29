@@ -149,7 +149,7 @@ export class MapscreenComponent implements OnInit {
           });
           
           let markerContent = '<div class="map-infowindow">' +
-                             `<div class="map-infowindow-title">${citybikeasema.nimi}, ${citybikeasema?.id}</div>` + 
+                             `<div class="map-infowindow-title">${citybikeasema.nimi}</div>` + 
                              `<div class="map-infowindow-content">${citybikeasema?.osoite}, ${citybikeasema?.kaupunki}</div>` + 
                              
   
