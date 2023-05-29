@@ -1,0 +1,15 @@
+
+.main {
+    background-color:rgb(16, 20, 23);
+
+}
+
+h1 {
+    color: rgb(250 204 21);
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.station {
+    margin-left: 2%;
+}

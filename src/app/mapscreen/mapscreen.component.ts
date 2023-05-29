@@ -158,13 +158,12 @@ export class MapscreenComponent implements OnInit {
                              `<div class="map-infowindow-content">Kapasiteetti: ${citybikeasema?.kapasiteet} kpl</div>` +  
                              
                              `<div class="map-infowindow-content">
-                             <a routerLink="/station-details/{{ citybikeasema?.id }}">
+                             <a href=/station-details/${citybikeasema?.id}>
                                Lue lisää >
                              </a>
                            </div>` +  
-
                               '</div>'
-                             
+                  
                            
                             
           // To add the marker to the map, call setMap();
