@@ -41,7 +41,8 @@ registerLocaleData(localeFi);
     FooterComponent,
     CustomFilterPipe,
     MainpageComponent,
-    StationDetailsComponent
+    StationDetailsComponent,
+    
   ],
   imports: [
     BrowserModule,

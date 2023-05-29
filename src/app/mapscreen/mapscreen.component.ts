@@ -159,7 +159,7 @@ export class MapscreenComponent implements OnInit {
                              
                              `<div class="map-infowindow-content">
                              <a href=/station-details/${citybikeasema?.id}>
-                               Lue lisää >
+                               Katso lisätiedot >
                              </a>
                            </div>` +  
                               '</div>'
