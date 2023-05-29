@@ -149,15 +149,24 @@ export class MapscreenComponent implements OnInit {
           });
           
           let markerContent = '<div class="map-infowindow">' +
-                             `<div class="map-infowindow-title">${citybikeasema.nimi}</div>` + 
+                             `<div class="map-infowindow-title">${citybikeasema.nimi}, ${citybikeasema?.id}</div>` + 
                              `<div class="map-infowindow-content">${citybikeasema?.osoite}, ${citybikeasema?.kaupunki}</div>` + 
                              
   
                              `<hr>` + `<br>`+ 
                              `<div class="map-infowindow-content">Operaattori: ${citybikeasema?.operaattor}</div>` + 
-                             `<div class="map-infowindow-content">Kapasiteetti: ${citybikeasema?.kapasiteet} kpl</div>` +   
+                             `<div class="map-infowindow-content">Kapasiteetti: ${citybikeasema?.kapasiteet} kpl</div>` +  
+                             
+                             `<div class="map-infowindow-content">
+                             <a routerLink="/station-details/{{ citybikeasema?.id }}">
+                               Lue lisää >
+                             </a>
+                           </div>` +  
+
                               '</div>'
                              
+                           
+                            
           // To add the marker to the map, call setMap();
           marker.setMap(this.map);
           google.maps.event.addListener(marker, "click", () => {
