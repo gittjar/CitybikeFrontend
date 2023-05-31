@@ -12,26 +12,26 @@ import { Journey } from '../models/journey.model';
 export class StationDetailsComponent implements OnInit {
 
 
-
-
   stationdetail: any;
 
 
   constructor (private actRoute: ActivatedRoute, private router: Router, private hpservice: StationService, private tripservice: BiketripService) {}
 
     ngOnInit (): void{
-      // this.getProductDetail();
-      // this.sortName();
+ 
       const id = Number(this.actRoute.snapshot.paramMap.get('id'));
    if(id){
         this.getStationDetail(id);
    }
    this.getTripData();
+
      }
 
      getStationDetail(id: number): any {
       this.hpservice.getStation(id).subscribe((data: any) => {
-        this.stationdetail = data;}
+        this.stationdetail = data;
+        this.displayMap();
+        }
         )}
 
         
@@ -56,6 +56,33 @@ export class StationDetailsComponent implements OnInit {
             .slice(0, 5)
             .map(entry => entry[0]);
         }
+
+
+
+        displayMap(): void {
+          const xCoordinate = this.stationdetail.x;
+          const yCoordinate = this.stationdetail.y;
+
+        
+          // Create a new Google Map instance
+          const mapOptions: google.maps.MapOptions = {
+            center: { lat: yCoordinate, lng: xCoordinate },
+            zoom: 15,
+          };
+          const map = new google.maps.Map(document.getElementById('map') as HTMLElement, mapOptions);
+      
+        
+          // Add a marker to the map at the specified coordinates
+          const markerOptions: google.maps.MarkerOptions = {
+            position: { lat: yCoordinate, lng: xCoordinate },
+            map: map,
+            title: this.stationdetail.nimi,
+            icon: {url: '/assets/bike.png', scaledSize: new google.maps.Size(50, 50)}  
+            };
+          const marker = new google.maps.Marker(markerOptions);
+        }
+
+
 
         onBack(): void {
           this.router.navigate(['/mapscreen']);

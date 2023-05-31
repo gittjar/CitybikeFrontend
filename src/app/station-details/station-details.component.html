@@ -9,6 +9,7 @@
     <h4>
         {{stationdetail.osoite}}, {{stationdetail.kaupunki}}
     </h4>
+   
     <h4>
         Kapasiteetti: {{stationdetail.kapasiteet}} kpl
     </h4>
@@ -30,8 +31,9 @@
 
     </article>
 
-    <article class="random-kuva">
-
+    <article class="station-on-map">
+        <div id="map"></div>
+        <p>Coordinates: {{ stationdetail.x }}, {{ stationdetail.y }}</p>
     </article>
 
    
