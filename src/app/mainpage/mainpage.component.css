@@ -48,7 +48,7 @@ background-image: linear-gradient(to right, #266BC4 0%, #1FFF8F 95%);
   @media only screen and (max-width: 768px) { 
 .siteHeader {height: auto;}
 
-.centered {font-size: 4rem;}
+.centered {font-size: 3rem;}
 
 }
 

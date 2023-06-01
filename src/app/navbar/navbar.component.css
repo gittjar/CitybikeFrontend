@@ -25,9 +25,8 @@ nav {
         flex-direction: column;
         height: auto;
     }
-    h1, a {font-size: 1.3rem;
-        font-weight: 800;
-        margin-top: 0.5%;
+    h1, a {font-size: 1.1rem;
+        font-weight: 700;
         margin-left: 2%;}
    }
 
@@ -36,10 +35,10 @@ nav {
     .navi {
         display: flex;
         flex-direction: row;
-        height: 3rem;
+        height: auto;
 
     }
-    h1, a {font-size: 1.6rem;
+    h1, a {font-size: 1.2rem;
         font-weight: 800;
         margin-top: 0.5%;
         margin-left: 2%;}
