@@ -1,9 +1,5 @@
-import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { StationService } from '../station.service';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { BiketripService } from '../biketrip.service';
 import { Journey } from '../models/journey.model';
 import { faRotateLeft, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';

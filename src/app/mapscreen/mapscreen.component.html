@@ -1,21 +1,18 @@
 
 <section class="main bg-stone-900 font-mono">
-
-
     <section class="kartta">
     <div id="map">
     </div>
-
     </section>
     <section class="asema-data">
         
-       <h4>Top-10 Lähtöasemat  </h4> 
+       <h4>Top-10 Lähtöasemat <fa-icon [icon]="ArrowRightFromBracket"></fa-icon> </h4> 
           <div class="top-asemat" *ngFor="let station of getTopDepartureStations()">
             {{ station }} ({{ getDepartureStationCount(station) }})
           </div>
         
         <br>
-        <h4>TOP-10 Palautusasemat </h4>
+        <h4>TOP-10 Palautusasemat <fa-icon [icon]="RotareLeft"></fa-icon> </h4>
         <div class="top-asemat" *ngFor="let station of getTopReturnStations()">
             {{station}} ({{ getReturnStationCount(station) }})
         </div>
