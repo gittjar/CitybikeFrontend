@@ -12,6 +12,22 @@
     padding-top: 1%;
 }
 
+.colorbar {
+    height: 6px;
+    background-image: -webkit-gradient(
+	linear,
+	right top,
+	left top,
+	color-stop(0, #8e61f7),
+	color-stop(0.95, rgb(28 25 23))
+);
+background-image: -o-linear-gradient(right, #8e61f7 0%, rgb(28 25 23) 95%);
+background-image: -moz-linear-gradient(right, #8e61f7 0%, rgb(28 25 23) 95%);
+background-image: -webkit-linear-gradient(right, #8e61f7 0%, rgb(28 25 23) 95%);
+background-image: -ms-linear-gradient(right, #8e61f7 0%, rgb(28 25 23) 95%);
+background-image: linear-gradient(to right, #8e61f7 0%, rgb(28 25 23) 95%);
+}
+
 h1 {
     font-size: 2.2rem;
     font-weight: 600;

@@ -1,3 +1,19 @@
+.colorbar {
+    height: 6px;
+    background-image: -webkit-gradient(
+	linear,
+	right top,
+	left top,
+	color-stop(0, #266BC4),
+	color-stop(0.95, #1FFF8F)
+);
+background-image: -o-linear-gradient(right, #266BC4 0%, #1FFF8F 95%);
+background-image: -moz-linear-gradient(right, #266BC4 0%, #1FFF8F 95%);
+background-image: -webkit-linear-gradient(right, #266BC4 0%, #1FFF8F 95%);
+background-image: -ms-linear-gradient(right, #266BC4 0%, #1FFF8F 95%);
+background-image: linear-gradient(to right, #266BC4 0%, #1FFF8F 95%);
+}
+
 .main {
     display: flex;
     flex-direction: row;

@@ -39,9 +39,10 @@ export class StationDetailsComponent implements OnInit {
           this.tripservice.GetBikeTrips().subscribe((data: any) =>
           this.jsonData = data)
         }
-        jsonData: Journey[] = []; // Replace this with your actual JSON data
-
+        jsonData: Journey[] = [];
+        averageDistance : any;
         getTopReturnStations(departureStation: string): string[] {
+          
           const returnStations = this.jsonData
             .filter(journey => journey.departure_station_name === departureStation)
             .map(journey => journey.return_station_name);
@@ -50,12 +51,21 @@ export class StationDetailsComponent implements OnInit {
             countMap.set(station, (countMap.get(station) || 0) + 1);
             return countMap;
           }, new Map<string, number>());
+
+          // Calculate the average distance
+            const filteredData = this.jsonData.filter(journey => journey.departure_station_name === departureStation);
+            const totalDistance = filteredData.reduce((sum, journey) => sum + journey.covered_distance_m, 0);
+            const averageDistance = totalDistance / filteredData.length;
+
+            // Assign the average distance and top return stations to component variables
+            this.averageDistance = averageDistance;
       
           return Array.from(stationCountMap.entries())
             .sort((a, b) => b[1] - a[1])
             .slice(0, 5)
             .map(entry => entry[0]);
         }
+   
 
 
 
