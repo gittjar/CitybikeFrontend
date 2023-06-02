@@ -86,7 +86,7 @@ export class StationDetailsComponent implements OnInit {
           const markerOptions: google.maps.MarkerOptions = {
             position: { lat: yCoordinate, lng: xCoordinate },
             map: map,
-            title: this.stationdetail.nimi,
+            title: this.stationdetail?.nimi,
             icon: {url: '/assets/bike.png', scaledSize: new google.maps.Size(50, 50)}  
             };
           const marker = new google.maps.Marker(markerOptions);

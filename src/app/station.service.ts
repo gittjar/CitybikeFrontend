@@ -10,7 +10,7 @@ export class StationService {
 
 
   // base url
-  BASEURL = 'https://corsproxy.io/?https://citybikeapi.azurewebsites.net/api/Stations';
+  BASEURL = 'https://corsproxy.io/?https://citybikeapi.azurewebsites.net/api/Stations/';
   
   public getStations():any {
     // for localhos

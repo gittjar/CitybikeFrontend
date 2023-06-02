@@ -16,10 +16,10 @@ export class BiketripService {
     return trips;
   }
 
-  Baseurl_biketripsMay2021 = 'https://corsproxy.io/?https://citybikeapi.azurewebsites.net/api/CitybikeTripsMay2021?pageNumber=';
+  Baseurl_biketripsMay2021 = 'https://corsproxy.io/?https://citybikeapi.azurewebsites.net/api/CitybikeTripsMay2021';
   
   public GetBikeTripsPerPage(pagenumber: number): any {
-    const trips = this.http.get(this.Baseurl_biketripsMay2021+pagenumber+'&pageSize=500')
+    const trips = this.http.get(this.Baseurl_biketripsMay2021+'?pageNumber='+pagenumber+'&pageSize=500')
     return trips;
   }
 
