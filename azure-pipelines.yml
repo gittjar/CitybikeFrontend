@@ -41,7 +41,7 @@ stages:
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-          ArtifactName: 'dropsolitacitybike'
+          ArtifactName: 'dropscb'
           publishLocation: 'Container'
 
 - stage: Development
@@ -64,5 +64,5 @@ stages:
               azureSubscription: 'Palveluyhteys-Azure-common'
               appType: 'webApp'
               appName: 'solitacitybike'
-              package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+              package: '$(Pipeline.Workspace)/dropscb/$(Build.BuildId).zip'
               runtimeStack: 'NODE|16-lts'
