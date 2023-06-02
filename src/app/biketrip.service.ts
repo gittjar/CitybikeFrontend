@@ -10,13 +10,16 @@ export class BiketripService {
 
   // get biketrips
   // ?page=$1&limit=50
+  Baseurl_common = 'https://corsproxy.io/?https://citybikeapi.azurewebsites.net/api/CitybikeTrips';
   public GetBikeTrips(): any {
-    const trips = this.http.get('/commontrips');
+    const trips = this.http.get(this.Baseurl_common);
     return trips;
   }
 
+  Baseurl_biketripsMay2021 = 'https://corsproxy.io/?https://citybikeapi.azurewebsites.net/api/CitybikeTripsMay2021?pageNumber=';
+  
   public GetBikeTripsPerPage(pagenumber: number): any {
-    const trips = this.http.get('/biketrips?pageNumber='+pagenumber+'&pageSize=500')
+    const trips = this.http.get(this.Baseurl_biketripsMay2021+pagenumber+'&pageSize=500')
     return trips;
   }
 

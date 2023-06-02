@@ -1,0 +1,3 @@
+https://citybikeapi.azurewebsites.net/api/Stations
+https://citybikeapi.azurewebsites.net/api/CitybikeTripsMay2021?pageNumber=1&pageSize=500
+https://citybikeapi.azurewebsites.net/api/CitybikeTrips
