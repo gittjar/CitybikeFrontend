@@ -3,6 +3,7 @@ import { StationService } from '../station.service';
 import { BiketripService } from '../biketrip.service';
 import { Journey } from '../models/journey.model';
 import { faRotateLeft, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { RouterLink } from '@angular/router';
 
 
 
@@ -98,11 +99,6 @@ export class MapscreenComponent implements OnInit {
   }
   
 
-
-
-
-
-
   // google maps configurations
   markers = [] as any;
 
@@ -131,6 +127,8 @@ export class MapscreenComponent implements OnInit {
         arr.forEach((citybikeasema: any) => {
           this.stations = response;
           
+
+          
           let marker = new google.maps.Marker({
             position: {
               lat: citybikeasema?.y,
@@ -143,24 +141,23 @@ export class MapscreenComponent implements OnInit {
             animation : google.maps.Animation.DROP,
             icon: {url: '/assets/location-pin.png'},
           });
-          
+
           let markerContent = '<div class="map-infowindow">' +
                              `<div class="map-infowindow-title">${citybikeasema.nimi}</div>` + 
                              `<div class="map-infowindow-content">${citybikeasema?.osoite}, ${citybikeasema?.kaupunki}</div>` + 
                              
-  
                              `<hr>` + `<br>`+ 
                              `<div class="map-infowindow-content">Operaattori: ${citybikeasema?.operaattor}</div>` + 
                              `<div class="map-infowindow-content">Kapasiteetti: ${citybikeasema?.kapasiteet} kpl</div>` +  
                              
                              `<div class="map-infowindow-content">
-                             <a href=/station-details/${citybikeasema?.id}>
+                             <a href="station-details/${citybikeasema?.id}">
                                Katso lisätiedot >
                              </a>
                            </div>` +  
+
                               '</div>'
-                  
-                           
+            
                             
           // To add the marker to the map, call setMap();
           marker.setMap(this.map);
@@ -172,8 +169,5 @@ export class MapscreenComponent implements OnInit {
         });
       }); 
   }
-  
-
-  
 
 }
