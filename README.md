@@ -1,7 +1,16 @@
-# Solita Citybike application
-## Citybike webapp documentation
+<style>
+f { color: Fuchsia }
+c { color: Cyan }
+l { color: Lime }
+g { color: Gold }
+</style>
 
-### How to start Azure SQL in cloud
+
+# <f> Solita Citybike application </f>
+## Citybike webapp documentation 
+<hr>
+
+### <l> How to start Azure SQL in cloud
 
 1. Create your Azure account
 2. Short tutorial: https://www.youtube.com/watch?v=ov27ukpWgdQ
@@ -10,7 +19,7 @@
 https://learn.microsoft.com/en-us/sql/azure-data-studio/quickstart-sql-database?view=sql-server-ver16
 
 
-### Creating Station Table
+### <l> Creating Station Table
 
 5. Importing data, choose INT value for FID, ID and Kapasiteet (all other string(nvarchar(50)), lets change x and y to decimal after import).
         - Choose CSV file
@@ -25,7 +34,7 @@ Choose from right-click over Station table (Design) then open new window, choose
 
 Now we have created database and importet data from CSV to Station table.
 
-### Creating Citybitrips Table
+### <l> Creating Citybitrips Table
 
 7. Importing data, choose DATE for Departure and Return
 choose INT for Departure/Return_station_id and duration_sec
@@ -39,7 +48,7 @@ SQL: alter table Citybiketrips alter column Covered_distance_m decimal;
 
 Now we have created Citybiketrips table and imported data from CSV.
 
-### Create API for frontend
+### <c> Create API for frontend
 
 1. Microsoft documentation:
         https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-7.0&tabs=visual-studio-mac
@@ -69,7 +78,7 @@ CitybiketripsMay2021 server pagination:
 All citybiketrips:
         https://citybikeapi.azurewebsites.net/api/CitybikeTrips
 
-### Citybike App frontend
+### <c> Citybike App frontend
 
 1. This project used Angular 16 in frontend. 
         Angular documentation: https://angular.io
@@ -86,7 +95,7 @@ Features
 - Show TOP-10 Departure stations and TOP-10 Return stations
 - Different sorts for biketrips and free text search
 
-### MVCCitybike (CRUD)
+### <c> MVCCitybike (CRUD)
 
 1. Microsoft documentation:
         https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/start-mvc?view=aspnetcore-7.0&tabs=visual-studio-mac
@@ -104,7 +113,7 @@ Features
 - Sort citybiketrips by date or search by free text search
 - Connected to Azure SQL server
 
-### CI/CD pipelines Azure
+### <g> CI/CD pipelines Azure
 
 1. Applications uses CI/CD pipelines Azure DevOps, see more: https://learn.microsoft.com/en-us/azure/devops/pipelines/get-started/what-is-azure-pipelines?view=azure-devops
 
@@ -114,6 +123,6 @@ Features
 - Frontend runtime stack: Node 16, others Dotnet v7.0
 - Publishing mode: Code
 
-### E2E tests Cypress
+### <g> E2E tests Cypress
 
 - ng e2e
