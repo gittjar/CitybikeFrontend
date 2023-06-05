@@ -69,7 +69,9 @@ CitybiketripsMay2021 server pagination:
 All citybiketrips:
         https://citybikeapi.azurewebsites.net/api/CitybikeTrips
 
-2. This project used Angular 16 in frontend. 
+### Citybike App frontend
+
+1. This project used Angular 16 in frontend. 
         Angular documentation: https://angular.io
 
 Frontend reposito:
@@ -107,7 +109,10 @@ Features
 1. Applications uses CI/CD pipelines Azure DevOps, see more: https://learn.microsoft.com/en-us/azure/devops/pipelines/get-started/what-is-azure-pipelines?view=azure-devops
 
 - Automated deploy frontend and MVC every day when changes in development -branch
-- Location Norway East
+- For frontend Development must be approved in Azure when deployed
+- Location Norway East, all OS: Windows
+- Frontend runtime stack: Node 16, others Dotnet v7.0
+- Publishing mode: Code
 
 ### E2E tests Cypress
 
