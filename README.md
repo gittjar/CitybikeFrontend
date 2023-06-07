@@ -110,12 +110,24 @@ Features
 
 1. Applications uses CI/CD pipelines Azure DevOps, see more: https://learn.microsoft.com/en-us/azure/devops/pipelines/get-started/what-is-azure-pipelines?view=azure-devops
 
-- Automated deploy frontend and MVC every day when changes in development -branch
-- For frontend Development must be approved in Azure when deployed
+- Automated deploy for MVC every day when changes in development -branch
+- For frontend Development must be approved in Azure when deployed in release pipeline
+- API release pipeline manually
 - Location Norway East, all OS: Windows
 - Frontend runtime stack: Node 16, others Dotnet v7.0
 - Publishing mode: Code
 
 ### E2E tests Cypress
+#### terminal commands
 
-- ng e2e
+- npm install -g @angular/cli
+- git clone https://github.com/gittjar/CitybikeFrontend.git
+- ng e2e (run tests)
+- ng s -o (run application)
+
+### TODO -list
+
+- Make informative 404 page to Azure
+- Small informative windows in App when loading data
+- Small repairs for mobile layout
+- Information page to App
