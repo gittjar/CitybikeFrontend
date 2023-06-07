@@ -26,15 +26,13 @@
 
 
     </aside>
-
     <article class="lista">
             <aside class="flex justify-between pagenappulat">
              <button class="pagenappi" (click)="onPageChangeMinus()"><fa-icon [icon]="ChevronLeft"></fa-icon> Edellinen sivu</button>
                Olet sivulla: {{newPageNumber}} / {{totalPages}}<br>
                Kohteita yhteensä: {{totalItems}}
                <button class="pagenappi" (click)="onPageChangePlus()">Seuraava sivu <fa-icon [icon]="ChevronRight"></fa-icon></button>
-            </aside>
-
+              </aside>
         <section *ngFor="let trip of citybiketripsmay2021?.data | filter:term" class="tripcard justify-between">
         <article>
 
@@ -53,8 +51,7 @@
 
         </aside>
         </section>
-        
-
+    
     </article>
 </section>
 
