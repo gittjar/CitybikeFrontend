@@ -29,6 +29,12 @@ stages:
           ng build --configuration production --aot
         displayName: 'npm install and build'
         workingDirectory: '$(Build.SourcesDirectory)'
+
+# cypress e2e tests
+      - script: 'npm run cypress run'
+        displayName: 'Run Cypress E2E tests'
+        workingDirectory: '$(Build.SourcesDirectory)'
+
       - task: ArchiveFiles@2
         displayName: 'Archive files'
         inputs:
