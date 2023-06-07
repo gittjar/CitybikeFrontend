@@ -31,7 +31,7 @@ stages:
         workingDirectory: '$(Build.SourcesDirectory)'
 
 # cypress e2e tests
-      - script: 'npm run cypress run'
+      - script: 'ng e2e'
         displayName: 'Run Cypress E2E tests'
         workingDirectory: '$(Build.SourcesDirectory)'
 
