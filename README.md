@@ -112,6 +112,15 @@ Features
 
 - Automated deploy for MVC every day when changes in development -branch
 - For frontend Development must be approved in Azure when deployed in release pipeline
+- Merge 'develop' to 'to-website' branch works triggered deployment:
+<br>
+```
+git checkout develop
+git pull
+git checkout to-website
+git merge develop
+```
+
 - API release pipeline manually
 - Location Norway East, all OS: Windows
 - Frontend runtime stack: Node 16, others Dotnet v7.0
