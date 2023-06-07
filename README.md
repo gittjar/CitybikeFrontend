@@ -41,6 +41,23 @@ SQL: alter table Citybiketrips alter column Covered_distance_m decimal;
 
 Now we have created Citybiketrips table and imported data from CSV.
 
+### Create user for database tables
+
+```
+USE master;
+CREATE LOGIN UserName1 WITH password='VaikeaSalasana2';
+GO
+USE YourDabaseName;
+CREATE USER UserName1 from LOGIN UserName1;
+GO
+EXEC sp_addrolemember 'db_datawriter', 'UserName1';
+GO
+ALTER ROLE db_datawriter ADD MEMBER kingdat4;
+ALTER ROLE db_datareader ADD MEMBER kingdat4;
+```
+
+More information: https://learn.microsoft.com/en-us/sql/t-sql/statements/alter-role-transact-sql?view=sql-server-ver16
+
 ### Create API for frontend
 
 1. Microsoft documentation:
