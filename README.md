@@ -52,9 +52,11 @@ CREATE USER UserName1 from LOGIN UserName1;
 GO
 EXEC sp_addrolemember 'db_datawriter', 'UserName1';
 GO
-ALTER ROLE db_datawriter ADD MEMBER kingdat4;
-ALTER ROLE db_datareader ADD MEMBER kingdat4;
+ALTER ROLE db_datawriter ADD MEMBER UserName1;
+ALTER ROLE db_datareader ADD MEMBER UserName1;
 ```
+
+Connect this user to ConnectionString in API and MVC.
 
 More information: https://learn.microsoft.com/en-us/sql/t-sql/statements/alter-role-transact-sql?view=sql-server-ver16
 
@@ -70,8 +72,9 @@ Reposito to Citybike API:  https://github.com/gittjar/CitybikeApi
 - Create different Models for Database tables
 - Used in this exercise only GET methods for create this API layer
 - Serverside pagination
+- Use in ConnectionString before created SQL user
 
-See running API in Cloud.
+See running API in Cloud and endpoints.
 
 All stations:
         https://citybikeapi.azurewebsites.net/api/Stations
@@ -122,6 +125,7 @@ Features
 - Sort stations by city or free text search
 - Sort citybiketrips by date or search by free text search
 - Connected to Azure SQL server
+- Use in ConnectionString before created SQL user
 
 ### CI/CD pipelines Azure
 
@@ -131,12 +135,14 @@ Features
 - For frontend Development must be approved in Azure when deployed in release pipeline
 - Merge 'develop' to 'to-website' branch works triggered deployment:
 <br>
+
 ```
 git checkout develop
 git pull
 git checkout to-website
 git merge develop
 ```
+<br>
 
 - API release pipeline manually
 - Location Norway East, all OS: Windows
