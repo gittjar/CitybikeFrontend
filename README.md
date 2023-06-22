@@ -27,6 +27,9 @@ Choose from right-click over Station table (Design) then open new window, choose
 
 Now we have created database and importet data from CSV to Station table.
 
+19.6.2023: <br>
+Updated SQL to receive also picture link (Kuva column). SQL: ALTER TABLE STATION ALTER COLUMN Kuva NVARCHAR(MAX); 
+
 ### Creating Citybitrips Table
 
 7. Importing data, choose DATE for Departure and Return

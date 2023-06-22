@@ -7,6 +7,7 @@
 
 .station {
     margin-left: 2%;
+    margin-right: 2%;
     color: rgb(250 204 21);
     width: 40%;
     padding-top: 1%;
@@ -47,13 +48,17 @@ h4 {
     margin-right: 2%;
     color: rgb(250 204 21);
     padding-top: 1%;
+}
 
-
+.stationkuva {
+border-radius: 10px 10px 10px 10px;
 }
 
 #map {
     width: 100%;
     height: 540px;
+    border-radius: 10px 10px 10px 10px;
+
   }
 /* Mobile CSS rules */ 
 @media only screen and (max-width: 425px) 
