@@ -28,6 +28,7 @@ import localeFi from '@angular/common/locales/fi';
 import { CustomFilterPipe } from './custom-filter-pipe.pipe'; // search filter
 import { MainpageComponent } from './mainpage/mainpage.component';
 import { StationDetailsComponent } from './station-details/station-details.component';
+import { LoadingComponent } from './loading/loading.component';
 
 registerLocaleData(localeFi);
 
@@ -42,6 +43,7 @@ registerLocaleData(localeFi);
     CustomFilterPipe,
     MainpageComponent,
     StationDetailsComponent,
+    LoadingComponent,
     
   ],
   imports: [

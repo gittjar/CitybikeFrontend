@@ -1,11 +1,19 @@
 <article class="colorbar bg-gradient-to-r from-indigo-500 via-stone-900 to-pink-500">
 </article>
 
+<app-loading *ngIf="loading"></app-loading>
+
+
 <section class="main bg-stone-900 font-mono">
+    
     <section class="kartta">
-    <div id="map">
-    </div>
+        
+            <div id="map">
+            </div>
+        
+
     </section>
+
     <section class="asema-data">
         
        <h4>Top-10 Lähtöasemat <fa-icon [icon]="ArrowRightFromBracket"></fa-icon> </h4> 
@@ -21,7 +29,10 @@
 
 
     </section>
+   
 </section>
+
+
 <!-- TEST QUERY TO DATABASE GET KEYVALUES -->
 <!--
 <div *ngFor="let x of stations | keyvalue">
