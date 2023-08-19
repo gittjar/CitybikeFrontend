@@ -17,6 +17,9 @@ export class MapscreenComponent implements OnInit {
   stations : any
   RotareLeft = faRotateLeft;
   ArrowRightFromBracket = faArrowRightFromBracket;
+  loading: boolean = true;
+
+
 
   constructor (private hpservice: StationService, private tripservice: BiketripService) {}
 
@@ -48,16 +51,28 @@ export class MapscreenComponent implements OnInit {
 
     this.getTripData();
 
+
+  }
+ // loading window
+  showLoadingWindowForDuration(duration: number) {
+    setTimeout(() => {
+      this.loading = false;
+    }, duration);
   }
 
   getAllStations():void {
-    this.hpservice.getStations().subscribe((data: any) =>
-    this.stations = data)
+    this.hpservice.getStations().subscribe((data: any) => {
+    this.stations = data;
+    this.showLoadingWindowForDuration(2000); // Display loading window for 2 seconds
+    })
+
   }
 
   getTripData(): void{
-    this.tripservice.GetBikeTrips().subscribe((data: any) =>
-    this.jsonData = data)
+    this.tripservice.GetBikeTrips().subscribe((data: any) => {
+    this.jsonData = data;
+  })
+
   }
 
   jsonData: Journey[] = [];
@@ -164,7 +179,7 @@ export class MapscreenComponent implements OnInit {
           google.maps.event.addListener(marker, "click", () => {
            let infowindow = new google.maps.InfoWindow();
             infowindow.setContent(markerContent)
-            infowindow.open(this.map, marker);    
+            infowindow.open(this.map, marker); 
           });
         });
       }); 
