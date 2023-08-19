@@ -40,7 +40,7 @@
         <br>
         Palautusaika ja paikka: {{trip?.return | date:'MMM d, y (HH:mm)'}} : {{trip?.return_station_name}}
         <br>
-        Matkan pituus ja kesto: {{trip?.covered_distance_m / 1000 | number : '1.1-2'}}km ja kesto {{trip?.duration_sec / 60 | number : '1.1-2'}}min
+        Matkan pituus: {{ (trip?.covered_distance_m / 1000) | number : '1.1-2'}}km Matkan kesto: {{ (trip?.duration_sec / 60) | number : '1.0-0'}}min {{ (trip?.duration_sec % 60) }}sec
         <br>
         </article>
 
