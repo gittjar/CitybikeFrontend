@@ -44,12 +44,12 @@
         <br>
         </article>
 
-         <aside class="keskinopeus">
+            <aside class="keskinopeus">
             Keskinopeus (km/h)<br> 
             <span *ngIf="(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) > 15" class="nopeus yli15">{{(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) | number : '1.1-2'}}</span>
             <span *ngIf="(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) < 15" class="nopeus alle15">{{(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) | number : '1.1-2'}}</span>
-
-        </aside>
+            </aside>
+            
         </section>
     
     </article>

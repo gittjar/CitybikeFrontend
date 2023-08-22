@@ -154,7 +154,7 @@ background-image: linear-gradient(to right, #097830 52%, #1B1917 87%);
     }
 
     .pagenappulat {
-        font-size: 0.5rem;
+        font-size: 0.4rem;
     }
 
     .nav-item, .hakunapit {
@@ -170,14 +170,12 @@ background-image: linear-gradient(to right, #097830 52%, #1B1917 87%);
     }
     .tripcard {
         border: rgb(250 204 21) 1px solid;
-        padding: 5px;
+        padding: 3px;
         display: flex;
         flex-direction: row;
-        font-size: 0.6rem;
+        font-size: 0.35rem;
     }
     .nopeus {
-        font-size: 1rem;
+        font-size: 0.65rem;
     }
-
 }
-
