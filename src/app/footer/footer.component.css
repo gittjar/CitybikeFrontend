@@ -1,26 +1,43 @@
-footer{
-    background-color: rgb(28 25 23);
-   /* color: rgb(250 204 21);*/
-    font-size: 1.3rem;
+footer {
+    background-color: rgb(0, 0, 0);
+    font-size: 0.8rem;
     font-weight: 700;
     padding: 2%;
-   }
-
-   a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  footer a {
     margin-left: 1.5%;
+    text-decoration: none;
+    color: #fff;
+  }
 
-   }
-
-/* Tablet CSS rules */ 
-@media only screen and (max-width: 768px) { 
-    footer {
-        display: flex;
-        flex-direction: column;        
-        height: auto;
-
+    footer a:hover {    
+    color: #cecece;
     }
-    a {font-size: 0.8rem;
-        font-weight: 800;
-        margin-top: 0.5%;
-        }
-   }
+  
+  .footer-link {
+    background-clip: text;
+    transition: background 0.3s ease;
+  }
+  
+  .footer-link:hover {
+    background-clip: text;
+  }
+  
+  /* Tablet CSS rules */
+  @media only screen and (max-width: 768px) {
+    footer {
+      flex-direction: column;
+      height: auto;
+    }
+  
+    footer a {
+      font-size: 0.8rem;
+      font-weight: 800;
+      margin-top: 0.5%;
+    }
+  }

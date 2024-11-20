@@ -1,72 +1,146 @@
-/* STICKY NAVBAR Disabled
-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
+/* General styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .navi {
+    position: relative;
     width: 100%;
     z-index: 999;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
   }
+  
   .sticky {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    background-color: #292828;
+    opacity: 0.9;
     z-index: 999;
   }
-  */
-
-
-
-
-  /* Mobile CSS rules */ 
+  
+  /* Hamburger menu styles */
+  .menu-icon {
+    display: none;
+    cursor: pointer;
+  }
+  
+  .menu-icon div {
+    width: 35px;
+    height: 5px;
+    background-color: #fff;
+    margin: 6px 0;
+    transition: 0.4s;
+  }
+  
+  .menu-icon .change:nth-child(1) {
+    background-color: #fff;
+  }
+  
+  .menu-icon .change:nth-child(2) {
+    background-color: #fff;
+    opacity: 1;
+  }
+  
+  .menu-icon .change:nth-child(3) {
+    background-color: #fff;
+  }
+  
+  .menu-icon .change:nth-child(1).change,
+  .menu-icon .change:nth-child(3).change {
+    opacity: 0;
+  }
+  
+  .menu-icon .change:nth-child(2).change {
+    background-color: #ff0000;
+  }
+  
+  /* Menu links styles */
+  .menu-links {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .menu-links a {
+    margin: 0 10px;
+    text-decoration: none;
+  }
+  
+  .menu-links.show {
+    display: block;
+  }
+  
+  /* Mobile CSS rules */
   @media only screen and (max-width: 425px) {
     .navi {
-        display: flex;
-        flex-direction: column;
-        height: auto;
+      flex-direction: column;
     }
-    h1, a {font-size: 1.1rem;
-        font-weight: 700;
-        margin-left: 2%;}
-   }
-
-/* Tablet CSS rules */ 
-@media only screen and (min-width: 426px) { 
+  
+    .menu-icon {
+      display: block;
+    }
+  
+    .menu-links {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+    }
+  
+    .menu-links.show {
+      display: flex;
+    }
+  
+    .menu-links a {
+      margin: 10px 0;
+    }
+  }
+  
+  /* Tablet CSS rules */
+  @media only screen and (min-width: 426px) and (max-width: 768px) {
     .navi {
-        display: flex;
-        flex-direction: row;
-        height: auto;
-
+      flex-direction: row;
     }
-    h1, a {font-size: 1.2rem;
-        font-weight: 800;
-        margin-top: 0.5%;
-        margin-left: 2%;}
-   }
- 
-
-/* Desktop CSS rules */ 
-@media only screen and (min-width: 769px) {
+  
+    .menu-icon {
+      display: block;
+    }
+  
+    .menu-links {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+    }
+  
+    .menu-links.show {
+      display: flex;
+    }
+  
+    .menu-links a {
+      margin: 10px 0;
+    }
+  }
+  
+  /* Desktop CSS rules */
+  @media only screen and (min-width: 769px) {
     .navi {
-        display: flex;
-        flex-direction: row;
-        height: 4.3rem;
+      flex-direction: row;
     }
-    
-    
-    h1 {
-        font-size: 2rem;
-        font-weight: 800;
-        margin-top: 0.5%;
-        margin-left: 2%; 
+  
+    .menu-icon {
+      display: none;
     }
-    
-    a {
-        font-size: 2rem;
-        font-weight: 800;
-        margin-top: 0.5%;
-        margin-left: 2%;
+  
+    .menu-links {
+      display: flex;
+      flex-direction: row;
     }
-    
-
- }
+  
+    .menu-links a {
+      margin: 0 10px;
+    }
+  }

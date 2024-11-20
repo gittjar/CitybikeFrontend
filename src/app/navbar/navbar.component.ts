@@ -7,21 +7,16 @@ import { HostListener } from '@angular/core';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
+  isSticky = false;
+  isMenuOpen = false;
 
-// add a property to check if the navbar is sticky or not
-isSticky = false;
-
-// listen for scroll events on window
-@HostListener('window:scroll', ['$event'])
-onScroll(event: any) {
-  // get the current scroll position
-  const scrollTop = event.target.documentElement.scrollTop;
-  // check if the scroll position is greater than a certain value
-  if (scrollTop > 100) {
-    this.isSticky = true;
-  } else {
-    this.isSticky = false;
+  @HostListener('window:scroll', ['$event'])
+  onScroll(event: any) {
+    const scrollTop = event.target.documentElement.scrollTop;
+    this.isSticky = scrollTop > 100;
   }
-}
 
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
 }
