@@ -3,9 +3,6 @@ import { StationService } from '../station.service';
 import { BiketripService } from '../biketrip.service';
 import { Journey } from '../models/journey.model';
 import { faRotateLeft, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-import { RouterLink } from '@angular/router';
-
-
 
 @Component({
   selector: 'app-mapscreen',
@@ -14,14 +11,14 @@ import { RouterLink } from '@angular/router';
 })
 export class MapscreenComponent implements OnInit {
 
-  stations : any
+  stations: any;
   RotareLeft = faRotateLeft;
   ArrowRightFromBracket = faArrowRightFromBracket;
   loading: boolean = true;
+  topDepartureStations: any[] = [];
+  topReturnStations: any[] = [];
 
-
-
-  constructor (private hpservice: StationService, private tripservice: BiketripService) {}
+  constructor(private hpservice: StationService, private tripservice: BiketripService) {}
 
   // googlemaps
   mapLoaded!: boolean;
@@ -29,7 +26,7 @@ export class MapscreenComponent implements OnInit {
   geocoder = new google.maps.Geocoder();
   infoWindow!: google.maps.InfoWindow;
   options: google.maps.MapOptions = {
-  mapTypeId: google.maps.MapTypeId.ROADMAP,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
     scrollwheel: true,
     center: {
       lat: 60.177038,
@@ -50,139 +47,106 @@ export class MapscreenComponent implements OnInit {
     this.showContent('MyText');
 
     this.getTripData();
-
-
+    this.loadTopDepartureStations();
+    this.loadTopReturnStations();
   }
- // loading window
+
+  // loading window
   showLoadingWindowForDuration(duration: number) {
     setTimeout(() => {
       this.loading = false;
     }, duration);
   }
 
-  getAllStations():void {
+  getAllStations(): void {
     this.hpservice.getStations().subscribe((data: any) => {
-    this.stations = data;
-    this.showLoadingWindowForDuration(2000); // Display loading window for 2 seconds
-    })
-
+      this.stations = data;
+      this.showLoadingWindowForDuration(2000); // Display loading window for 2 seconds
+    });
   }
 
-  getTripData(): void{
-    this.tripservice.GetBikeTrips().subscribe((data: any) => {
-    this.jsonData = data;
-  })
-
+  getTripData(): void {
+    this.tripservice.GetBikeTripsPerPage(1).subscribe((data: any) => {
+      this.jsonData = data;
+      console.log('Trip data loaded:', this.jsonData);
+    });
   }
 
   jsonData: Journey[] = [];
 
-  // top 10 lähtöasemat ja count
-  getTopDepartureStations(): string[] {
-    const stationCountMap = this.jsonData.reduce((countMap, journey) => {
-      const station = journey.departure_station_name;
-      countMap.set(station, (countMap.get(station) || 0) + 1);
-      return countMap;
-    }, new Map<string, number>());
-
-    return Array.from(stationCountMap.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10)
-      .map(entry => entry[0]);
+  loadTopDepartureStations(): void {
+    this.tripservice.GetTopDepartureStations().subscribe((data: any) => {
+      this.topDepartureStations = data;
+      console.log('Top Departure Stations:', data);
+    });
   }
 
-  getDepartureStationCount(station: string): number {
-    return this.jsonData.filter(journey => journey.departure_station_name === station).length;
+  loadTopReturnStations(): void {
+    this.tripservice.GetTopReturnStations().subscribe((data: any) => {
+      this.topReturnStations = data;
+      console.log('Top Return Stations:', data);
+    });
   }
-
-  // top 10 palautusasemat ja count
-  getTopReturnStations(): string[] {
-    const stationCountMap = this.jsonData.reduce((countMap, journey) => {
-      const station = journey.return_station_name;
-      countMap.set(station, (countMap.get(station) || 0) + 1);
-      return countMap;
-    }, new Map<string, number>());
-
-    return Array.from(stationCountMap.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10)
-      .map(entry => entry[0]);
-  }
-
-  getReturnStationCount(station: string): number {
-    return this.jsonData.filter(journey => journey.return_station_name === station).length;
-  }
-  
 
   // google maps configurations
   markers = [] as any;
 
   showContent(contentType: string) {
+    this.markers = [];
 
-    this.markers = []
-  
-    let content: any = null
-  
-  
-    if(contentType === "MyText") {
-     // content = this.placeservice.getPlace(this.textid);
-     content = this.hpservice.getStations();
-    }
-    else {
+    let content: any = null;
+
+    if (contentType === "MyText") {
+      content = this.hpservice.getStations();
+    } else {
       console.error("unknown content type");
-      return
+      return;
     }
-  
-    console.log("click")
-  
+
+    console.log("click");
+
     content.subscribe((response: any) => {
-      
-        let arr = response as Array<any>
-  
-        arr.forEach((citybikeasema: any) => {
-          this.stations = response;
-          
+      let arr = response as Array<any>;
 
-          
-          let marker = new google.maps.Marker({
-            position: {
-              lat: citybikeasema?.y,
-              lng: citybikeasema?.x,
-            },
-            label : {text: citybikeasema?.nimi,
-            color: 'Navy', fontWeight: '700', fontFamily: 'Arial', fontSize: '14px' },
-            title : citybikeasema?.osoite + ', ' + citybikeasema?.kaupunki,
-            opacity: 1.2,
-            animation : google.maps.Animation.DROP,
-            icon: {url: '/assets/location-pin.png'},
-          });
+      arr.forEach((citybikeasema: any) => {
+        this.stations = response;
 
-          let markerContent = '<div class="map-infowindow">' +
-                             `<div class="map-infowindow-title">${citybikeasema.nimi}</div>` + 
-                             `<div class="map-infowindow-content">${citybikeasema?.osoite}, ${citybikeasema?.kaupunki}</div>` + 
-                             
-                             `<hr>` + `<br>`+ 
-                             `<div class="map-infowindow-content">Operaattori: ${citybikeasema?.operaattor}</div>` + 
-                             `<div class="map-infowindow-content">Kapasiteetti: ${citybikeasema?.kapasiteet} kpl</div>` +  
-                             
-                             `<div class="map-infowindow-content">
+        let marker = new google.maps.Marker({
+          position: {
+            lat: citybikeasema?.y,
+            lng: citybikeasema?.x,
+          },
+          label: {
+            text: citybikeasema?.nimi,
+            color: 'Navy', fontWeight: '700', fontFamily: 'Arial', fontSize: '14px'
+          },
+          title: citybikeasema?.osoite + ', ' + citybikeasema?.kaupunki,
+          opacity: 1.2,
+          animation: google.maps.Animation.DROP,
+          icon: { url: '/assets/location-pin.png' },
+        });
+
+        let markerContent = '<div class="map-infowindow">' +
+          `<div class="map-infowindow-title">${citybikeasema.nimi}</div>` +
+          `<div class="map-infowindow-content">${citybikeasema?.osoite}, ${citybikeasema?.kaupunki}</div>` +
+          `<hr>` + `<br>` +
+          `<div class="map-infowindow-content">Operaattori: ${citybikeasema?.operaattor}</div>` +
+          `<div class="map-infowindow-content">Kapasiteetti: ${citybikeasema?.kapasiteet} kpl</div>` +
+          `<div class="map-infowindow-content">
                              <a href="station-details/${citybikeasema?.id}">
                                Katso lisätiedot >
                              </a>
-                           </div>` +  
+                           </div>` +
+          '</div>';
 
-                              '</div>'
-            
-                            
-          // To add the marker to the map, call setMap();
-          marker.setMap(this.map);
-          google.maps.event.addListener(marker, "click", () => {
-           let infowindow = new google.maps.InfoWindow();
-            infowindow.setContent(markerContent)
-            infowindow.open(this.map, marker); 
-          });
+        // To add the marker to the map, call setMap();
+        marker.setMap(this.map);
+        google.maps.event.addListener(marker, "click", () => {
+          let infowindow = new google.maps.InfoWindow();
+          infowindow.setContent(markerContent);
+          infowindow.open(this.map, marker);
         });
-      }); 
+      });
+    });
   }
-
 }

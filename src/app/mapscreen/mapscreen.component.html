@@ -3,35 +3,26 @@
 
 <app-loading *ngIf="loading"></app-loading>
 
-
 <section class="main bg-stone-900 font-mono">
     
     <section class="kartta">
-        
-            <div id="map">
-            </div>
-        
-
+        <div id="map"></div>
     </section>
 
     <section class="asema-data">
-        
-       <h4>Top-10 Lähtöasemat <fa-icon [icon]="ArrowRightFromBracket"></fa-icon> </h4> 
-          <div class="top-asemat" *ngFor="let station of getTopDepartureStations()">
-            {{ station }} ({{ getDepartureStationCount(station) }})
-          </div>
+        <h4>Top-10 Lähtöasemat <fa-icon [icon]="ArrowRightFromBracket"></fa-icon></h4> 
+        <div class="top-asemat" *ngFor="let name of topDepartureStations">
+            {{ name.station }} ({{ name.count }})
+        </div>
         
         <br>
-        <h4>TOP-10 Palautusasemat <fa-icon [icon]="RotareLeft"></fa-icon> </h4>
-        <div class="top-asemat" *ngFor="let station of getTopReturnStations()">
-            {{station}} ({{ getReturnStationCount(station) }})
+        <h4>TOP-10 Palautusasemat <fa-icon [icon]="RotareLeft"></fa-icon></h4>
+        <div class="top-asemat" *ngFor="let name of topReturnStations">
+            {{ name.station }} ({{ name.count }})
         </div>
-
-
     </section>
    
 </section>
-
 
 <!-- TEST QUERY TO DATABASE GET KEYVALUES -->
 <!--

@@ -4,26 +4,20 @@
 <section class="main font-mono bg-stone-900">
 
     <article class="station">
-    <p *ngIf="stationdetail"></p>
-    <h1>
-    {{stationdetail.nimi}}
-    </h1>
-    <h4>
-        {{stationdetail.osoite}}, {{stationdetail.kaupunki}}
-    </h4>
-   
-    <h4>
-        Kapasiteetti: {{stationdetail.kapasiteet}} kpl
-    </h4>
-    <h4>Matkan keskipituus: {{averageDistance/1000 | number}}km</h4>
-
-    <br>
-    <h4>Top 5 Palautusasemaa</h4>
-    <div *ngFor="let returnStation of getTopReturnStations(stationdetail.nimi)">
-       
-        {{ returnStation }} 
-
-    </div>
+        <div *ngIf="errorMessage">
+            <p>{{ errorMessage }}</p>
+          </div>
+          <div *ngIf="stationdetail && !errorMessage">
+            <h1>{{ stationdetail.nimi }}</h1>
+            <h4>Kapasiteetti: {{stationdetail.kapasiteet}} kpl</h4>
+            <h4>Matkan keskipituus: {{averageDistance/1000 | number}}km</h4>
+          
+            <br>
+            <h4>Top 5 Palautusasemaa</h4>
+            <div *ngFor="let returnStation of getTopReturnStations(stationdetail.nimi)">
+              <a [routerLink]="['/station-details', returnStation.id]">{{ returnStation.name }}</a>
+            </div>
+          </div>
 
     <figure>
         <img class="stationkuva" src="{{stationdetail?.kuva}}">
