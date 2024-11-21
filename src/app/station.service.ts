@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,6 @@ export class StationService {
   BASEURL = 'https://corsproxy.io/?https://citybikeapi.azurewebsites.net/api/Stations/';
   
   public getStations():any {
-    // for localhos
     //const stations = this.http.get('/stations');
     const stations = this.http.get(this.BASEURL);
     return stations;
@@ -23,6 +23,10 @@ export class StationService {
    // const station = this.http.get('stations/'+id)
     const station = this.http.get(this.BASEURL+id);
     return station;
+  }
+
+  public getStationDetails(id: number): Observable<any> {
+    return this.http.get(`${this.BASEURL}${id}/details`);
   }
 
 
