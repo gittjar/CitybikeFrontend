@@ -13,10 +13,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class StationDetailsComponent implements OnInit {
 
   stationdetail: any;
-  getTopDepartureStations: any;
   jsonData: Journey[] = [];
   averageDistance: any;
   errorMessage: string | null = null;
+  topReturnStations: { id: number, name: string, rank: number }[] = [];
 
   constructor(
     private actRoute: ActivatedRoute,
@@ -26,11 +26,13 @@ export class StationDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = Number(this.actRoute.snapshot.paramMap.get('id'));
-    if (id) {
-      this.getStationDetail(id);
-      this.getTripData(id);
-    }
+    this.actRoute.paramMap.subscribe(params => {
+      const id = Number(params.get('id'));
+      if (id) {
+        this.getStationDetail(id);
+        this.getTripData(id);
+      }
+    });
   }
 
   getStationDetail(id: number): void {
@@ -53,6 +55,8 @@ export class StationDetailsComponent implements OnInit {
     this.tripservice.GetTripsByStationId(stationId).subscribe((data: Journey[]) => {
       this.jsonData = data;
       this.calculateAverageDistance();
+      this.topReturnStations = this.getTopReturnStations(this.stationdetail.nimi);
+      this.displayMap();
     });
   }
 
@@ -61,7 +65,7 @@ export class StationDetailsComponent implements OnInit {
     this.averageDistance = totalDistance / this.jsonData.length;
   }
 
-  getTopReturnStations(departureStation: string): { id: number, name: string }[] {
+  getTopReturnStations(departureStation: string): { id: number, name: string, rank: number }[] {
     const returnStations = this.jsonData
       .filter(journey => journey.departure_station_name === departureStation)
       .map(journey => ({ id: journey.return_station_id, name: journey.return_station_name }));
@@ -75,22 +79,22 @@ export class StationDetailsComponent implements OnInit {
     return Array.from(stationCountMap.entries())
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)
-      .map(entry => {
+      .map((entry, index) => {
         const [id, name] = entry[0].split('-');
-        return { id: Number(id), name };
+        return { id: Number(id), name, rank: index + 1 };
       });
   }
 
   displayMap(): void {
     const xCoordinate = this.stationdetail.x;
     const yCoordinate = this.stationdetail.y;
-
+  
     const mapOptions: google.maps.MapOptions = {
       center: { lat: yCoordinate, lng: xCoordinate },
       zoom: 15,
     };
     const map = new google.maps.Map(document.getElementById('map') as HTMLElement, mapOptions);
-
+  
     const markerOptions: google.maps.MarkerOptions = {
       position: { lat: yCoordinate, lng: xCoordinate },
       map: map,
@@ -98,6 +102,20 @@ export class StationDetailsComponent implements OnInit {
       icon: { url: '/assets/bike.png', scaledSize: new google.maps.Size(50, 50) }
     };
     const marker = new google.maps.Marker(markerOptions);
+  
+    // Add numbered markers for top 5 return stations
+    this.topReturnStations.forEach(station => {
+      const returnStation = this.jsonData.find(journey => journey.return_station_id === station.id);
+      if (returnStation) {
+        const markerOptions: google.maps.MarkerOptions = {
+          position: { lat: returnStation.return_station_lat, lng: returnStation.return_station_lng },
+          map: map,
+          label: `${station.rank}`,
+          title: station.name,
+        };
+        new google.maps.Marker(markerOptions);
+      }
+    });
   }
 
   onBack(): void {

@@ -1,41 +1,60 @@
-<article class="colorbar">
-</article>
+<article class="colorbar"></article>
 
-<section class="main font-mono bg-stone-900">
+<section class="main font-mono bg-stone-900 text-white p-4 mb-20">
 
-    <article class="station">
-        <div *ngIf="errorMessage">
+    <article class="station bg-stone-800 p-4 rounded-lg shadow-lg">
+        <div *ngIf="errorMessage" class="text-red-500">
             <p>{{ errorMessage }}</p>
-          </div>
-          <div *ngIf="stationdetail && !errorMessage">
-            <h1>{{ stationdetail.nimi }}</h1>
-            <h4>Kapasiteetti: {{stationdetail.kapasiteet}} kpl</h4>
-            <h4>Matkan keskipituus: {{averageDistance/1000 | number}}km</h4>
-          
-            <br>
-            <h4>Top 5 Palautusasemaa</h4>
-            <div *ngFor="let returnStation of getTopReturnStations(stationdetail.nimi)">
-              <a [routerLink]="['/station-details', returnStation.id]">{{ returnStation.name }}</a>
+        </div>
+        <div *ngIf="stationdetail && !errorMessage">
+            <h1 class="text-3xl font-bold mb-2">{{ stationdetail.nimi }}</h1>
+            <div class="bg-stone-700 p-4 rounded-lg mb-4">
+                <h4 class="text-xl font-semibold">Kapasiteetti: {{stationdetail.kapasiteet}} kpl</h4>
+                <div *ngIf="!averageDistance" class="text-red-500">
+                    <p>Ei tarpeeksi dataa tuottaa keskimääräistä kilometrilukemaa!</p>
+                </div>
+                <div *ngIf="averageDistance">
+                    <h4 class="text-xl font-semibold">Matkan keskipituus: {{averageDistance/1000 | number}} km</h4>
+                </div>
             </div>
-          </div>
+            <div class="bg-stone-700 p-4 rounded-lg mb-4">
+                <h4 class="text-xl font-semibold mb-2">Top 5 Palautusasemaa</h4>
+                <div *ngIf="topReturnStations.length < 5" class="text-red-500">
+                    <p>Ei tarpeeksi dataa tuottaa Top-5 asemat luetteloa!</p>
+                </div>
+                <table *ngIf="topReturnStations.length >= 5" class="w-full text-left">
+                    <thead>
+                        <tr>
+                            <th class="pb-2">#</th>
+                            <th class="pb-2">Asema</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let returnStation of topReturnStations">
+                            <td class="pb-2">{{ returnStation.rank }}</td>
+                            <td class="pb-2">
+                                <a [routerLink]="['/station-details', returnStation.id]" class="text-pink-500 hover:underline">{{ returnStation.name }}</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <figure>
-        <img class="stationkuva" src="{{stationdetail?.kuva}}">
-    </figure>
+        <figure class="mb-4">
+            <img class="stationkuva w-full rounded-lg" src="{{stationdetail?.kuva}}">
+        </figure>
 
-
-    <button (click)='onBack()' class="nappula relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">
-        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-            Takaisin kartalle
-        </span>
-      </button>
-
+        <button (click)='onBack()' class="nappula relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">
+            <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                Takaisin kartalle
+            </span>
+        </button>
     </article>
 
-    <article class="station-on-map">
-        <div id="map"></div>
+    <article class="station-on-map bg-stone-800 p-4 rounded-lg shadow-lg">
+        <div id="map" class="rounded-lg mb-4"></div>
         <p>Coordinates: {{ stationdetail.x }}, {{ stationdetail.y }}</p>
     </article>
 
-   
 </section>
