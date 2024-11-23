@@ -7,7 +7,6 @@ import { Journey } from './models/journey.model';
   providedIn: 'root'
 })
 export class BiketripService {
-
   private apiUrl = 'https://corsproxy.io/?https://citybikeapi.azurewebsites.net/api/CitybikeTripsMay2021';
 
   constructor(private http: HttpClient) { }

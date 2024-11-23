@@ -2,22 +2,22 @@
 
 <section class="main font-mono bg-stone-900 text-white p-4 mb-20">
 
-    <article class="station bg-stone-800 p-4 rounded-lg shadow-lg">
-        <div *ngIf="errorMessage" class="text-red-500">
+    <article class="station bg-stone-800 p-6 rounded-lg shadow-lg">
+        <div *ngIf="errorMessage" class="text-red-500 mb-4">
             <p>{{ errorMessage }}</p>
         </div>
         <div *ngIf="stationdetail && !errorMessage">
-            <h1 class="text-3xl font-bold mb-2">{{ stationdetail.nimi }}</h1>
-            <div class="bg-stone-700 p-4 rounded-lg mb-4">
-                <h4 class="text-xl font-semibold">Kapasiteetti: {{stationdetail.kapasiteet}} kpl</h4>
+            <h1 class="text-3xl font-bold mb-4">{{ stationdetail.nimi }}</h1>
+            <div class="bg-stone-700 p-4 rounded-lg mb-6">
+                <h4 class="text-xl font-semibold mb-2">Kapasiteetti: {{stationdetail.kapasiteet}} kpl</h4>
                 <div *ngIf="!averageDistance" class="text-red-500">
                     <p>Ei tarpeeksi dataa tuottaa keskimääräistä kilometrilukemaa!</p>
                 </div>
                 <div *ngIf="averageDistance">
-                    <h4 class="text-xl font-semibold">Matkan keskipituus: {{averageDistance/1000 | number}} km</h4>
+                    <h4 class="text-xl font-semibold">Matkan keskipituus: {{averageDistance / 1000 | number}} km</h4>
                 </div>
             </div>
-            <div class="bg-stone-700 p-4 rounded-lg mb-4">
+            <div class="bg-stone-700 p-4 rounded-lg mb-6">
                 <h4 class="text-xl font-semibold mb-2">Top 5 Palautusasemaa</h4>
                 <div *ngIf="topReturnStations.length < 5" class="text-red-500">
                     <p>Ei tarpeeksi dataa tuottaa Top-5 asemat luetteloa!</p>
@@ -41,8 +41,9 @@
             </div>
         </div>
 
-        <figure class="mb-4">
-            <img class="stationkuva w-full rounded-lg" src="{{stationdetail?.kuva}}">
+        <figure class="mb-6">
+            <img *ngIf="stationdetail?.kuva" class="stationkuva w-full rounded-lg" [src]="stationdetail?.kuva" alt="Station Image">
+            <figcaption *ngIf="!stationdetail?.kuva" class="text-red-500">Image should be here but not uploaded!</figcaption>
         </figure>
 
         <button (click)='onBack()' class="nappula relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">
@@ -52,9 +53,10 @@
         </button>
     </article>
 
-    <article class="station-on-map bg-stone-800 p-4 rounded-lg shadow-lg">
-        <div id="map" class="rounded-lg mb-4"></div>
-        <p>Coordinates: {{ stationdetail.x }}, {{ stationdetail.y }}</p>
+    <article class="station-on-map bg-stone-800 p-6 rounded-lg shadow-lg">
+        <div id="map" class="rounded-lg mb-4" style="height: 400px;"></div>
+        <p *ngIf="stationdetail">Coordinates: {{ stationdetail.x }}, {{ stationdetail.y }}</p>
+        <p *ngIf="!stationdetail">Loading station details...</p>
     </article>
 
 </section>
