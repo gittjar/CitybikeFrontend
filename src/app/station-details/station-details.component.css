@@ -1,16 +1,18 @@
 .main {
     display: flex;
     flex-direction: row;
-    height: 77vh;
+    min-height: 77vh;
     gap: 2%;
 }
 
 .station {
     width: 40%;
+    height: auto;
 }
 
 .station-on-map {
     width: 60%;
+    height: auto;
 }
 
 .colorbar {

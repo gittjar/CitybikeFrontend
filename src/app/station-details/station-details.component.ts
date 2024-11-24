@@ -111,16 +111,16 @@ export class StationDetailsComponent implements OnInit {
 
   displayMap(): void {
     if (!this.stationdetail) return;
-
+  
     const xCoordinate = this.stationdetail.x;
     const yCoordinate = this.stationdetail.y;
-
+  
     const mapOptions: google.maps.MapOptions = {
       center: { lat: yCoordinate, lng: xCoordinate },
       zoom: 13,
     };
     const map = new google.maps.Map(document.getElementById('map') as HTMLElement, mapOptions);
-
+  
     const markerOptions: google.maps.MarkerOptions = {
       position: { lat: yCoordinate, lng: xCoordinate },
       map: map,
@@ -128,7 +128,7 @@ export class StationDetailsComponent implements OnInit {
       icon: { url: '/assets/bike.png', scaledSize: new google.maps.Size(50, 50) }
     };
     new google.maps.Marker(markerOptions);
-
+  
     this.topReturnStations.forEach(station => {
       const coordinates = this.getStationCoordinatesByName(station.name);
       if (coordinates) {
@@ -139,7 +139,85 @@ export class StationDetailsComponent implements OnInit {
           title: station.name,
         };
         new google.maps.Marker(returnMarkerOptions);
+  
+        // Draw polyline
+        const polyline = new google.maps.Polyline({
+          path: [
+            { lat: yCoordinate, lng: xCoordinate },
+            { lat: coordinates.y, lng: coordinates.x }
+          ],
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2,
+        });
+        polyline.setMap(map);
+  
+        // Calculate distance
+        const distance = this.calculateDistance(yCoordinate, xCoordinate, coordinates.y, coordinates.x);
+  
+        // Add label in the center of the polyline
+        const midPoint = {
+          lat: (yCoordinate + coordinates.y) / 2,
+          lng: (xCoordinate + coordinates.x) / 2
+        };
+  
+        // Create a custom overlay for the distance label
+        class DistanceLabel extends google.maps.OverlayView {
+          div: HTMLDivElement | null = null;
+  
+          override onAdd() {
+            const div = document.createElement('div');
+            div.style.position = 'absolute';
+            div.style.background = '#FFFFFF';
+            div.style.border = '1px solid #000000';
+            div.style.padding = '2px';
+            div.style.fontSize = '12px';
+            div.style.fontWeight = 'bold';
+            div.style.color = '#000000';
+            div.innerHTML = `${distance.toFixed(2)}m`;
+            this.div = div;
+            const panes = this.getPanes();
+            if (panes) {
+              panes.overlayLayer.appendChild(div);
+            }
+          }
+  
+          override draw() {
+            const overlayProjection = this.getProjection();
+            const position = overlayProjection.fromLatLngToDivPixel(new google.maps.LatLng(midPoint.lat, midPoint.lng));
+            if (position && this.div) {
+              this.div.style.left = position.x + 'px';
+              this.div.style.top = position.y + 'px';
+            }
+          }
+  
+          override onRemove() {
+            if (this.div) {
+              this.div.parentNode?.removeChild(this.div);
+              this.div = null;
+            }
+          }
+        }
+  
+        const distanceLabel = new DistanceLabel();
+        distanceLabel.setMap(map);
       }
     });
+  }
+  
+  calculateDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
+    const R = 6371000; // Radius of the Earth in meters
+    const dLat = this.deg2rad(lat2 - lat1);
+    const dLng = this.deg2rad(lng2 - lng1);
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+              Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in meters
+  }
+  
+  deg2rad(deg: number): number {
+    return deg * (Math.PI / 180);
   }
 }
