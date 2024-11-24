@@ -1,58 +1,52 @@
 .main {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+    .main {
+        flex-direction: row;
+    }
 }
 
 .colorbar {
     height: 6px;
-
 }
 
 .kartta {
-    width: 80%;
     border: 1px solid black;
-    margin: 0.5%;
-}
-
-.headlink {
-    color:rgb(16, 20, 23);
 }
 
 #map {
-    height: 600px; /* The height is 400 pixels */
-    width: 100%; /* The width is the width of the web page */
-    margin: 3px;
+    width: 100%;
 }
 
 .asema-data {
-    width: 20%;
     margin: 0.5%;
 }
 
-h4 {
-    color: rgb(250 204 21);
+h5 {
+    color: rgb(236, 72, 153); /* pink-500 */
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
 }
 
 .top-asemat {
     padding: 0.4%;
-    color: rgb(250 204 21);
-    font-size: 0.8rem;
+    color: rgb(255, 147, 201); 
+    font-size: 0.9rem;
 }
 
-/* Mobile CSS rules */ 
-@media only screen and (max-width: 425px) 
-{ 
-.main {
-    display: flex;
-    flex-direction: column;
+@media only screen and (max-width: 425px) {
+    .main {
+        flex-direction: column;
+    }
+
+    .kartta, .asema-data {
+        width: 100%;
+        margin: 0.5%;
+    }
 }
-
-.kartta, .asema-data {
-    width: 100%;
-    margin: 0.5%;
-}
-
- }
-
