@@ -1,63 +1,48 @@
-<article class="colorbar">
-</article>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Layout</title>
 
-<section class="main bg-stone-900 font-mono">
+</head>
+<body>
+  <article class="colorbar"></article>
 
+  <section class="main">
     <aside class="hakupalkki">
-        <div class="nav-item">
-            Etsi ja lajittele <fa-icon [icon]="MagnifyingGlass"></fa-icon>            
-            <input
-            type="text"
-            class="searchTerm"
-            placeholder="Kirjoita hakusana.."
-            [(ngModel)]="term"
-            />
-        </div>
+      <div class="nav-item">
+        Etsi ja lajittele <fa-icon [icon]="MagnifyingGlass"></fa-icon>
+        <input type="text" class="searchTerm" placeholder="Kirjoita hakusana.." [(ngModel)]="term" />
+      </div>
 
-        <div class="hakunapit">
-
-            <button (click)="sortA(false)" class="nappi nappi-top bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400">Pisin matka <fa-icon [icon]="ArrowRight"></fa-icon>
-            </button>
-            <button (click)="sortA(true)" class="nappi nappi-middle bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400"><fa-icon [icon]="ArrowLeft"></fa-icon> Lyhyin matka</button>
-            <button (click)="sortB(false)" class="nappi nappi-middle bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400">Pisin aika <fa-icon [icon]="ArrowRight"></fa-icon>
-            </button>
-            <button (click)="sortB(true)" class="nappi nappi-bottom bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400"><fa-icon [icon]="ArrowLeft"></fa-icon> Lyhyin aika</button>
-        </div>
-
-
+      <div class="hakunapit">
+        <button (click)="sortA(false)" class="nappi nappi-top bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400">Pisin matka</button>
+        <button (click)="sortA(true)" class="nappi nappi-middle bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400">Lyhyin matka</button>
+        <button (click)="sortB(false)" class="nappi nappi-middle bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400">Pisin aika</button>
+        <button (click)="sortB(true)" class="nappi nappi-bottom bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400">Lyhyin aika</button>
+      </div>
     </aside>
-    <article class="lista">
-            <aside class="flex justify-between pagenappulat">
-             <button class="pagenappi" (click)="onPageChangeMinus()"><fa-icon [icon]="ChevronLeft"></fa-icon> Edellinen sivu</button>
-               Olet sivulla: {{newPageNumber}} / {{totalPages}}<br>
-               Kohteita yhteensä: {{totalItems}}
-               <button class="pagenappi" (click)="onPageChangePlus()">Seuraava sivu <fa-icon [icon]="ChevronRight"></fa-icon></button>
-              </aside>
-        <section *ngFor="let trip of citybiketripsmay2021?.data | filter:term" class="tripcard justify-between">
-        <article>
 
-        Lähtöaika ja paikka: {{trip?.departure | date:'MMM d, y (HH:mm)'}} : {{trip?.departure_station_name}}
-        <br>
-        Palautusaika ja paikka: {{trip?.return | date:'MMM d, y (HH:mm)'}} : {{trip?.return_station_name}}
-        <br>
-        Matkan pituus: {{ (trip?.covered_distance_m / 1000) | number : '1.1-2'}}km Matkan kesto: {{ (trip?.duration_sec / 60) | number : '1.0-0'}}min {{ (trip?.duration_sec % 60) }}sec
-        <br>
+    <article class="lista">
+      <section *ngFor="let trip of citybiketripsmay2021 | filter:term" class="tripcard justify-between">
+        <article>
+          Lähtöaika ja paikka: {{trip?.departure | date:'MMM d, y (HH:mm)'}} : {{trip?.departure_station_name}}<br />
+          Palautusaika ja paikka: {{trip?.return | date:'MMM d, y (HH:mm)'}} : {{trip?.return_station_name}}<br />
+          Matkan pituus: {{ (trip?.covered_distance_m / 1000) | number : '1.1-2'}}km Matkan kesto: {{ (trip?.duration_sec / 60) | number : '1.0-0'}}min {{ (trip?.duration_sec % 60) }}sec<br />
         </article>
 
-            <aside class="keskinopeus">
-            Keskinopeus (km/h)<br> 
-            <span *ngIf="(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) > 15" class="nopeus yli15">{{(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) | number : '1.1-2'}}</span>
-            <span *ngIf="(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) < 15" class="nopeus alle15">{{(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) | number : '1.1-2'}}</span>
-            </aside>
-            
-        </section>
-    
-    </article>
-</section>
+        <aside class="keskinopeus">
+          Keskinopeus (km/h)<br />
+          <span *ngIf="(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) > 15" class="nopeus yli15">{{(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) | number : '1.1-2'}}</span>
+          <span *ngIf="(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) < 15" class="nopeus alle15">{{(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) | number : '1.1-2'}}</span>
+        </aside>
+      </section>
 
-<!--
-<div *ngFor="let x of citybiketripsmay2021 | keyvalue">
-    <div>{{x | json}}</div>
-    Object Key {{x.key}} and value: {{x.value}}
-</div>
--->
+      <button (click)="loadMoreTrips()" class="show-more">Näytä lisää</button>
+    </article>
+  </section>
+
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

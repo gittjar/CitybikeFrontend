@@ -1,181 +1,176 @@
+:root {
+  --primary-color: #266BC4;
+  --secondary-color: #1FFF8F;
+  --highlight-color: rgb(250, 204, 21);
+  --text-color: rgb(255, 255, 255);
+  --background-color: rgb(44, 35, 28);
+  --border-color: #ccc;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+}
+
 .colorbar {
-    height: 6px;
-    background-image: -webkit-gradient(
-	linear,
-	right top,
-	left top,
-	color-stop(0, #266BC4),
-	color-stop(0.95, #1FFF8F)
-);
-background-image: -o-linear-gradient(right, #266BC4 0%, #1FFF8F 95%);
-background-image: -moz-linear-gradient(right, #266BC4 0%, #1FFF8F 95%);
-background-image: -webkit-linear-gradient(right, #266BC4 0%, #1FFF8F 95%);
-background-image: -ms-linear-gradient(right, #266BC4 0%, #1FFF8F 95%);
-background-image: linear-gradient(to right, #266BC4 0%, #1FFF8F 95%);
+  height: 6px;
+  background: linear-gradient(to right, var(--primary-color) 0%, var(--secondary-color) 95%);
 }
 
 .main {
-    display: flex;
-    flex-direction: row;
-    padding-top: 2%;
+  display: flex;
+  flex-direction: row;
+  padding-top: 2%;
+  gap: 2%;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .hakupalkki {
-    width: 20%;
-    color: rgb(28 25 23);
-    margin-top: 2%;
+  width: 20%;
+  margin-top: 2%;
 }
+
 .nav-item {
-    color: rgb(250 204 21);    
-    margin-left: 7%;
+  color: wheat;
+  margin-left: 7%;
 
 }
 
-/*Inputin säädöt*/
 input {
-    color: rgb(250 204 21);
-    width: 90%;
-    padding: 10px;
-    box-shadow: 1px 2px;
-    margin-top: 3%;
-    border: 3px solid #000;
-  }
+  color: var(--highlight-color);
+  width: 90%;
+  padding: 10px;
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 3%;
+  border: 3px solid #000;
+  border-radius: 4px;
+}
 
-  .searchTerm{
-    height: 50px;
-    margin-bottom: 4px;
-    border-radius: 8px;
-    color: rgb(28 25 23);
+.searchTerm {
+  height: 50px;
+  margin-bottom: 4px;
+  border-radius: 1px;
+  color: var(--text-color);
 }
 
 .hakunapit {
-    margin-left: 7%;
+  margin-left: 7%;
 }
+
 .pagenappi {
-    margin: 0.4%;
-    padding: 1%;
-    border: 1px rgb(250 204 21) solid;
+  margin: 0.4%;
+  padding: 1%;
+  border: 1px solid var(--highlight-color);
+  transition: border 0.3s;
 }
 
 .pagenappi:hover {
-    border: 1px rgb(250 204 21) dashed;
+  border: 1px dashed var(--highlight-color);
 }
 
-.nappi-top {
-    width: 90%;
-    height: 45px;
-    border-radius: 8px 8px 0px 0px;
-    margin-bottom: 0.4%;
+
+.nappi-middle, .nappi-top, .nappi-bottom
+ {
+  width: 90%;
+  height: 45px;
+  margin-bottom: 0.4%;
+  border-radius: 0px;
+  border: 1px solid var(--border-color);
 }
-.nappi-middle {
-    width: 90%;
-    height: 45px;
-    margin-bottom: 0.4%;
-}
-.nappi-bottom {
-    width: 90%;
-    height: 45px;
-    border-radius: 0px 0px 8px 8px;
-    margin-bottom: 0.4%;
-}
+
 
 .lista {
-    width: 80%;
-    color: rgb(250 204 21);
-    margin-right: 1%;
-    margin-top: 2%;
-
-
+  width: 80%;
+  margin-right: 1%;
+  margin-top: 2%;
 }
 
 .tripcard {
-    border: rgb(250 204 21) 1px solid;
-    margin: 0.5%;
-    padding: 5px;
-    display: flex;
-    flex-direction: row;
+  border: 1px solid peru;
+  margin: 0.5%;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.3s, color 0.3s;
+  color: wheat;
 }
 
 .tripcard:hover {
-    background-color: rgb(44, 35, 28);
-    color: rgb(250 204 21);
-}
+  color: rgb(247, 245, 242);
+    background-color: rgb(49, 45, 42);
+    }
 
 .keskinopeus {
-    margin-left: 3%;
+  margin-left: 3%;
 }
 
 .nopeus {
-    font-size: 2rem;
+  font-size: 2rem;
 }
 
 .alle15 {
-    padding: 2%;
-    background-image: -webkit-gradient(
-	linear,
-	right top,
-	left top,
-	color-stop(0.5, #1C1917),
-	color-stop(1, #C0AB09)
-);
-background-image: -o-linear-gradient(left, #1C1917 50%, #C0AB09 100%);
-background-image: -moz-linear-gradient(left, #1C1917 50%, #C0AB09 100%);
-background-image: -webkit-linear-gradient(left, #1C1917 50%, #C0AB09 100%);
-background-image: -ms-linear-gradient(left, #1C1917 50%, #C0AB09 100%);
-background-image: linear-gradient(to left, #1C1917 50%, #C0AB09 100%);
+  padding: 2%;
+  background: linear-gradient(to left, #1C1917 50%, #C0AB09 100%);
 }
 
-.yli15{
-    padding: 2%;
-    background-image: -webkit-gradient(
-	linear,
-	left top,
-	right top,
-	color-stop(0.52, #097830),
-	color-stop(0.87, #1B1917)
-);
-background-image: -o-linear-gradient(right, #097830 52%, #1B1917 87%);
-background-image: -moz-linear-gradient(right, #097830 52%, #1B1917 87%);
-background-image: -webkit-linear-gradient(right, #097830 52%, #1B1917 87%);
-background-image: -ms-linear-gradient(right, #097830 52%, #1B1917 87%);
-background-image: linear-gradient(to right, #097830 52%, #1B1917 87%);
+.yli15 {
+  padding: 2%;
+  background: linear-gradient(to right, #097830 52%, #1B1917 87%);
 }
 
-/* Mobile + tablet CSS rules */ 
-@media only screen and (max-width: 768px) { 
-    .main {
-        display: flex;
-        flex-direction: column;
-    }
-    .hakupalkki {
-        width:100%;
-        margin-left: 1%;
-        margin-right: 1%;
-    }
+.show-more {
+  width: 20%;
+  height: 50px;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: linear-gradient(to right, #b84f09 50%, #C0AB09 100%);
+  color: var(--text-color);
+  transition: background 0.3s, color 0.3s;
+}
 
-    .pagenappulat {
-        font-size: 0.4rem;
-    }
+.show-more:hover {
+  background: linear-gradient(to right, #C0AB09 50%, #b84f09 100%);
+  color: #000;
+}
 
-    .nav-item, .hakunapit {
-        text-align: center;
-        margin-left: 1%;
-        margin-right: 1%;
-        font-size: 0.7rem;
-    }
-    .lista {
-        width: auto;
-        margin-left: 1%;
-        margin-right: 1%;
-    }
-    .tripcard {
-        border: rgb(250 204 21) 1px solid;
-        padding: 3px;
-        display: flex;
-        flex-direction: row;
-        font-size: 0.35rem;
-    }
-    .nopeus {
-        font-size: 0.65rem;
-    }
+@media only screen and (max-width: 768px) {
+  .main {
+    flex-direction: column;
+  }
+
+  .hakupalkki {
+    width: 100%;
+    margin: 1%;
+  }
+
+  .pagenappulat {
+    font-size: 0.4rem;
+  }
+
+  .nav-item, .hakunapit {
+    text-align: center;
+    margin: 1%;
+    font-size: 0.7rem;
+  }
+
+  .lista {
+    width: auto;
+    margin: 1%;
+  }
+
+  .tripcard {
+    padding: 3px;
+    font-size: 0.35rem;
+  }
+
+  .nopeus {
+    font-size: 0.65rem;
+  }
 }
