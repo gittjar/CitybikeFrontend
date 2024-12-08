@@ -126,25 +126,23 @@ export class MapscreenComponent implements OnInit {
           icon: { url: '/assets/location-pin.png' },
         });
 
-        let markerContent = '<div class="map-infowindow">' +
-          `<div class="map-infowindow-title">${citybikeasema.nimi}</div>` +
-          `<div class="map-infowindow-content">${citybikeasema?.osoite}, ${citybikeasema?.kaupunki}</div>` +
-          `<hr>` + `<br>` +
-          `<div class="map-infowindow-content">Operaattori: ${citybikeasema?.operaattor}</div>` +
-          `<div class="map-infowindow-content">Kapasiteetti: ${citybikeasema?.kapasiteet} kpl</div>` +
-          `<div class="map-infowindow-content">
-                             <a href="station-details/${citybikeasema?.id}">
-                               Katso lisätiedot >
-                             </a>
-                           </div>` +
-          '</div>';
+        let markerContent = `
+          <div class="map-infowindow">
+            <div class="map-infowindow-title">${citybikeasema.nimi}</div>
+            <div class="map-infowindow-content">${citybikeasema?.osoite}, ${citybikeasema?.kaupunki}</div>
+            <hr>
+            <div class="map-infowindow-content">Operaattori: ${citybikeasema?.operaattor}</div>
+            <div class="map-infowindow-content">Kapasiteetti: ${citybikeasema?.kapasiteet} kpl</div>
+            <div class="map-infowindow-content">
+              <a href="station-details/${citybikeasema?.id}">Katso lisätiedot ></a>
+            </div>
+          </div>`;
 
         // To add the marker to the map, call setMap();
         marker.setMap(this.map);
         google.maps.event.addListener(marker, "click", () => {
-          let infowindow = new google.maps.InfoWindow();
-          infowindow.setContent(markerContent);
-          infowindow.open(this.map, marker);
+          this.infoWindow.setContent(markerContent);
+          this.infoWindow.open(this.map, marker);
         });
       });
     });
