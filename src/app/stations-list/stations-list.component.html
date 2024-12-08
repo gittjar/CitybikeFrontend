@@ -1,0 +1,32 @@
+<div class="stations-list">
+    <table>
+      <thead>
+        <tr>
+          <th (click)="sortStations('nimi')">
+            Nimi <fa-icon [icon]="faSort"></fa-icon>
+          </th>
+          <th (click)="sortStations('kapasiteet')">
+            Kapasiteet <fa-icon [icon]="faSort"></fa-icon>
+          </th>
+          <th (click)="sortStations('palautetut')">
+            Palautetut <fa-icon [icon]="faSort"></fa-icon>
+          </th>
+          <th (click)="sortStations('lahdetyt')">
+            Lähteneet <fa-icon [icon]="faSort"></fa-icon>
+          </th>
+          <th>
+            Details <fa-icon [icon]="faLink"></fa-icon>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let station of sortedStations">
+          <td>{{ station.nimi }}</td>
+          <td>{{ station.kapasiteet }}</td>
+          <td>{{ station.palautetut }}</td>
+          <td>{{ station.lahdetyt }}</td>
+          <td><a [routerLink]="['/station-details', station.id]"><fa-icon [icon]="faLink"></fa-icon></a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

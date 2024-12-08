@@ -4,12 +4,14 @@ import { MapscreenComponent } from './mapscreen/mapscreen.component';
 import { BiketripsComponent } from './biketrips/biketrips.component';
 import { MainpageComponent } from './mainpage/mainpage.component';
 import { StationDetailsComponent } from './station-details/station-details.component';
+import { StationsListComponent } from './stations-list/stations-list.component';
 
 const routes: Routes = [
   { path: 'mapscreen', component: MapscreenComponent },
   { path: 'biketrips', component: BiketripsComponent },
   { path: 'mainpage', component: MainpageComponent },
   { path: 'station-details/:id', component: StationDetailsComponent},
+  { path: 'stations-list', component: StationsListComponent},
   { path: '', redirectTo: '/mainpage', pathMatch: 'full'},
 ];
 

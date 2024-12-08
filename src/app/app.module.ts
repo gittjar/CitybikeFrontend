@@ -29,6 +29,7 @@ import { CustomFilterPipe } from './custom-filter-pipe.pipe'; // search filter
 import { MainpageComponent } from './mainpage/mainpage.component';
 import { StationDetailsComponent } from './station-details/station-details.component';
 import { LoadingComponent } from './loading/loading.component';
+import { StationsListComponent } from './stations-list/stations-list.component';
 
 registerLocaleData(localeFi);
 
@@ -44,6 +45,7 @@ registerLocaleData(localeFi);
     MainpageComponent,
     StationDetailsComponent,
     LoadingComponent,
+    StationsListComponent,
     
   ],
   imports: [

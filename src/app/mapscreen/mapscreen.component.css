@@ -2,7 +2,9 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    color: rgb(40, 13, 0);
 }
+
 
 .map-infowindow {
     color: black;
@@ -32,6 +34,8 @@
 @media (min-width: 1024px) {
     .main {
         flex-direction: row;
+        color: rgb(40, 13, 0);
+
     }
 }
 
@@ -68,6 +72,8 @@ h5 {
 @media only screen and (max-width: 425px) {
     .main {
         flex-direction: column;
+        color: rgb(40, 13, 0);
+
     }
 
     .kartta, .asema-data {

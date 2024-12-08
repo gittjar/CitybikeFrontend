@@ -1,0 +1,64 @@
+import { Component, OnInit } from '@angular/core';
+import { StationService } from '../station.service';
+import { BiketripService } from '../biketrip.service';
+import { Station } from '../models/station.model';
+import { faSort, faLink } from '@fortawesome/free-solid-svg-icons';
+
+@Component({
+  selector: 'app-stations-list',
+  templateUrl: './stations-list.component.html',
+  styleUrls: ['./stations-list.component.css']
+})
+export class StationsListComponent implements OnInit {
+  stations: Station[] = [];
+  sortedStations: any[] = [];
+  sortDirection: { [key: string]: boolean } = {
+    nimi: true,
+    kapasiteet: true,
+    palautetut: true,
+    lahdetyt: true
+  };
+  faSort = faSort;
+  faLink = faLink;
+
+  constructor(private stationService: StationService, private biketripService: BiketripService) {}
+
+  ngOnInit(): void {
+    this.stationService.getStations().subscribe((data: Station[]) => {
+      this.stations = data;
+      this.loadAdditionalData();
+    });
+  }
+
+  loadAdditionalData(): void {
+    this.biketripService.GetTopDepartureStations().subscribe((departureData: any) => {
+      console.log('Departure Data:', departureData); // Log departure data
+      this.biketripService.GetTopReturnStations().subscribe((returnData: any) => {
+        console.log('Return Data:', returnData); // Log return data
+        this.stations.forEach(station => {
+          const departureInfo = departureData.find((d: any) => d.station === station.nimi);
+          const returnInfo = returnData.find((r: any) => r.station === station.nimi);
+          this.sortedStations.push({
+            ...station,
+            palautetut: returnInfo ? returnInfo.count : 0,
+            lahdetyt: departureInfo ? departureInfo.count : 0
+          });
+        });
+        console.log('Sorted Stations:', this.sortedStations); // Log sorted stations
+      });
+    });
+  }
+
+  sortStations(key: string): void {
+    this.sortDirection[key] = !this.sortDirection[key];
+    this.sortedStations.sort((a: any, b: any) => {
+      if (a[key] < b[key]) {
+        return this.sortDirection[key] ? -1 : 1;
+      } else if (a[key] > b[key]) {
+        return this.sortDirection[key] ? 1 : -1;
+      } else {
+        return 0;
+      }
+    });
+  }
+}
