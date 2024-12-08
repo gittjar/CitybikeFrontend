@@ -4,6 +4,31 @@
     gap: 2rem;
 }
 
+.map-infowindow {
+    color: black;
+    font-family: Arial, sans-serif;
+  }
+  
+  .map-infowindow-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  
+  .map-infowindow-content {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  
+  .map-infowindow a {
+    color: blue;
+    text-decoration: none;
+  }
+  
+  .map-infowindow a:hover {
+    text-decoration: underline;
+  }
+
 @media (min-width: 1024px) {
     .main {
         flex-direction: row;
