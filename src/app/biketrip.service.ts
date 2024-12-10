@@ -26,4 +26,8 @@ export class BiketripService {
   GetTripsByStationId(stationId: number): Observable<Journey[]> {
     return this.http.get<Journey[]>(`${this.apiUrl}/station/${stationId}`);
   }
+
+  public GetAllStations(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/AllStations`);
+  }
 }

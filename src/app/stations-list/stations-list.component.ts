@@ -31,21 +31,17 @@ export class StationsListComponent implements OnInit {
   }
 
   loadAdditionalData(): void {
-    this.biketripService.GetTopDepartureStations().subscribe((departureData: any) => {
-      console.log('Departure Data:', departureData); // Log departure data
-      this.biketripService.GetTopReturnStations().subscribe((returnData: any) => {
-        console.log('Return Data:', returnData); // Log return data
-        this.stations.forEach(station => {
-          const departureInfo = departureData.find((d: any) => d.station === station.nimi);
-          const returnInfo = returnData.find((r: any) => r.station === station.nimi);
-          this.sortedStations.push({
-            ...station,
-            palautetut: returnInfo ? returnInfo.count : 0,
-            lahdetyt: departureInfo ? departureInfo.count : 0
-          });
+    this.biketripService.GetAllStations().subscribe((stationData: any) => {
+      console.log('Station Data:', stationData); // Log station data
+      this.stations.forEach(station => {
+        const stationInfo = stationData.find((s: any) => s.station === station.nimi);
+        this.sortedStations.push({
+          ...station,
+          palautetut: stationInfo ? stationInfo.returnCount : 0,
+          lahdetyt: stationInfo ? stationInfo.departureCount : 0
         });
-        console.log('Sorted Stations:', this.sortedStations); // Log sorted stations
       });
+      console.log('Sorted Stations:', this.sortedStations); // Log sorted stations
     });
   }
 

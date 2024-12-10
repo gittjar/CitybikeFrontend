@@ -17,10 +17,13 @@
   th {
     cursor: pointer;
   }
-  
-  th:hover {
-    background-color: #f1f1f1;
+
+  a:hover {
+    color: rgb(4, 145, 161);
+    text-decoration: underline;
   }
+  
+
   
   @media (max-width: 768px) {
     th:nth-child(3), td:nth-child(3),
