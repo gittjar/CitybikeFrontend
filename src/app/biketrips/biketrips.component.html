@@ -21,10 +21,15 @@
         <button (click)="sortA(true)" class="nappi nappi-middle bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400">Lyhyin matka</button>
         <button (click)="sortB(false)" class="nappi nappi-middle bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400">Pisin aika</button>
         <button (click)="sortB(true)" class="nappi nappi-bottom bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400">Lyhyin aika</button>
+        <button (click)="loadMoreTrips()" class="nappi nappi-bottom bg-gradient-to-r from-teal-200 to-green-800 hover:from-emerald-700 hover:to-emerald-400">Lataa +500 lisää</button>
+
       </div>
     </aside>
 
     <article class="lista">
+      <h1 class="light-text">Citybiketrips May 2021</h1>
+      <p class="light-text">Matkoja ladattu sivulle: {{citybiketripsmay2021.length}} kappaletta</p>
+
       <section *ngFor="let trip of citybiketripsmay2021 | filter:term" class="tripcard justify-between">
         <article>
           Lähtöaika ja paikka: {{trip?.departure | date:'MMM d, y (HH:mm)'}} : {{trip?.departure_station_name}}<br />
@@ -39,7 +44,6 @@
         </aside>
       </section>
 
-      <button (click)="loadMoreTrips()" class="show-more">Näytä lisää</button>
     </article>
   </section>
 

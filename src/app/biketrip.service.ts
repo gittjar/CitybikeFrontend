@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Journey } from './models/journey.model';
+import { catchError } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class BiketripService {
-  private apiUrl = 'https://corsproxy.io/?https://citybikeapi.azurewebsites.net/api/CitybikeTripsMay2021';
+  private apiUrl = 'https://corsproxy.io/?url=https://citybikeapi.azurewebsites.net/api/CitybikeTripsMay2021';
 
   constructor(private http: HttpClient) { }
 

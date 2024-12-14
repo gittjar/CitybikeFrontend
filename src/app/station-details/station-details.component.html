@@ -14,7 +14,7 @@
                     <p>Ei tarpeeksi dataa tuottaa keskimääräistä kilometrilukemaa!</p>
                 </div>
                 <div *ngIf="averageDistance">
-                    <h4 class="text-xl font-semibold">Matkan keskipituus: {{averageDistance / 1000 | number}} km</h4>
+                    <h4 class="text-xl font-semibold">Matkan keskipituus: {{averageDistance / 1000 | number:'1.1-1' }} km</h4>
                 </div>
             </div>
             <div class="bg-stone-700 p-4 rounded-lg mb-6">

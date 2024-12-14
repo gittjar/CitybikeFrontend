@@ -28,6 +28,10 @@ body {
   color: var(--text-color);
 }
 
+.light-text {
+  color: wheat;
+}
+
 .hakupalkki {
   width: 20%;
   margin-top: 2%;
