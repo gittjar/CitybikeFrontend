@@ -7,7 +7,7 @@
             <p>{{ errorMessage }}</p>
         </div>
         <div *ngIf="stationdetail && !errorMessage">
-            <h1 class="text-3xl font-bold mb-4">{{ stationdetail.nimi }}</h1>
+            <h1 class="text-3xl font-bold mb-4">{{ stationdetail.nimi }}, {{ stationdetail.kaupunki }}</h1>
             <div class="bg-stone-700 p-4 rounded-lg mb-6">
                 <h4 class="text-xl font-semibold mb-2">Kapasiteetti: {{stationdetail.kapasiteet}} kpl</h4>
                 <div *ngIf="!averageDistance" class="text-red-500">

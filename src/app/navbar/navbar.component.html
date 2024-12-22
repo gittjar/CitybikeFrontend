@@ -1,14 +1,14 @@
 <nav class="navi bg-stone-900 flex" [class.sticky]="isSticky">
-    <div class="menu-icon" (click)="toggleMenu()">
-      <div [class.change]="isMenuOpen"></div>
-      <div [class.change]="isMenuOpen"></div>
-      <div [class.change]="isMenuOpen"></div>
-    </div>
-    <div class="menu-links" [class.show]="isMenuOpen">
-      <a routerLink="/mainpage" class="bg-clip-text text-transparent bg-gradient-to-r from-sky-200 to-sky-300 hover:from-yellow-600 hover:to-yellow-400">Citybike App</a>
-      <a routerLink="/mapscreen" class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-pink-500 hover:to-pink-400">Asemat kartalla</a>
-      <a routerLink="/stations-list" class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-pink-500 hover:to-pink-400">Asemalista</a>
-      <a routerLink="/biketrips" class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-pink-500 hover:to-pink-400">Pyörämatkat</a>
-      <a href="https://citybikemvc.azurewebsites.net/" class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-pink-500 hover:to-pink-400">Hallintatyökalu</a>
-    </div>
-  </nav>
+  <div class="menu-icon" (click)="toggleMenu()">
+    <div [class.change]="isMenuOpen"></div>
+    <div [class.change]="isMenuOpen"></div>
+    <div [class.change]="isMenuOpen"></div>
+  </div>
+  <div class="menu-links" [class.show]="isMenuOpen">
+    <a routerLink="/mainpage" (click)="closeMenu()" class="bg-clip-text text-transparent bg-gradient-to-r from-sky-200 to-sky-300 hover:from-yellow-600 hover:to-yellow-400">Citybike App</a>
+    <a routerLink="/mapscreen" (click)="closeMenu()" class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-pink-500 hover:to-pink-400">Asemat kartalla</a>
+    <a routerLink="/stations-list" (click)="closeMenu()" class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-pink-500 hover:to-pink-400">Asemalista</a>
+    <a routerLink="/biketrips" (click)="closeMenu()" class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-pink-500 hover:to-pink-400">Pyörämatkat</a>
+    <a href="https://citybikemvc.azurewebsites.net/" (click)="closeMenu()" class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-pink-500 hover:to-pink-400">Hallintatyökalu</a>
+  </div>
+</nav>
