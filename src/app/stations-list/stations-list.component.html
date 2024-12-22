@@ -1,3 +1,9 @@
+<div class="nav-item">
+  Etsi ja lajittele <fa-icon [icon]="MagnifyingGlass"></fa-icon>
+  <br>
+  <input type="text" class="searchTerm" placeholder="Kirjoita hakusana.." [(ngModel)]="term" />
+</div>
+
 <div class="stations-list">
   <table>
     <thead>
@@ -20,7 +26,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let station of sortedStations">
+      <tr *ngFor="let station of filteredStations">
         <td><a [routerLink]="['/station-details', station.id]">{{ station.nimi }}</a></td>
         <td>{{ station.kaupunki }}</td>
         <td>{{ station.kapasiteet }}</td>
