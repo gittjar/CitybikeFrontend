@@ -1,18 +1,41 @@
-
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   background-color: #000;
 }
+
 .colorbar {
   height: 6px;
+}
+
+.header-wrapper {
+  position: relative;
+  background-image: url('../../assets/images/IMG_3191.WEBP');
+  background-size: cover;
+  background-position: center;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.header-wrapper h2 {
+  margin: 0;
+  font-size: 2.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.header-wrapper fa-icon {
+  margin-left: 10px;
 }
 
 .main {
   display: flex;
   flex-direction: row;
-  padding-top: 2%;
+  padding: 2%;
   gap: 2%;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -24,13 +47,13 @@ body {
 
 .hakupalkki {
   width: 20%;
-  margin-top: 2%;
+  padding: 2%;
+  height: fit-content;
 }
 
 .nav-item {
   color: wheat;
   margin-left: 7%;
-
 }
 
 input {
@@ -54,16 +77,13 @@ input {
   margin-left: 7%;
 }
 
-
-
-
 .nappi-sort {
   width: 90%;
   height: 45px;
   margin-bottom: 0.4%;
   border-radius: 2px;
   color: #e6e6e6;
-  border: #2400c2 1px solid;
+  border: peru 1px solid;
   transition: all 0.3s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   font-size: 16px;
@@ -75,14 +95,9 @@ input {
   color: #ffffff;
 }
 
-
-
-
-
 .lista {
   width: 80%;
-  margin-right: 1%;
-  margin-top: 2%;
+  padding: 2%;
 }
 
 .tripcard {
@@ -99,8 +114,8 @@ input {
 
 .tripcard:hover {
   color: rgb(247, 245, 242);
-    background-color: rgb(49, 45, 42);
-    }
+  background-color: rgb(49, 45, 42);
+}
 
 .keskinopeus {
   margin-left: 3%;
@@ -120,22 +135,6 @@ input {
   background: linear-gradient(to right, #097830 52%, #1B1917 87%);
 }
 
-.show-more {
-  width: 20%;
-  height: 50px;
-  margin-top: 1%;
-  margin-bottom: 1%;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background: linear-gradient(to right, #b84f09 50%, #C0AB09 100%);
-  color: var(--text-color);
-  transition: background 0.3s, color 0.3s;
-}
-
-.show-more:hover {
-  background: linear-gradient(to right, #C0AB09 50%, #b84f09 100%);
-  color: #000;
-}
 
 @media only screen and (max-width: 768px) {
   .main {
