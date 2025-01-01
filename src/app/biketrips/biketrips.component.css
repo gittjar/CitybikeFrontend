@@ -1,11 +1,3 @@
-:root {
-  --primary-color: #266BC4;
-  --secondary-color: #1FFF8F;
-  --highlight-color: rgb(250, 204, 21);
-  --text-color: rgb(255, 255, 255);
-  --background-color: rgb(44, 35, 28);
-  --border-color: #ccc;
-}
 
 body {
   font-family: Arial, sans-serif;
@@ -42,7 +34,7 @@ body {
 }
 
 input {
-  color: var(--highlight-color);
+  color: #1B1917;
   width: 90%;
   padding: 10px;
   box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.1);
@@ -55,33 +47,36 @@ input {
   height: 50px;
   margin-bottom: 4px;
   border-radius: 1px;
-  color: var(--text-color);
+  color: black;
 }
 
 .hakunapit {
   margin-left: 7%;
 }
 
-.pagenappi {
-  margin: 0.4%;
-  padding: 1%;
-  border: 1px solid var(--highlight-color);
-  transition: border 0.3s;
-}
-
-.pagenappi:hover {
-  border: 1px dashed var(--highlight-color);
-}
 
 
-.nappi-middle, .nappi-top, .nappi-bottom
- {
+
+.nappi-sort {
   width: 90%;
   height: 45px;
   margin-bottom: 0.4%;
-  border-radius: 0px;
-  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  color: #e6e6e6;
+  border: #2400c2 1px solid;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  cursor: pointer;
 }
+
+.nappi-sort:hover {
+  background: #0a0044;
+  color: #ffffff;
+}
+
+
+
 
 
 .lista {
