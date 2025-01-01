@@ -1,6 +1,12 @@
+<article class="colorbar"></article>
 
-    <header class="siteHeader">
-        <img src="../../assets/images/citybike01.jpg" class="siteLogo" alt="Citybike Logo">
-        <div class="centered">Citybike App</div>
-    </header>
-    <article class="colorbar"></article>
+<div class="cards-container">
+  <div class="card" *ngFor="let card of cards; let i = index" [class.active]="i === activeCardIndex">
+    <img [src]="card.image" alt="Card Image">
+    <div class="card-content">
+      <h2>{{ card.title }}</h2>
+      <p>{{ card.description }}</p>
+      <a [routerLink]="card.link">{{ card.linkText }}</a>
+    </div>
+  </div>
+</div>

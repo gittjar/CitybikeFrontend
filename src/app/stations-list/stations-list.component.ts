@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { StationService } from '../station.service';
 import { BiketripService } from '../biketrip.service';
 import { Station } from '../models/station.model';
-import { faSort, faLink, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faSort, faLink, faMagnifyingGlass, faArrowRightLong } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-stations-list',
@@ -23,6 +23,7 @@ export class StationsListComponent implements OnInit {
   faSort = faSort;
   faLink = faLink;
   MagnifyingGlass = faMagnifyingGlass;
+  ArrowRightLong = faArrowRightLong;
 
   constructor(private stationService: StationService, private biketripService: BiketripService) {}
 

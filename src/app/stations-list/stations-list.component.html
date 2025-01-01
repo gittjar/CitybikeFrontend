@@ -27,8 +27,8 @@
     </thead>
     <tbody>
       <tr *ngFor="let station of filteredStations">
-        <td><a [routerLink]="['/station-details', station.id]">{{ station.nimi }}</a></td>
-        <td>{{ station.kaupunki }}</td>
+        <td><a [routerLink]="['/station-details', station.id]">{{ station.nimi }} <fa-icon [icon]="ArrowRightLong"></fa-icon></a></td>
+        <td>{{ station.kaupunki }} </td>
         <td>{{ station.kapasiteet }}</td>
         <td>{{ station.palautetut }}</td>
         <td>{{ station.lahdetyt }}</td>

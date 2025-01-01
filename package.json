@@ -26,6 +26,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "ng2-search-filter": "^0.5.1",
     "rxjs": "~7.8.0",
+    "swiper": "^11.1.15",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"
   },
@@ -37,6 +38,7 @@
     "@cypress/schematic": "^2.5.0",
     "@types/jasmine": "~4.3.0",
     "autoprefixer": "^10.4.14",
+    "cypress": "latest",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
@@ -45,7 +47,6 @@
     "karma-jasmine-html-reporter": "~2.0.0",
     "postcss": "^8.4.23",
     "tailwindcss": "^3.3.2",
-    "typescript": "~5.0.2",
-    "cypress": "latest"
+    "typescript": "~5.0.2"
   }
 }
