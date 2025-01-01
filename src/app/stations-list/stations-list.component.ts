@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { StationService } from '../station.service';
 import { BiketripService } from '../biketrip.service';
 import { Station } from '../models/station.model';
-import { faSort, faLink, faMagnifyingGlass, faArrowRightLong } from '@fortawesome/free-solid-svg-icons';
+import { faSort, faLink, faMagnifyingGlass, faArrowRightLong, faBicycle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-stations-list',
@@ -13,6 +13,7 @@ export class StationsListComponent implements OnInit {
   stations: Station[] = [];
   sortedStations: any[] = [];
   displayedStations: any[] = [];
+  loading: boolean = true;
   sortDirection: { [key: string]: boolean } = {
     nimi: true,
     kapasiteet: true,
@@ -23,6 +24,7 @@ export class StationsListComponent implements OnInit {
   term = '';
   faSort = faSort;
   faLink = faLink;
+  faBicycle = faBicycle;
   MagnifyingGlass = faMagnifyingGlass;
   ArrowRightLong = faArrowRightLong;
   uniqueCities: string[] = [];
@@ -38,6 +40,13 @@ export class StationsListComponent implements OnInit {
     });
   }
 
+      // loading window
+      showLoadingWindowForDuration(duration: number) {
+        setTimeout(() => {
+          this.loading = false;
+        }, duration);
+      }
+
   loadAdditionalData(): void {
     this.biketripService.GetAllStations().subscribe((stationData: any) => {
       this.stations.forEach(station => {
@@ -49,6 +58,7 @@ export class StationsListComponent implements OnInit {
         });
       });
       this.displayedStations = [...this.sortedStations];
+      this.showLoadingWindowForDuration(3000);
     });
   }
 

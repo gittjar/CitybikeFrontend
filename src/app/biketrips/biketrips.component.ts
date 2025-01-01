@@ -14,6 +14,7 @@ export class BiketripsComponent implements OnInit {
   citybiketripsmay2021: any[] = [];
   allTrips: any[] = [];
   term = '';
+  loading: boolean = true;
   // fontawesome
   MagnifyingGlass = faMagnifyingGlass;
 
@@ -23,10 +24,18 @@ export class BiketripsComponent implements OnInit {
     this.GetBikeTripsMay2021();
   }
 
+    // loading window
+    showLoadingWindowForDuration(duration: number) {
+      setTimeout(() => {
+        this.loading = false;
+      }, duration);
+    }
+
   GetBikeTripsMay2021(): void {
     this.hpservice.GetBikeTripsPerPage(this.newPageNumber).subscribe((data: any) => {
       this.citybiketripsmay2021 = data.data;
       this.allTrips = data.data;
+      this.showLoadingWindowForDuration(3000);
     });
   }
 

@@ -15,7 +15,7 @@
 .loading-text {
   font-size: 2rem;
   font-weight: 600;
-  color: #1FFF8F;
+  color: #b0e8f9;
   background-color: #343434 ;
   opacity: 0.8;
   padding: 10px 20px;
@@ -24,7 +24,7 @@
 
 .loading-spinner {
   border: 10px solid #4b4b4b;
-  border-top: 10px solid #1FFF8F;
+  border-top: 10px solid #00a452;
   border-radius: 50%;
   width: 50px;
   height: 50px;

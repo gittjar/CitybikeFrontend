@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modern Layout</title>
 
-</head>
-<body>
-  <article class="colorbar"></article>
+<article class="colorbar bg-gradient-to-r from-amber-500 via-stone-900 to-lime-500"></article>
+<app-loading *ngIf="loading"></app-loading>
 
   <section class="main">
+
+
     <aside class="hakupalkki">
       <div class="nav-item">
         Etsi ja lajittele <fa-icon [icon]="MagnifyingGlass"></fa-icon>
@@ -47,5 +42,3 @@
   </section>
 
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-</body>
-</html>
