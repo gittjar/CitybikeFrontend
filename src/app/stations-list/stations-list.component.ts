@@ -12,6 +12,7 @@ import { faSort, faLink, faMagnifyingGlass, faArrowRightLong } from '@fortawesom
 export class StationsListComponent implements OnInit {
   stations: Station[] = [];
   sortedStations: any[] = [];
+  displayedStations: any[] = [];
   sortDirection: { [key: string]: boolean } = {
     nimi: true,
     kapasiteet: true,
@@ -24,6 +25,8 @@ export class StationsListComponent implements OnInit {
   faLink = faLink;
   MagnifyingGlass = faMagnifyingGlass;
   ArrowRightLong = faArrowRightLong;
+  uniqueCities: string[] = [];
+  selectedCities: Set<string> = new Set();
 
   constructor(private stationService: StationService, private biketripService: BiketripService) {}
 
@@ -31,12 +34,12 @@ export class StationsListComponent implements OnInit {
     this.stationService.getStations().subscribe((data: Station[]) => {
       this.stations = data;
       this.loadAdditionalData();
+      this.uniqueCities = [...new Set(this.stations.map(station => station.kaupunki))];
     });
   }
 
   loadAdditionalData(): void {
     this.biketripService.GetAllStations().subscribe((stationData: any) => {
-      console.log('Station Data:', stationData); // Log station data
       this.stations.forEach(station => {
         const stationInfo = stationData.find((s: any) => s.station === station.nimi);
         this.sortedStations.push({
@@ -45,13 +48,13 @@ export class StationsListComponent implements OnInit {
           lahdetyt: stationInfo ? stationInfo.departureCount : 0
         });
       });
-      console.log('Sorted Stations:', this.sortedStations); // Log sorted stations
+      this.displayedStations = [...this.sortedStations];
     });
   }
 
   sortStations(key: string): void {
     this.sortDirection[key] = !this.sortDirection[key];
-    this.sortedStations.sort((a: any, b: any) => {
+    this.displayedStations.sort((a: any, b: any) => {
       if (a[key] < b[key]) {
         return this.sortDirection[key] ? -1 : 1;
       } else if (a[key] > b[key]) {
@@ -62,10 +65,36 @@ export class StationsListComponent implements OnInit {
     });
   }
 
+  toggleCitySelection(city: string): void {
+    if (this.selectedCities.has(city)) {
+      this.selectedCities.delete(city);
+    } else {
+      this.selectedCities.add(city);
+    }
+    this.filterBySelectedCities();
+  }
+
+  filterBySelectedCities(): void {
+    if (this.selectedCities.size === 0) {
+      this.displayedStations = [...this.sortedStations];
+    } else {
+      this.displayedStations = this.sortedStations.filter(station => this.selectedCities.has(station.kaupunki));
+    }
+  }
+
+  showAll(): void {
+    this.selectedCities.clear();
+    this.displayedStations = [...this.sortedStations];
+  }
+
   get filteredStations(): any[] {
-    return this.sortedStations.filter(station =>
+    return this.displayedStations.filter(station =>
       station.nimi.toLowerCase().includes(this.term.toLowerCase()) ||
       station.kaupunki.toLowerCase().includes(this.term.toLowerCase())
     );
+  }
+
+  isCitySelected(city: string): boolean {
+    return this.selectedCities.has(city);
   }
 }

@@ -4,6 +4,18 @@
   <input type="text" class="searchTerm" placeholder="Kirjoita hakusana.." [(ngModel)]="term" />
 </div>
 
+<div class="buttons-container">
+  <button *ngFor="let city of uniqueCities" 
+          (click)="toggleCitySelection(city)" 
+          [ngClass]="{'selected': isCitySelected(city)}" 
+          class="city-button">
+    {{ city }} <fa-icon [icon]="ArrowRightLong"></fa-icon>
+  </button>
+  <button (click)="showAll()" class="city-button">
+    Näytä kaikki <fa-icon [icon]="ArrowRightLong"></fa-icon>
+  </button>
+</div>
+
 <div class="stations-list">
   <table>
     <thead>
