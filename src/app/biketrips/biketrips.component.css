@@ -122,19 +122,20 @@ input {
 }
 
 .nopeus {
-  font-size: 2rem;
+  font-size: 1.8rem;
+  padding: 1.5%;
+  border-radius: 10px 10px 10px 10px;
 }
 
 .alle15 {
   padding: 2%;
-  background: linear-gradient(to left, #1C1917 50%, #C0AB09 100%);
+  background: linear-gradient(to left, #1C1917 50%, #c86e01 100%);
 }
 
 .yli15 {
   padding: 2%;
   background: linear-gradient(to right, #097830 52%, #1B1917 87%);
 }
-
 
 @media only screen and (max-width: 768px) {
   .main {
@@ -147,13 +148,13 @@ input {
   }
 
   .pagenappulat {
-    font-size: 0.4rem;
+    font-size: 0.8rem;
   }
 
   .nav-item, .hakunapit {
     text-align: center;
     margin: 1%;
-    font-size: 0.7rem;
+    font-size: 1rem;
   }
 
   .lista {
@@ -162,11 +163,22 @@ input {
   }
 
   .tripcard {
-    padding: 3px;
-    font-size: 0.35rem;
+    padding: 10px;
+    font-size: 1rem;
   }
 
   .nopeus {
-    font-size: 0.65rem;
+    font-size: 1.2rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+  }
+
+  .nappi-sort {
+    width: 100%;
+    font-size: 1rem;
   }
 }
