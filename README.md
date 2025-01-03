@@ -2,7 +2,6 @@
 #  Solita Citybike application </f>
 ## Citybike webapp documentation 
 
-
 ### How to start Azure SQL in cloud
 
 1. Create your Azure account
@@ -10,7 +9,6 @@
 3. Create resource -> SQL Database + Create -> fill detailed information (From configure you found cheaper options for compute tier) and finally create
 4. After that install Azure Datastudio and make connection to database, here is documentation:
 https://learn.microsoft.com/en-us/sql/azure-data-studio/quickstart-sql-database?view=sql-server-ver16
-
 
 ### Creating Station Table
 
