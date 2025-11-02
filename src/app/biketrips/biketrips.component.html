@@ -2,6 +2,44 @@
 <article class="colorbar bg-gradient-to-r from-amber-500 via-stone-900 to-lime-500"></article>
 <app-loading *ngIf="loading"></app-loading>
 
+<!-- Loading Modal for "Load All" -->
+<div *ngIf="showLoadingModal" class="loading-modal-overlay">
+  <div class="loading-modal">
+    <h2>🚴 Ladataan kaikkia matkoja...</h2>
+    
+    <div class="loading-stats">
+      <div class="stat-box">
+        <div class="stat-number">{{tripsLoadedSoFar.toLocaleString()}}</div>
+        <div class="stat-label">Matkoja ladattu</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">
+          <span *ngIf="loadingPercentage < 100">~</span>{{estimatedTotalTrips.toLocaleString()}}
+        </div>
+        <div class="stat-label">
+          <span *ngIf="loadingPercentage < 100">Arvio päivittyy...</span>
+          <span *ngIf="loadingPercentage === 100">Yhteensä</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="progress-bar-container">
+      <div class="progress-bar" [style.width.%]="loadingPercentage">
+        <span class="progress-text">{{loadingPercentage}}%</span>
+      </div>
+    </div>
+
+    <p class="loading-message">
+      <span *ngIf="loadingPercentage < 100">Odota hetki, ladataan sivua {{newPageNumber}}...</span>
+      <span *ngIf="loadingPercentage === 100">Viimeistellään...</span>
+    </p>
+    
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+    </div>
+  </div>
+</div>
+
 <div class="header-wrapper">
   <h2>
     <span class="bg-gray-700 bg-opacity-75 text-white text-2xl font-bold p-4 rounded-lg shadow-lg">
@@ -45,7 +83,7 @@
             <span *ngIf="loadingMore">⏳ Ladataan...</span>
           </button>
           <button (click)="loadAllTrips()" [disabled]="loadingMore || loadingAll" class="nappi-load-all">
-            <span *ngIf="!loadingAll">🚀 Lataa paljon matkoja</span>
+            <span *ngIf="!loadingAll">🚀 Lataa KAIKKI matkat</span>
             <span *ngIf="loadingAll">⏳ Ladataan...</span>
           </button>
         </div>
