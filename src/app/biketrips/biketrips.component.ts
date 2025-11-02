@@ -30,6 +30,13 @@ export class BiketripsComponent implements OnInit {
   totalPages = 1;
   usePagination = true;
 
+  // Loading progress
+  showLoadingModal = false;
+  totalTripsToLoad = 0;
+  tripsLoadedSoFar = 0;
+  loadingPercentage = 0;
+  estimatedTotalTrips = 0;
+
   ngOnInit(): void {
     this.GetBikeTripsMay2021();
   }
@@ -73,49 +80,135 @@ export class BiketripsComponent implements OnInit {
   }
 
   loadAllTrips(): void {
-    if (!confirm('⚠️ Tämä lataa kaikki matkat kerralla. Se voi kestää hetken ja hidastaa selainta. Jatketaanko?')) {
+    // Show confirmation
+    if (!confirm('⚠️ Tämä lataa KAIKKI matkat kerralla. Se voi kestää useita minuutteja ja kuluttaa paljon muistia. Jatketaanko?')) {
       return;
     }
 
     this.loadingAll = true;
-    this.loadMultiplePages(10); // Load 10 pages at once (2500 trips)
+    this.showLoadingModal = true;
+    this.tripsLoadedSoFar = this.allTrips.length; // Start from current count
+    this.loadingPercentage = 0;
+    this.estimatedTotalTrips = 0;
+
+    console.log('Fetching total trip count from API...');
+    
+    // Try to get total count from API first
+    this.hpservice.GetTotalTripsCount().subscribe(
+      (totalCount: number) => {
+        if (totalCount > 0) {
+          // API provided total count!
+          this.estimatedTotalTrips = totalCount;
+          console.log(`✅ API reports total trips: ${totalCount}`);
+        } else {
+          // API doesn't have count endpoint, will estimate dynamically
+          console.log('ℹ️ No count endpoint available, estimating dynamically');
+        }
+        
+        // Start loading all pages
+        this.loadAllPagesRecursively(this.newPageNumber + 1);
+      },
+      error => {
+        // Error getting count, proceed with dynamic estimation
+        console.log('⚠️ Error fetching count, will estimate dynamically');
+        this.loadAllPagesRecursively(this.newPageNumber + 1);
+      }
+    );
   }
 
-  private loadMultiplePages(pagesToLoad: number): void {
-    const startPage = this.newPageNumber + 1;
-    const endPage = startPage + pagesToLoad - 1;
-    let pagesLoaded = 0;
+  private estimateTotalTrips(): void {
+    // This method is no longer needed, we'll update estimate dynamically
+  }
 
-    for (let page = startPage; page <= endPage; page++) {
-      this.hpservice.GetBikeTripsPerPage(page).subscribe((data: any) => {
+  private loadAllPagesRecursively(startPage: number): void {
+    this.hpservice.GetBikeTripsPerPage(startPage).subscribe(
+      (data: any) => {
+        console.log(`Page ${startPage}: Received ${data.data?.length || 0} trips`);
+        
         if (data.data && data.data.length > 0) {
+          // Add new data
+          const previousCount = this.allTrips.length;
           const newTrips = this.removeDuplicates([...this.allTrips, ...data.data]);
           this.allTrips = newTrips;
           this.citybiketripsmay2021 = [...this.allTrips];
-          this.newPageNumber = Math.max(this.newPageNumber, page);
+          this.newPageNumber = startPage;
           
-          pagesLoaded++;
-          console.log(`Loaded page ${page}/${endPage} - Total trips: ${this.allTrips.length}`);
+          // Update progress
+          this.tripsLoadedSoFar = this.allTrips.length;
           
-          if (pagesLoaded === pagesToLoad || data.data.length < 250) {
-            this.loadingAll = false;
-            this.updatePagination();
-            if (this.currentSortFunction) {
-              this.currentSortFunction();
+          const addedCount = this.allTrips.length - previousCount;
+          console.log(`Page ${startPage}: Added ${addedCount} new trips (${data.data.length} received, ${data.data.length - addedCount} duplicates removed)`);
+          
+          // Dynamic estimation (only if we don't have API count)
+          if (this.estimatedTotalTrips === 0 || data.data.length >= 200) {
+            if (data.data.length >= 200) {
+              // Still loading full pages - estimate conservatively
+              // Use actual loaded count + small buffer based on average per page
+              const avgPerPage = this.allTrips.length / startPage;
+              const estimatedRemainingPages = Math.min(10, Math.ceil(startPage * 0.2)); // Estimate max 10-20% more pages
+              const dynamicEstimate = Math.floor(this.allTrips.length + (avgPerPage * estimatedRemainingPages));
+              
+              // Only update estimate if we don't have API count, or dynamic is higher
+              if (this.estimatedTotalTrips === 0) {
+                this.estimatedTotalTrips = dynamicEstimate;
+              }
+            } else {
+              // Last page detected (less than 200 items), set exact total
+              this.estimatedTotalTrips = this.allTrips.length;
             }
-            alert(`✅ Ladattu ${this.allTrips.length} matkaa yhteensä!`);
+          }
+          
+          // Calculate percentage
+          if (this.estimatedTotalTrips > 0) {
+            this.loadingPercentage = Math.min(99, Math.floor((this.tripsLoadedSoFar / this.estimatedTotalTrips) * 100));
+          }
+          
+          console.log(`Total: ${this.allTrips.length} trips | Estimate: ~${this.estimatedTotalTrips} | Progress: ${this.loadingPercentage}%`);
+          
+          // If page has substantial data (200+ items), there might be more
+          if (data.data.length >= 200) {
+            // Continue loading next page
+            console.log(`Continuing to page ${startPage + 1}...`);
+            setTimeout(() => this.loadAllPagesRecursively(startPage + 1), 100);
+          } else {
+            // This was the last page (less than 200 items)
+            console.log(`Last page detected (only ${data.data.length} items). Finishing...`);
+            this.finishLoadingAll();
           }
         } else {
           // No more data
-          this.loadingAll = false;
-          this.updatePagination();
-          alert(`✅ Kaikki matkat ladattu! Yhteensä: ${this.allTrips.length} matkaa`);
+          console.log(`No data received on page ${startPage}. Finishing...`);
+          this.finishLoadingAll();
         }
-      }, error => {
-        this.loadingAll = false;
-        console.error('Error loading trips:', error);
-      });
-    }
+      },
+      error => {
+        console.error(`Error loading page ${startPage}:`, error);
+        this.finishLoadingAll();
+      }
+    );
+  }
+
+  private finishLoadingAll(): void {
+    this.loadingPercentage = 100;
+    this.tripsLoadedSoFar = this.allTrips.length;
+    this.totalTripsToLoad = this.allTrips.length;
+    
+    setTimeout(() => {
+      this.loadingAll = false;
+      this.showLoadingModal = false;
+      this.updatePagination();
+      
+      if (this.currentSortFunction) {
+        this.currentSortFunction();
+      }
+      
+      alert(`✅ Kaikki matkat ladattu! Yhteensä: ${this.allTrips.length.toLocaleString()} matkaa`);
+    }, 500);
+  }
+
+  private loadMultiplePages(pagesToLoad: number): void {
+    // This method is now deprecated, replaced by loadAllPagesRecursively
+    this.loadAllPagesRecursively(this.newPageNumber + 1);
   }
 
   updatePagination(): void {
