@@ -16,35 +16,145 @@
     <aside class="hakupalkki bg-stone-700 text-white font-bold p-2 rounded-lg shadow-lg mx-2">
       <div class="nav-item">
         Etsi ja lajittele <fa-icon [icon]="MagnifyingGlass"></fa-icon>
-        <input type="text" class="searchTerm" placeholder="Kirjoita hakusana.." [(ngModel)]="term" />
+        <input type="text" class="searchTerm" placeholder="Kirjoita hakusana.." [(ngModel)]="term" (ngModelChange)="onSearchChange()" />
       </div>
 
       <div class="hakunapit">
-        <button (click)="sortA(false)" class="nappi-sort">Pisin matka</button>
-        <button (click)="sortA(true)" class="nappi-sort">Lyhyin matka</button>
-        <button (click)="sortB(false)" class="nappi-sort">Pisin aika</button>
-        <button (click)="sortB(true)" class="nappi-sort">Lyhyin aika</button>
-        <button (click)="loadMoreTrips()" class="nappi-sort">Lataa +500 lisää</button>
+        <div class="sort-section">
+          <p class="sort-label">Matkan pituus</p>
+          <button (click)="sortByDistance(false)" class="nappi-sort">↓ Pisin matka</button>
+          <button (click)="sortByDistance(true)" class="nappi-sort">↑ Lyhyin matka</button>
+        </div>
+
+        <div class="sort-section">
+          <p class="sort-label">Matkan kesto</p>
+          <button (click)="sortByDuration(false)" class="nappi-sort">↓ Pisin aika</button>
+          <button (click)="sortByDuration(true)" class="nappi-sort">↑ Lyhyin aika</button>
+        </div>
+
+        <div class="sort-section">
+          <p class="sort-label">Keskinopeus</p>
+          <button (click)="sortBySpeed(false)" class="nappi-sort">↓ Nopein</button>
+          <button (click)="sortBySpeed(true)" class="nappi-sort">↑ Hitain</button>
+        </div>
+
+        <div class="sort-section">
+          <button (click)="resetSort()" class="nappi-reset">↺ Palauta alkuperäinen</button>
+          <button (click)="loadMoreTrips()" [disabled]="loadingMore || loadingAll" class="nappi-load">
+            <span *ngIf="!loadingMore">📥 Lataa lisää matkoja</span>
+            <span *ngIf="loadingMore">⏳ Ladataan...</span>
+          </button>
+          <button (click)="loadAllTrips()" [disabled]="loadingMore || loadingAll" class="nappi-load-all">
+            <span *ngIf="!loadingAll">🚀 Lataa paljon matkoja</span>
+            <span *ngIf="loadingAll">⏳ Ladataan...</span>
+          </button>
+        </div>
+
+        <div class="sort-section">
+          <p class="sort-label">Näyttö</p>
+          <button (click)="togglePagination()" class="nappi-toggle">
+            <span *ngIf="usePagination">📄 Sivutus: Päällä ({{itemsPerPage}}/sivu)</span>
+            <span *ngIf="!usePagination">📜 Sivutus: Pois (näytä kaikki)</span>
+          </button>
+        </div>
       </div>
     </aside>
 
     <article class="lista bg-stone-700 text-white font-bold p-2 rounded-lg shadow-lg">
       <h1 class="light-text">Citybiketrips May 2021</h1>
-      <p class="light-text">Matkoja ladattu sivulle: {{citybiketripsmay2021.length}} kappaletta</p>
+      <p class="light-text stats-text">
+        Matkoja ladattu: <span class="highlight">{{allTrips.length}}</span> kappaletta
+        <span *ngIf="term && term.trim()"> | Hakutuloksia: <span class="highlight">{{getFilteredTripsCount()}}</span></span>
+        <span *ngIf="usePagination"> | Näytetään sivulla: {{displayedTrips.length}}</span>
+      </p>
 
-      <section *ngFor="let trip of citybiketripsmay2021 | filter:term" class="tripcard justify-between">
-        <article>
-          Lähtöaika ja paikka: {{trip?.departure | date:'MMM d, y (HH:mm)'}} : {{trip?.departure_station_name}}<br />
-          Palautusaika ja paikka: {{trip?.return | date:'MMM d, y (HH:mm)'}} : {{trip?.return_station_name}}<br />
-          Matkan pituus: {{ (trip?.covered_distance_m / 1000) | number : '1.1-2'}}km Matkan kesto: {{ (trip?.duration_sec / 60) | number : '1.0-0'}}min {{ (trip?.duration_sec % 60) }}sec<br />
+      <!-- Pagination Controls -->
+      <div *ngIf="usePagination && totalPages > 1" class="pagination-controls">
+        <button (click)="previousPage()" [disabled]="currentPage === 1" class="page-btn">
+          ← Edellinen
+        </button>
+        
+        <button *ngIf="getPageNumbers()[0] > 1" (click)="goToPage(1)" class="page-number">1</button>
+        <span *ngIf="getPageNumbers()[0] > 2" class="page-dots">...</span>
+        
+        <button *ngFor="let page of getPageNumbers()" 
+                (click)="goToPage(page)" 
+                [class.active]="page === currentPage"
+                class="page-number">
+          {{page}}
+        </button>
+        
+        <span *ngIf="getPageNumbers()[getPageNumbers().length - 1] < totalPages - 1" class="page-dots">...</span>
+        <button *ngIf="getPageNumbers()[getPageNumbers().length - 1] < totalPages" (click)="goToPage(totalPages)" class="page-number">{{totalPages}}</button>
+        
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="page-btn">
+          Seuraava →
+        </button>
+      </div>
+
+      <section *ngFor="let trip of displayedTrips; trackBy: trackByTrip" class="tripcard">
+        <article class="trip-info">
+          <div class="trip-row">
+            <span class="trip-icon">🚴</span>
+            <div class="trip-details">
+              <div class="station-info">
+                <strong>Lähtö:</strong> {{trip?.departure | date:'MMM d, y (HH:mm)'}} - {{trip?.departure_station_name}}
+              </div>
+              <div class="station-info">
+                <strong>Palautus:</strong> {{trip?.return | date:'MMM d, y (HH:mm)'}} - {{trip?.return_station_name}}
+              </div>
+            </div>
+          </div>
+          
+          <div class="trip-stats">
+            <div class="stat-item">
+              <span class="stat-icon">📏</span>
+              <span class="stat-label">Matka:</span>
+              <span class="stat-value">{{ (trip?.covered_distance_m / 1000) | number : '1.1-2'}} km</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-icon">⏱️</span>
+              <span class="stat-label">Kesto:</span>
+              <span class="stat-value">{{ formatDuration(trip?.duration_sec) }}</span>
+            </div>
+          </div>
         </article>
 
         <aside class="keskinopeus">
-          Keskinopeus (km/h)<br />
-          <span *ngIf="(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) > 15" class="nopeus yli15">{{(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) | number : '1.1-2'}}</span>
-          <span *ngIf="(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) < 15" class="nopeus alle15">{{(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) | number : '1.1-2'}}</span>
+          <div class="speed-label">Keskinopeus</div>
+          <span *ngIf="(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) > 15" class="nopeus yli15">
+            {{(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) | number : '1.1-2'}}
+          </span>
+          <span *ngIf="(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) <= 15" class="nopeus alle15">
+            {{(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) | number : '1.1-2'}}
+          </span>
+          <div class="speed-unit">km/h</div>
         </aside>
       </section>
+
+      <!-- Bottom Pagination Controls -->
+      <div *ngIf="usePagination && totalPages > 1" class="pagination-controls pagination-bottom">
+        <button (click)="previousPage()" [disabled]="currentPage === 1" class="page-btn">
+          ← Edellinen
+        </button>
+        
+        <button *ngIf="getPageNumbers()[0] > 1" (click)="goToPage(1)" class="page-number">1</button>
+        <span *ngIf="getPageNumbers()[0] > 2" class="page-dots">...</span>
+        
+        <button *ngFor="let page of getPageNumbers()" 
+                (click)="goToPage(page)" 
+                [class.active]="page === currentPage"
+                class="page-number">
+          {{page}}
+        </button>
+        
+        <span *ngIf="getPageNumbers()[getPageNumbers().length - 1] < totalPages - 1" class="page-dots">...</span>
+        <button *ngIf="getPageNumbers()[getPageNumbers().length - 1] < totalPages" (click)="goToPage(totalPages)" class="page-number">{{totalPages}}</button>
+        
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="page-btn">
+          Seuraava →
+        </button>
+      </div>
 
     </article>
   </section>
