@@ -3,28 +3,50 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
 import { Journey } from './models/journey.model';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class BiketripService {
-  private apiUrl = 'https://corsproxy.io/?url=https://citybikeapi.azurewebsites.net/api/CitybikeTripsMay2021';
-
+  // Use relative path for local dev (proxied), absolute for production
+  private apiUrl = environment.production 
+    ? 'https://citybikeapi.azurewebsites.net/api/CitybikeTripsMay2021'
+    : '/api/CitybikeTripsMay2021';
+    
   constructor(private http: HttpClient) { }
 
-  public GetBikeTripsPerPage(pageNumber: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}?pageNumber=${pageNumber}`);
+  public GetBikeTripsPerPage(
+    pageNumber: number, 
+    pageSize: number = 500,
+    sortBy: string = 'departure',
+    sortOrder: string = 'asc',
+    search: string = ''
+  ): Observable<any> {
+    let params = `?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+    if (search) {
+      params += `&search=${encodeURIComponent(search)}`;
+    }
+    return this.http.get<any>(`${this.apiUrl}${params}`);
   }
 
-  public GetTotalTripsCount(): Observable<number> {
-    // First try to get from a dedicated count endpoint
-    return this.http.get<number>(`${this.apiUrl}/count`).pipe(
+  public GetTotalTripsCount(search: string = ''): Observable<any> {
+    const params = search ? `?search=${encodeURIComponent(search)}` : '';
+    return this.http.get<any>(`${this.apiUrl}/count${params}`).pipe(
       catchError(error => {
-        console.log('Count endpoint not available, will estimate dynamically');
-        return of(0); // Return 0 to indicate count not available
+        console.log('Count endpoint error:', error);
+        return of({ totalTrips: 0 });
       })
     );
+  }
+
+  public GetTripsStats(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/stats`);
+  }
+
+  public GetTripsCountByStation(stationId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/count/by-station/${stationId}`);
   }
 
   public GetTopDepartureStations(): Observable<any> {

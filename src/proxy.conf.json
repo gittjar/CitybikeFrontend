@@ -1,25 +1,9 @@
-[{
-    "context": ["/stations"],
-    "target": "https://localhost:7297/api/Stations",
-    "secure": false,
-    "logLevel": "debug",
+{
+  "/api": {
+    "target": "https://citybikeapi.azurewebsites.net",
+    "secure": true,
     "changeOrigin": true,
-    "pathRewrite": {"^/stations" : ""}
-  },
-  {
-    "context": ["/biketrips"],
-    "target": "https://localhost:7297/api/CitybikeTripsMay2021",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true,
-    "pathRewrite": {"^/biketrips" : ""}
-  },
-  {
-    "context": ["/commontrips"],
-    "target": "https://localhost:7297/api/CitybikeTrips",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true,
-    "pathRewrite": {"^/commontrips" : ""}
-  }]
+    "logLevel": "debug"
+  }
+}
   

@@ -37,6 +37,10 @@ export class BiketripsComponent implements OnInit {
   loadingPercentage = 0;
   estimatedTotalTrips = 0;
 
+  // Stats
+  showStats = false;
+  stats: any = null;
+
   ngOnInit(): void {
     this.GetBikeTripsMay2021();
   }
@@ -49,7 +53,7 @@ export class BiketripsComponent implements OnInit {
     }
 
   GetBikeTripsMay2021(): void {
-    this.hpservice.GetBikeTripsPerPage(this.newPageNumber).subscribe((data: any) => {
+    this.hpservice.GetBikeTripsPerPage(this.newPageNumber, 500).subscribe((data: any) => {
       this.citybiketripsmay2021 = this.removeDuplicates(data.data);
       this.allTrips = [...this.citybiketripsmay2021];
       this.updatePagination();
@@ -60,7 +64,7 @@ export class BiketripsComponent implements OnInit {
   loadMoreTrips(): void {
     this.loadingMore = true;
     this.newPageNumber++;
-    this.hpservice.GetBikeTripsPerPage(this.newPageNumber).subscribe((data: any) => {
+    this.hpservice.GetBikeTripsPerPage(this.newPageNumber, 500).subscribe((data: any) => {
       const previousCount = this.allTrips.length;
       // Add new data to allTrips and remove duplicates
       const newTrips = this.removeDuplicates([...this.allTrips, ...data.data]);
@@ -95,14 +99,14 @@ export class BiketripsComponent implements OnInit {
     
     // Try to get total count from API first
     this.hpservice.GetTotalTripsCount().subscribe(
-      (totalCount: number) => {
-        if (totalCount > 0) {
+      (response: any) => {
+        if (response && response.totalTrips > 0) {
           // API provided total count!
-          this.estimatedTotalTrips = totalCount;
-          console.log(`✅ API reports total trips: ${totalCount}`);
+          this.estimatedTotalTrips = response.totalTrips;
+          console.log(`✅ API reports total trips: ${response.totalTrips}`);
         } else {
-          // API doesn't have count endpoint, will estimate dynamically
-          console.log('ℹ️ No count endpoint available, estimating dynamically');
+          // API doesn't have count or returned 0
+          console.log('ℹ️ No count available, estimating dynamically');
         }
         
         // Start loading all pages
@@ -120,8 +124,11 @@ export class BiketripsComponent implements OnInit {
     // This method is no longer needed, we'll update estimate dynamically
   }
 
-  private loadAllPagesRecursively(startPage: number): void {
-    this.hpservice.GetBikeTripsPerPage(startPage).subscribe(
+  private loadAllPagesRecursively(startPage: number, retryCount: number = 0): void {
+    const maxRetries = 3;
+    const baseDelay = 500; // Base delay between requests (ms)
+    
+    this.hpservice.GetBikeTripsPerPage(startPage, 500).subscribe(
       (data: any) => {
         console.log(`Page ${startPage}: Received ${data.data?.length || 0} trips`);
         
@@ -140,20 +147,19 @@ export class BiketripsComponent implements OnInit {
           console.log(`Page ${startPage}: Added ${addedCount} new trips (${data.data.length} received, ${data.data.length - addedCount} duplicates removed)`);
           
           // Dynamic estimation (only if we don't have API count)
-          if (this.estimatedTotalTrips === 0 || data.data.length >= 200) {
-            if (data.data.length >= 200) {
-              // Still loading full pages - estimate conservatively
-              // Use actual loaded count + small buffer based on average per page
+          if (this.estimatedTotalTrips === 0 || data.data.length >= 450) {
+            if (data.data.length >= 450) {
+              // Still loading full pages (500 per page) - estimate conservatively
               const avgPerPage = this.allTrips.length / startPage;
-              const estimatedRemainingPages = Math.min(10, Math.ceil(startPage * 0.2)); // Estimate max 10-20% more pages
+              const estimatedRemainingPages = Math.min(10, Math.ceil(startPage * 0.2));
               const dynamicEstimate = Math.floor(this.allTrips.length + (avgPerPage * estimatedRemainingPages));
               
-              // Only update estimate if we don't have API count, or dynamic is higher
+              // Only update estimate if we don't have API count
               if (this.estimatedTotalTrips === 0) {
                 this.estimatedTotalTrips = dynamicEstimate;
               }
             } else {
-              // Last page detected (less than 200 items), set exact total
+              // Last page detected (less than 450 items), set exact total
               this.estimatedTotalTrips = this.allTrips.length;
             }
           }
@@ -165,13 +171,13 @@ export class BiketripsComponent implements OnInit {
           
           console.log(`Total: ${this.allTrips.length} trips | Estimate: ~${this.estimatedTotalTrips} | Progress: ${this.loadingPercentage}%`);
           
-          // If page has substantial data (200+ items), there might be more
-          if (data.data.length >= 200) {
-            // Continue loading next page
+          // If page has substantial data (450+ items out of 500), there might be more
+          if (data.data.length >= 450) {
+            // Continue loading next page with delay to avoid rate limiting
             console.log(`Continuing to page ${startPage + 1}...`);
-            setTimeout(() => this.loadAllPagesRecursively(startPage + 1), 100);
+            setTimeout(() => this.loadAllPagesRecursively(startPage + 1, 0), baseDelay);
           } else {
-            // This was the last page (less than 200 items)
+            // This was the last page (less than 450 items)
             console.log(`Last page detected (only ${data.data.length} items). Finishing...`);
             this.finishLoadingAll();
           }
@@ -183,7 +189,17 @@ export class BiketripsComponent implements OnInit {
       },
       error => {
         console.error(`Error loading page ${startPage}:`, error);
-        this.finishLoadingAll();
+        
+        // Retry logic with exponential backoff
+        if (retryCount < maxRetries) {
+          const retryDelay = baseDelay * Math.pow(2, retryCount + 1); // 1s, 2s, 4s
+          console.log(`⚠️ Retrying page ${startPage} in ${retryDelay}ms (attempt ${retryCount + 1}/${maxRetries})...`);
+          setTimeout(() => this.loadAllPagesRecursively(startPage, retryCount + 1), retryDelay);
+        } else {
+          console.error(`❌ Failed to load page ${startPage} after ${maxRetries} retries. Stopping.`);
+          alert(`Lataaminen keskeytetty sivulla ${startPage}. Ladattu ${this.allTrips.length} matkaa.\n\nVirhe: ${error.message || 'CORS-proxy rate limit'}`);
+          this.finishLoadingAll();
+        }
       }
     );
   }
@@ -296,15 +312,22 @@ export class BiketripsComponent implements OnInit {
   }
 
   removeDuplicates(trips: any[]): any[] {
-    const seen = new Set();
-    return trips.filter(trip => {
-      const key = `${trip.departure}-${trip.departure_station_id}-${trip.return_station_id}-${trip.duration_sec}-${trip.covered_distance_m}`;
-      if (seen.has(key)) {
-        return false;
-      }
-      seen.add(key);
-      return true;
-    });
+    // Check if trips have an 'id' field for true duplicate detection
+    if (trips.length > 0 && trips[0].id !== undefined) {
+      const seen = new Set();
+      return trips.filter(trip => {
+        if (seen.has(trip.id)) {
+          return false;
+        }
+        seen.add(trip.id);
+        return true;
+      });
+    }
+    
+    // If no ID field, don't remove anything - API should handle pagination correctly
+    // These are legitimate trips that happen to be similar
+    console.log('⚠️ No ID field found. Assuming all trips are unique (API handles pagination).');
+    return trips;
   }
 
   sortByDistance(isAsc: boolean) {
@@ -390,5 +413,23 @@ export class BiketripsComponent implements OnInit {
         trip.return?.toLowerCase().includes(searchTerm)
       );
     }).length;
+  }
+
+  loadStats(): void {
+    this.hpservice.GetTripsStats().subscribe(
+      (data: any) => {
+        this.stats = data;
+        this.showStats = true;
+        console.log('Stats loaded:', data);
+      },
+      error => {
+        console.error('Error loading stats:', error);
+        alert('Virhe tilastojen lataamisessa');
+      }
+    );
+  }
+
+  closeStats(): void {
+    this.showStats = false;
   }
 }
