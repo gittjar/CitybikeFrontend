@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { StationService } from '../station.service';
 import { BiketripService } from '../biketrip.service';
 import { Station } from '../models/station.model';
-import { faSort, faLink, faMagnifyingGlass, faArrowRightLong, faBicycle, faFilter, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { faSort, faLink, faMagnifyingGlass, faArrowRightLong, faBicycle, faFilter, faLocationDot, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-stations-list',
@@ -27,10 +27,14 @@ export class StationsListComponent implements OnInit {
   faBicycle = faBicycle;
   faFilter = faFilter;
   faLocation = faLocationDot;
+  faArrowUp = faArrowUp;
+  faArrowDown = faArrowDown;
   MagnifyingGlass = faMagnifyingGlass;
   ArrowRightLong = faArrowRightLong;
   uniqueCities: string[] = [];
   selectedCities: Set<string> = new Set();
+  currentSortKey: string = '';
+  showOnlyWithImages: boolean = false;
 
   constructor(private stationService: StationService, private biketripService: BiketripService) {}
 
@@ -65,14 +69,24 @@ export class StationsListComponent implements OnInit {
   }
 
   sortStations(key: string): void {
+    this.currentSortKey = key;
     this.sortDirection[key] = !this.sortDirection[key];
     this.displayedStations.sort((a: any, b: any) => {
-      if (a[key] < b[key]) {
-        return this.sortDirection[key] ? -1 : 1;
-      } else if (a[key] > b[key]) {
-        return this.sortDirection[key] ? 1 : -1;
+      const aValue = a[key] || 0;
+      const bValue = b[key] || 0;
+      
+      if (typeof aValue === 'string') {
+        return this.sortDirection[key] 
+          ? aValue.localeCompare(bValue, 'fi')
+          : bValue.localeCompare(aValue, 'fi');
       } else {
-        return 0;
+        if (aValue < bValue) {
+          return this.sortDirection[key] ? -1 : 1;
+        } else if (aValue > bValue) {
+          return this.sortDirection[key] ? 1 : -1;
+        } else {
+          return 0;
+        }
       }
     });
   }
@@ -83,10 +97,10 @@ export class StationsListComponent implements OnInit {
     } else {
       this.selectedCities.add(city);
     }
-    this.filterBySelectedCities();
+    this.applyFilters();
   }
 
-  filterBySelectedCities(): void {
+  applyFilters(): void {
     if (this.selectedCities.size === 0) {
       this.displayedStations = [...this.sortedStations];
     } else {
@@ -96,14 +110,22 @@ export class StationsListComponent implements OnInit {
 
   showAll(): void {
     this.selectedCities.clear();
-    this.displayedStations = [...this.sortedStations];
+    this.applyFilters();
   }
 
   get filteredStations(): any[] {
-    return this.displayedStations.filter(station =>
+    let filtered = this.displayedStations.filter(station =>
       station.nimi.toLowerCase().includes(this.term.toLowerCase()) ||
       station.kaupunki.toLowerCase().includes(this.term.toLowerCase())
     );
+
+    if (this.showOnlyWithImages) {
+      filtered = filtered.filter(station => 
+        station.kuva && station.kuva.trim() !== '' && !station.imageError
+      );
+    }
+
+    return filtered;
   }
 
   isCitySelected(city: string): boolean {

@@ -1,5 +1,5 @@
 
-<article class="colorbar bg-gradient-to-r from-cyan-500 via-sky-300 to-pink-500"></article>
+<article class="colorbar bg-gradient-to-r from-cyan-500 via-cyan-300 to-stone-500"></article>
 
 <app-loading *ngIf="loading"></app-loading>
 
@@ -52,6 +52,46 @@
       Näytä kaikki
       <fa-icon [icon]="ArrowRightLong"></fa-icon>
     </button>
+  </div>
+
+  <div class="sort-label">
+    <fa-icon [icon]="faSort"></fa-icon>
+    Lajittele:
+  </div>
+  
+  <div class="buttons-container">
+    <button (click)="sortStations('nimi')" 
+            [ngClass]="{'selected': currentSortKey === 'nimi'}" 
+            class="sort-button">
+      Nimi
+      <fa-icon [icon]="currentSortKey === 'nimi' ? (sortDirection['nimi'] ? faArrowUp : faArrowDown) : faSort"></fa-icon>
+    </button>
+    <button (click)="sortStations('kapasiteet')" 
+            [ngClass]="{'selected': currentSortKey === 'kapasiteet'}" 
+            class="sort-button">
+      Kapasiteetti
+      <fa-icon [icon]="currentSortKey === 'kapasiteet' ? (sortDirection['kapasiteet'] ? faArrowUp : faArrowDown) : faSort"></fa-icon>
+    </button>
+    <button (click)="sortStations('lahdetyt')" 
+            [ngClass]="{'selected': currentSortKey === 'lahdetyt'}" 
+            class="sort-button">
+      Lähdöt
+      <fa-icon [icon]="currentSortKey === 'lahdetyt' ? (sortDirection['lahdetyt'] ? faArrowUp : faArrowDown) : faSort"></fa-icon>
+    </button>
+    <button (click)="sortStations('palautetut')" 
+            [ngClass]="{'selected': currentSortKey === 'palautetut'}" 
+            class="sort-button">
+      Palautukset
+      <fa-icon [icon]="currentSortKey === 'palautetut' ? (sortDirection['palautetut'] ? faArrowUp : faArrowDown) : faSort"></fa-icon>
+    </button>
+  </div>
+
+  <div class="view-options">
+    <label class="checkbox-label">
+      <input type="checkbox" [(ngModel)]="showOnlyWithImages" (change)="applyFilters()" />
+      <span>Näytä vain kuvalliset asemat</span>
+      <fa-icon [icon]="faBicycle" class="checkbox-icon"></fa-icon>
+    </label>
   </div>
 </section>
 
