@@ -14,10 +14,10 @@
       </div>
       <div class="stat-box">
         <div class="stat-number">
-          {{estimatedTotalTrips.toLocaleString()}}
+          {{estimatedTotalTrips > 0 ? estimatedTotalTrips.toLocaleString() : '...'}}
         </div>
         <div class="stat-label">
-          Yhteensä
+          Arvioitu yhteensä
         </div>
       </div>
     </div>
@@ -25,6 +25,17 @@
     <div class="progress-bar-container">
       <div class="progress-bar" [style.width.%]="loadingPercentage">
         <span class="progress-text">{{loadingPercentage}}%</span>
+      </div>
+    </div>
+
+    <div class="time-info">
+      <div class="time-box">
+        <span class="time-label">Kulunut aika:</span>
+        <span class="time-value">{{formatTime(elapsedTime)}}</span>
+      </div>
+      <div class="time-box" *ngIf="estimatedTimeRemaining > 0 && loadingPercentage < 99">
+        <span class="time-label">Arvioitu jäljellä:</span>
+        <span class="time-value">{{formatTime(estimatedTimeRemaining)}}</span>
       </div>
     </div>
 
@@ -36,6 +47,10 @@
     <div class="loading-spinner">
       <div class="spinner"></div>
     </div>
+
+    <button (click)="abortLoading()" class="abort-button" *ngIf="loadingPercentage < 100">
+      ⛔ Keskeytä lataaminen
+    </button>
   </div>
 </div>
 

@@ -36,6 +36,10 @@ export class BiketripsComponent implements OnInit {
   tripsLoadedSoFar = 0;
   loadingPercentage = 0;
   estimatedTotalTrips = 0;
+  loadingAborted = false;
+  loadingStartTime = 0;
+  estimatedTimeRemaining = 0;
+  elapsedTime = 0;
 
   // Stats
   showStats = false;
@@ -91,9 +95,13 @@ export class BiketripsComponent implements OnInit {
 
     this.loadingAll = true;
     this.showLoadingModal = true;
+    this.loadingAborted = false;
     this.tripsLoadedSoFar = this.allTrips.length; // Start from current count
     this.loadingPercentage = 0;
     this.estimatedTotalTrips = 0;
+    this.loadingStartTime = Date.now();
+    this.estimatedTimeRemaining = 0;
+    this.elapsedTime = 0;
 
     console.log('Fetching total trip count from API...');
     
@@ -125,12 +133,26 @@ export class BiketripsComponent implements OnInit {
   }
 
   private loadAllPagesRecursively(startPage: number, retryCount: number = 0): void {
+    // Check if loading was aborted
+    if (this.loadingAborted) {
+      console.log('Loading aborted by user');
+      this.finishLoadingAll(true);
+      return;
+    }
+
     const maxRetries = 3;
     const baseDelay = 500; // Base delay between requests (ms)
     
     this.hpservice.GetBikeTripsPerPage(startPage, 500).subscribe(
       (data: any) => {
         console.log(`Page ${startPage}: Received ${data.data?.length || 0} trips`);
+        
+        // Check abort again after receiving data
+        if (this.loadingAborted) {
+          console.log('Loading aborted by user after receiving data');
+          this.finishLoadingAll(true);
+          return;
+        }
         
         if (data.data && data.data.length > 0) {
           // Add new data
@@ -142,6 +164,9 @@ export class BiketripsComponent implements OnInit {
           
           // Update progress
           this.tripsLoadedSoFar = this.allTrips.length;
+          
+          // Calculate elapsed time and estimate remaining
+          this.elapsedTime = Math.floor((Date.now() - this.loadingStartTime) / 1000);
           
           const addedCount = this.allTrips.length - previousCount;
           console.log(`Page ${startPage}: Added ${addedCount} new trips (${data.data.length} received, ${data.data.length - addedCount} duplicates removed)`);
@@ -164,9 +189,14 @@ export class BiketripsComponent implements OnInit {
             }
           }
           
-          // Calculate percentage
+          // Calculate percentage and time estimates
           if (this.estimatedTotalTrips > 0) {
             this.loadingPercentage = Math.min(99, Math.floor((this.tripsLoadedSoFar / this.estimatedTotalTrips) * 100));
+            
+            // Estimate time remaining
+            const tripsPerSecond = this.tripsLoadedSoFar / this.elapsedTime;
+            const remainingTrips = this.estimatedTotalTrips - this.tripsLoadedSoFar;
+            this.estimatedTimeRemaining = Math.ceil(remainingTrips / tripsPerSecond);
           }
           
           console.log(`Total: ${this.allTrips.length} trips | Estimate: ~${this.estimatedTotalTrips} | Progress: ${this.loadingPercentage}%`);
@@ -179,16 +209,22 @@ export class BiketripsComponent implements OnInit {
           } else {
             // This was the last page (less than 450 items)
             console.log(`Last page detected (only ${data.data.length} items). Finishing...`);
-            this.finishLoadingAll();
+            this.finishLoadingAll(false);
           }
         } else {
           // No more data
           console.log(`No data received on page ${startPage}. Finishing...`);
-          this.finishLoadingAll();
+          this.finishLoadingAll(false);
         }
       },
       error => {
         console.error(`Error loading page ${startPage}:`, error);
+        
+        // Check if aborted
+        if (this.loadingAborted) {
+          this.finishLoadingAll(true);
+          return;
+        }
         
         // Retry logic with exponential backoff
         if (retryCount < maxRetries) {
@@ -198,13 +234,13 @@ export class BiketripsComponent implements OnInit {
         } else {
           console.error(`❌ Failed to load page ${startPage} after ${maxRetries} retries. Stopping.`);
           alert(`Lataaminen keskeytetty sivulla ${startPage}. Ladattu ${this.allTrips.length} matkaa.\n\nVirhe: ${error.message || 'CORS-proxy rate limit'}`);
-          this.finishLoadingAll();
+          this.finishLoadingAll(false);
         }
       }
     );
   }
 
-  private finishLoadingAll(): void {
+  private finishLoadingAll(wasAborted: boolean = false): void {
     this.loadingPercentage = 100;
     this.tripsLoadedSoFar = this.allTrips.length;
     this.totalTripsToLoad = this.allTrips.length;
@@ -218,8 +254,32 @@ export class BiketripsComponent implements OnInit {
         this.currentSortFunction();
       }
       
-      alert(`✅ Kaikki matkat ladattu! Yhteensä: ${this.allTrips.length.toLocaleString()} matkaa`);
+      if (wasAborted) {
+        alert(`⚠️ Lataaminen keskeytetty käyttäjän toimesta.\nLadattu: ${this.allTrips.length.toLocaleString()} matkaa`);
+      } else {
+        alert(`✅ Kaikki matkat ladattu! Yhteensä: ${this.allTrips.length.toLocaleString()} matkaa`);
+      }
     }, 500);
+  }
+
+  abortLoading(): void {
+    if (confirm('⚠️ Haluatko varmasti keskeyttää lataamisen?\n\nTähän mennessä ladatut matkat säilytetään.')) {
+      this.loadingAborted = true;
+    }
+  }
+
+  formatTime(seconds: number): string {
+    if (seconds < 60) {
+      return `${seconds}s`;
+    } else if (seconds < 3600) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins}min ${secs}s`;
+    } else {
+      const hours = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      return `${hours}h ${mins}min`;
+    }
   }
 
   private loadMultiplePages(pagesToLoad: number): void {
