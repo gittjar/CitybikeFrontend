@@ -2,64 +2,113 @@
 <article class="colorbar bg-gradient-to-r from-cyan-500 via-sky-300 to-pink-500"></article>
 
 <app-loading *ngIf="loading"></app-loading>
+
 <div class="header-wrapper">
   <h2>
     <span class="bg-gray-700 bg-opacity-75 text-white text-2xl font-bold p-4 rounded-lg shadow-lg">
-    Kaupunkipyöräasemat
-    <fa-icon [icon]="faBicycle"></fa-icon>
+      Kaupunkipyöräasemat
+      <fa-icon [icon]="faBicycle"></fa-icon>
     </span>
   </h2>
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value">{{ stations.length }}</div>
+      <div class="stat-label">Asemia yhteensä</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ uniqueCities.length }}</div>
+      <div class="stat-label">Kaupunkeja</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ filteredStations.length }}</div>
+      <div class="stat-label">Näytetään</div>
+    </div>
+  </div>
 </div>
 
-<section class="bg-stone-700 text-white font-bold p-4 rounded-lg shadow-lg mx-4">
-<div class="nav-item">
-  Etsi ja lajittele <fa-icon [icon]="MagnifyingGlass"></fa-icon>
-  <br>
-  <input type="text" class="searchTerm" placeholder="Kirjoita hakusana.." [(ngModel)]="term" />
-</div>
+<section class="search-section">
+  <div class="search-container">
+    <fa-icon [icon]="MagnifyingGlass" class="search-icon"></fa-icon>
+    <input type="text" 
+           class="search-input" 
+           placeholder="Etsi aseman nimellä tai kaupungilla..." 
+           [(ngModel)]="term" />
+  </div>
 
-<div class="buttons-container">
-  <button *ngFor="let city of uniqueCities" 
-          (click)="toggleCitySelection(city)" 
-          [ngClass]="{'selected': isCitySelected(city)}" 
-          class="city-button">
-    {{ city }} <fa-icon [icon]="ArrowRightLong"></fa-icon>
-  </button>
-  <button (click)="showAll()" class="city-button">
-    Näytä kaikki <fa-icon [icon]="ArrowRightLong"></fa-icon>
-  </button>
-</div>
+  <div class="filter-label">
+    <fa-icon [icon]="faFilter"></fa-icon>
+    Suodata kaupungin mukaan:
+  </div>
+  
+  <div class="buttons-container">
+    <button *ngFor="let city of uniqueCities" 
+            (click)="toggleCitySelection(city)" 
+            [ngClass]="{'selected': isCitySelected(city)}" 
+            class="city-button">
+      {{ city }}
+      <fa-icon [icon]="ArrowRightLong"></fa-icon>
+    </button>
+    <button (click)="showAll()" class="city-button show-all-btn">
+      Näytä kaikki
+      <fa-icon [icon]="ArrowRightLong"></fa-icon>
+    </button>
+  </div>
 </section>
 
-<div class="stations-list">
-  <table>
-    <thead>
-      <tr>
-        <th (click)="sortStations('nimi')">
-          Nimi <fa-icon [icon]="faSort"></fa-icon>
-        </th>
-        <th (click)="sortStations('kaupunki')">
-          Kaupunki <fa-icon [icon]="faSort"></fa-icon>
-        </th>
-        <th (click)="sortStations('kapasiteet')">
-          Kapasiteet <fa-icon [icon]="faSort"></fa-icon>
-        </th>
-        <th (click)="sortStations('palautetut')">
-          Palautetut <fa-icon [icon]="faSort"></fa-icon>
-        </th>
-        <th (click)="sortStations('lahdetyt')">
-          Lähteneet <fa-icon [icon]="faSort"></fa-icon>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let station of filteredStations">
-        <td><a [routerLink]="['/station-details', station.id]">{{ station.nimi }} <fa-icon [icon]="ArrowRightLong"></fa-icon></a></td>
-        <td>{{ station.kaupunki }} </td>
-        <td>{{ station.kapasiteet }}</td>
-        <td>{{ station.palautetut }}</td>
-        <td>{{ station.lahdetyt }}</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="stations-grid">
+  <div *ngFor="let station of filteredStations" class="station-card">
+    <div class="card-image">
+      <img *ngIf="station.kuva && station.kuva.trim() !== ''" 
+           [src]="station.kuva" 
+           [alt]="station.nimi"
+           (error)="station.imageError = true"
+           [style.display]="station.imageError ? 'none' : 'block'" />
+      <div *ngIf="!station.kuva || station.kuva.trim() === '' || station.imageError" class="no-image-placeholder">
+        <fa-icon [icon]="faBicycle" class="placeholder-icon"></fa-icon>
+        <p>Image should be here, but not uploaded!</p>
+      </div>
+    </div>
+    
+    <div class="card-header">
+      <h3 class="station-name">
+        <fa-icon [icon]="faBicycle" class="station-icon"></fa-icon>
+        {{ station.nimi }}
+      </h3>
+      <span class="city-badge">{{ station.kaupunki }}</span>
+    </div>
+    
+    <div class="card-body">
+      <div class="info-row">
+        <fa-icon [icon]="faLocation" class="info-icon"></fa-icon>
+        <span class="info-text">{{ station.osoite }}</span>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">{{ station.kapasiteet }}</div>
+          <div class="stat-text">Kapasiteetti</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">{{ station.lahdetyt || 0 }}</div>
+          <div class="stat-text">Lähtöjä</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">{{ station.palautetut || 0 }}</div>
+          <div class="stat-text">Palautuksia</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card-footer">
+      <a [routerLink]="['/station-details', station.id]" class="details-link">
+        Näytä tiedot
+        <fa-icon [icon]="ArrowRightLong"></fa-icon>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="filteredStations.length === 0" class="no-results">
+  <fa-icon [icon]="MagnifyingGlass" class="no-results-icon"></fa-icon>
+  <p>Ei tuloksia haulle "{{ term }}"</p>
 </div>

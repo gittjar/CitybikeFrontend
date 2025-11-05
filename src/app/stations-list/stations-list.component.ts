@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { StationService } from '../station.service';
 import { BiketripService } from '../biketrip.service';
 import { Station } from '../models/station.model';
-import { faSort, faLink, faMagnifyingGlass, faArrowRightLong, faBicycle } from '@fortawesome/free-solid-svg-icons';
+import { faSort, faLink, faMagnifyingGlass, faArrowRightLong, faBicycle, faFilter, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-stations-list',
@@ -25,6 +25,8 @@ export class StationsListComponent implements OnInit {
   faSort = faSort;
   faLink = faLink;
   faBicycle = faBicycle;
+  faFilter = faFilter;
+  faLocation = faLocationDot;
   MagnifyingGlass = faMagnifyingGlass;
   ArrowRightLong = faArrowRightLong;
   uniqueCities: string[] = [];
