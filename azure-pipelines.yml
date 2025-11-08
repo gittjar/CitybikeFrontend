@@ -56,7 +56,7 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Deploy App Service'
             inputs:
-              azureSubscription: 'Palveluyhteys-Azure-common'
+              azureSubscription: 'Palveluyhteys_2025'
               appType: 'webApp'
               appName: 'solitacitybike'
               package: '$(Pipeline.Workspace)/dropscb/$(Build.BuildId).zip'
