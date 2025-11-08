@@ -3,6 +3,7 @@ import { StationService } from '../station.service';
 import { BiketripService } from '../biketrip.service';
 import { Journey } from '../models/journey.model';
 import { faRotateLeft, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { MarkerClusterer } from '@googlemaps/markerclusterer';
 
 @Component({
   selector: 'app-mapscreen',
@@ -193,6 +194,7 @@ export class MapscreenComponent implements OnInit {
 
   // google maps configurations
   markers = [] as any;
+  markerClusterer?: MarkerClusterer;
 
   showContent(contentType: string) {
     this.markers = [];
@@ -266,12 +268,47 @@ export class MapscreenComponent implements OnInit {
             </a>
           </div>`;
 
-        // To add the marker to the map, call setMap();
-        marker.setMap(this.map);
+        // Add click listener to marker
         google.maps.event.addListener(marker, "click", () => {
           this.infoWindow.setContent(markerContent);
           this.infoWindow.open(this.map, marker);
         });
+
+        // Add marker to array for clustering
+        this.markers.push(marker);
+      });
+
+      // Create marker clusterer after all markers are added
+      if (this.markerClusterer) {
+        this.markerClusterer.clearMarkers();
+      }
+      
+      this.markerClusterer = new MarkerClusterer({
+        map: this.map,
+        markers: this.markers,
+        renderer: {
+          render: ({ count, position }) => {
+            // Custom cluster marker style matching your theme
+            return new google.maps.Marker({
+              position,
+              icon: {
+                url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                  <svg width="60" height="60" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="30" cy="30" r="28" fill="#08c9de" stroke="#292524" stroke-width="3"/>
+                    <text x="30" y="38" text-anchor="middle" font-size="20" font-weight="bold" fill="#292524">${count}</text>
+                  </svg>
+                `),
+                scaledSize: new google.maps.Size(60, 60),
+                anchor: new google.maps.Point(30, 30)
+              },
+              label: {
+                text: ' ',
+                color: 'transparent'
+              },
+              zIndex: Number(google.maps.Marker.MAX_ZINDEX) + count,
+            });
+          }
+        }
       });
     });
   }
