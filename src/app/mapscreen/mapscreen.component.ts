@@ -192,6 +192,12 @@ export class MapscreenComponent implements OnInit {
     });
   }
 
+  getStationIdByName(stationName: string): number | null {
+    if (!this.stations) return null;
+    const station = this.stations.find((s: any) => s.nimi === stationName);
+    return station ? station.id : null;
+  }
+
   // google maps configurations
   markers = [] as any;
   markerClusterer?: MarkerClusterer;

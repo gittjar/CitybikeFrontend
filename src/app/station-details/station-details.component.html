@@ -19,15 +19,33 @@
             </div>
             <div class="bg-stone-700 p-4 rounded-lg mb-6">
                 <h4 class="text-xl font-semibold mb-2">Kapasiteetti: {{stationdetail.kapasiteet}} kpl</h4>
+                <p class="text-stone-400 mb-2">Osoite: {{stationdetail.osoite}}</p>
                 <div *ngIf="!averageDistance" class="text-red-500">
                     <p>Ei tarpeeksi dataa tuottaa keskimääräistä kilometrilukemaa!</p>
                 </div>
                 <div *ngIf="averageDistance">
                     <h4 class="text-xl font-semibold">Matkan keskipituus: {{averageDistance / 1000 | number:'1.1-1' }} km</h4>
                 </div>
+                
+                <!-- Quick Actions -->
+                <div class="action-buttons mt-4 flex gap-3 flex-wrap">
+                    <a [href]="'https://www.google.com/maps/dir/?api=1&destination=' + stationdetail.y + ',' + stationdetail.x" 
+                       target="_blank"
+                       class="action-btn directions-btn">
+                        📍 Reittiohjeet
+                    </a>
+                    <button (click)="copyCoordinates()" class="action-btn copy-btn">
+                        📋 Kopioi koordinaatit
+                    </button>
+                    <a [href]="'https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=' + stationdetail.y + ',' + stationdetail.x" 
+                       target="_blank"
+                       class="action-btn streetview-btn">
+                        👁️ Street View
+                    </a>
+                </div>
             </div>
             <div class="bg-stone-700 p-4 rounded-lg mb-6">
-                <h4 class="text-xl font-semibold mb-2">Top 5 Palautusasemaa</h4>
+                <h4 class="text-xl font-semibold mb-2">Top-5 Palautusasemaa</h4>
                 <div *ngIf="topReturnStations.length < 5" class="text-red-500">
                     <p>Ei tarpeeksi dataa tuottaa Top-5 asemat luetteloa!</p>
                 </div>
@@ -36,17 +54,42 @@
                         <tr>
                             <th class="pb-2">#</th>
                             <th class="pb-2">Asema</th>
+                            <th class="pb-2 text-right">Matkat</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let returnStation of topReturnStations">
+                        <tr *ngFor="let returnStation of topReturnStations" class="hover:bg-stone-600 transition-colors">
                             <td class="pb-2">{{ returnStation.rank }}</td>
                             <td class="pb-2">
-                                <a [routerLink]="['/station-details', returnStation.id]" class="text-pink-500 hover:underline">{{ returnStation.name }}</a>
+                                <a [routerLink]="['/station-details', returnStation.id]" class="text-cyan-400 hover:text-cyan-300 hover:underline">{{ returnStation.name }}</a>
                             </td>
+                            <td class="pb-2 text-right text-stone-400">{{ returnStation.count }}</td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            
+            <!-- Trip Statistics -->
+                        <div class="bg-stone-700 p-4 rounded-lg mb-6" *ngIf="jsonData.length > 0">
+                            <h4 class="text-xl font-semibold mb-4">{{ stationdetail.nimi }} - tilastot</h4>
+                            <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value">{{ jsonData.length }}</div>
+                        <div class="stat-label">Matkoja yhteensä</div>
+                    </div>
+                    <div class="stat-box" *ngIf="averageDistance">
+                        <div class="stat-value">{{ averageDistance / 1000 | number:'1.1-1' }} km</div>
+                        <div class="stat-label">Keskimatka</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">{{ getDepartureCount() }}</div>
+                        <div class="stat-label">Lähtöjä</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">{{ getReturnCount() }}</div>
+                        <div class="stat-label">Palautuksia</div>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -16,7 +16,7 @@ export class StationDetailsComponent implements OnInit {
   stationdetail: Station | null = null;
   jsonData: Journey[] = [];
   errorMessage: string | null = null;
-  topReturnStations: { id: number, name: string, rank: number }[] = [];
+  topReturnStations: { id: number, name: string, rank: number, count: number }[] = [];
   stationTable: Station[] = [];
   averageDistance: number | null = null;
 
@@ -65,7 +65,7 @@ export class StationDetailsComponent implements OnInit {
     });
   }
 
-  getTopReturnStations(departureStation: string): { id: number, name: string, rank: number }[] {
+  getTopReturnStations(departureStation: string): { id: number, name: string, rank: number, count: number }[] {
     const returnStations = this.jsonData
       .filter(journey => journey.departure_station_name === departureStation)
       .map(journey => ({ id: journey.return_station_id, name: journey.return_station_name }));
@@ -81,7 +81,7 @@ export class StationDetailsComponent implements OnInit {
       .slice(0, 5)
       .map((entry, index) => {
         const [id, name] = entry[0].split('-');
-        return { id: Number(id), name, rank: index + 1 };
+        return { id: Number(id), name, rank: index + 1, count: entry[1] };
       });
   }
 
@@ -120,16 +120,154 @@ export class StationDetailsComponent implements OnInit {
     const mapOptions: google.maps.MapOptions = {
       center: { lat: yCoordinate, lng: xCoordinate },
       zoom: 13,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      disableDefaultUI: false,
+      zoomControl: true,
+      mapTypeControl: false,
+      streetViewControl: true,
+      fullscreenControl: true,
+      styles: [
+        {
+          "elementType": "geometry",
+          "stylers": [{"color": "#212121"}]
+        },
+        {
+          "elementType": "labels.icon",
+          "stylers": [{"visibility": "off"}]
+        },
+        {
+          "elementType": "labels.text.fill",
+          "stylers": [{"color": "#757575"}]
+        },
+        {
+          "elementType": "labels.text.stroke",
+          "stylers": [{"color": "#212121"}]
+        },
+        {
+          "featureType": "administrative",
+          "elementType": "geometry",
+          "stylers": [{"color": "#757575"}]
+        },
+        {
+          "featureType": "administrative.country",
+          "elementType": "labels.text.fill",
+          "stylers": [{"color": "#9e9e9e"}]
+        },
+        {
+          "featureType": "administrative.locality",
+          "elementType": "labels.text.fill",
+          "stylers": [{"color": "#bdbdbd"}]
+        },
+        {
+          "featureType": "poi",
+          "elementType": "labels.text.fill",
+          "stylers": [{"color": "#757575"}]
+        },
+        {
+          "featureType": "poi.park",
+          "elementType": "geometry",
+          "stylers": [{"color": "#181818"}]
+        },
+        {
+          "featureType": "poi.park",
+          "elementType": "labels.text.fill",
+          "stylers": [{"color": "#616161"}]
+        },
+        {
+          "featureType": "poi.park",
+          "elementType": "labels.text.stroke",
+          "stylers": [{"color": "#1b1b1b"}]
+        },
+        {
+          "featureType": "road",
+          "elementType": "geometry.fill",
+          "stylers": [{"color": "#2c2c2c"}]
+        },
+        {
+          "featureType": "road",
+          "elementType": "labels.text.fill",
+          "stylers": [{"color": "#8a8a8a"}]
+        },
+        {
+          "featureType": "road.arterial",
+          "elementType": "geometry",
+          "stylers": [{"color": "#373737"}]
+        },
+        {
+          "featureType": "road.highway",
+          "elementType": "geometry",
+          "stylers": [{"color": "#3c3c3c"}]
+        },
+        {
+          "featureType": "road.highway.controlled_access",
+          "elementType": "geometry",
+          "stylers": [{"color": "#4e4e4e"}]
+        },
+        {
+          "featureType": "road.local",
+          "elementType": "labels.text.fill",
+          "stylers": [{"color": "#616161"}]
+        },
+        {
+          "featureType": "transit",
+          "elementType": "labels.text.fill",
+          "stylers": [{"color": "#757575"}]
+        },
+        {
+          "featureType": "water",
+          "elementType": "geometry",
+          "stylers": [{"color": "#000000"}]
+        },
+        {
+          "featureType": "water",
+          "elementType": "labels.text.fill",
+          "stylers": [{"color": "#3d3d3d"}]
+        }
+      ]
     };
     const map = new google.maps.Map(document.getElementById('map') as HTMLElement, mapOptions);
   
+    // Main station marker with custom SVG
+    const mainStationIcon = {
+      path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
+      fillColor: '#06b6d4',
+      fillOpacity: 1,
+      strokeColor: '#ffffff',
+      strokeWeight: 2,
+      scale: 2,
+      anchor: new google.maps.Point(12, 22)
+    };
+    
     const markerOptions: google.maps.MarkerOptions = {
       position: { lat: yCoordinate, lng: xCoordinate },
       map: map,
       title: this.stationdetail.nimi,
-      icon: { url: '/assets/bike.png', scaledSize: new google.maps.Size(50, 50) }
+      icon: mainStationIcon,
+      animation: google.maps.Animation.DROP
     };
-    new google.maps.Marker(markerOptions);
+    
+    const mainMarker = new google.maps.Marker(markerOptions);
+    
+    // Info window for main station
+    const infoWindow = new google.maps.InfoWindow({
+      content: `
+        <div style="color: #292524; padding: 8px; font-family: sans-serif;">
+          <h3 style="margin: 0 0 8px 0; color: #06b6d4; font-size: 16px; font-weight: bold;">
+            ${this.stationdetail.nimi}
+          </h3>
+          <p style="margin: 4px 0; font-size: 13px;">
+            <strong>Kapasiteetti:</strong> ${this.stationdetail.kapasiteet} paikkaa
+          </p>
+          <p style="margin: 4px 0; font-size: 13px;">
+            <strong>Osoite:</strong> ${this.stationdetail.osoite}
+          </p>
+        </div>
+      `
+    });
+    
+    mainMarker.addListener('click', () => {
+      infoWindow.open(map, mainMarker);
+    });
   
     this.topReturnStations.forEach(station => {
       const coordinates = this.getStationCoordinatesByName(station.name);
@@ -137,8 +275,21 @@ export class StationDetailsComponent implements OnInit {
         const returnMarkerOptions: google.maps.MarkerOptions = {
           position: { lat: coordinates.y, lng: coordinates.x },
           map: map,
-          label: `${station.rank}`,
+          label: {
+            text: `${station.rank}`,
+            color: '#ffffff',
+            fontSize: '14px',
+            fontWeight: 'bold'
+          },
           title: station.name,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 20,
+            fillColor: '#06b6d4',
+            fillOpacity: 0.9,
+            strokeColor: '#67e8f9',
+            strokeWeight: 2
+          }
         };
         new google.maps.Marker(returnMarkerOptions);
   
@@ -149,9 +300,9 @@ export class StationDetailsComponent implements OnInit {
             { lat: coordinates.y, lng: coordinates.x }
           ],
           geodesic: true,
-          strokeColor: '#FF0000',
-          strokeOpacity: 1.0,
-          strokeWeight: 2,
+          strokeColor: '#06b6d4',
+          strokeOpacity: 0.8,
+          strokeWeight: 3,
         });
         polyline.setMap(map);
   
@@ -231,5 +382,26 @@ export class StationDetailsComponent implements OnInit {
         kaupunki: this.stationdetail.kaupunki
       });
     }
+  }
+
+  copyCoordinates(): void {
+    if (this.stationdetail) {
+      const coords = `${this.stationdetail.y}, ${this.stationdetail.x}`;
+      navigator.clipboard.writeText(coords).then(() => {
+        alert('Koordinaatit kopioitu leikepöydälle!');
+      }).catch(err => {
+        console.error('Failed to copy coordinates:', err);
+      });
+    }
+  }
+
+  getDepartureCount(): number {
+    if (!this.stationdetail) return 0;
+    return this.jsonData.filter(j => j.departure_station_name === this.stationdetail!.nimi).length;
+  }
+
+  getReturnCount(): number {
+    if (!this.stationdetail) return 0;
+    return this.jsonData.filter(j => j.return_station_name === this.stationdetail!.nimi).length;
   }
 }
