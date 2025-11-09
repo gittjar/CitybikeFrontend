@@ -10,5 +10,37 @@
     <a routerLink="/stations-list" (click)="closeMenu()" class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-pink-500 hover:to-pink-400">Asemalista</a>
     <a routerLink="/biketrips" (click)="closeMenu()" class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-pink-500 hover:to-pink-400">Pyörämatkat</a>
     <a href="https://citybikemvc.azurewebsites.net/" (click)="closeMenu()" class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-pink-500 hover:to-pink-400">Hallintatyökalu</a>
+    
+    <!-- Favorites Dropdown -->
+    <div class="favorites-dropdown-container">
+      <button (click)="toggleFavoritesDropdown()" class="favorites-button bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-amber-500 hover:from-pink-500 hover:to-pink-400">
+        ⭐ Suosikit
+        <span class="favorites-badge" *ngIf="favoriteCount > 0">{{ favoriteCount }}</span>
+      </button>
+      
+      <div class="favorites-dropdown" *ngIf="showFavorites">
+        <div class="favorites-header">
+          <h3>Suosikkiasemat</h3>
+          <span class="favorites-count">{{ favoriteCount }} asemaa</span>
+        </div>
+        
+        <div class="favorites-list" *ngIf="favorites.length > 0">
+          <div class="favorite-item" *ngFor="let fav of favorites" (click)="goToStation(fav.id)">
+            <div class="favorite-info">
+              <div class="favorite-name">{{ fav.nimi }}</div>
+              <div class="favorite-city">{{ fav.kaupunki }}</div>
+            </div>
+            <button class="remove-favorite" (click)="removeFavorite(fav.id, $event)" title="Poista suosikeista">
+              ✕
+            </button>
+          </div>
+        </div>
+        
+        <div class="no-favorites" *ngIf="favorites.length === 0">
+          <p>Ei vielä suosikkiasemia</p>
+          <span>Lisää tähtikuvakkeesta aseman tiedoissa</span>
+        </div>
+      </div>
+    </div>
   </div>
 </nav>

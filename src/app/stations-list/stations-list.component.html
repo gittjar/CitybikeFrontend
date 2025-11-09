@@ -114,7 +114,15 @@
         <fa-icon [icon]="faBicycle" class="station-icon"></fa-icon>
         {{ station.nimi }}
       </h3>
-      <span class="city-badge">{{ station.kaupunki }}</span>
+      <div class="card-header-right">
+        <button class="favorite-button" 
+                (click)="toggleFavorite(station, $event)"
+                [class.is-favorite]="favoritesService.isFavorite(station.id)"
+                [title]="favoritesService.isFavorite(station.id) ? 'Poista suosikeista' : 'Lisää suosikkeihin'">
+          {{ favoritesService.isFavorite(station.id) ? 'Suosikki' : 'Suosikki' }}
+        </button>
+        <span class="city-badge">{{ station.kaupunki }}</span>
+      </div>
     </div>
     
     <div class="card-body">

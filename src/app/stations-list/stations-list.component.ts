@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { StationService } from '../station.service';
 import { BiketripService } from '../biketrip.service';
+import { FavoritesService } from '../favorites.service';
 import { Station } from '../models/station.model';
-import { faSort, faLink, faMagnifyingGlass, faArrowRightLong, faBicycle, faFilter, faLocationDot, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { faSort, faLink, faMagnifyingGlass, faArrowRightLong, faBicycle, faFilter, faLocationDot, faArrowUp, faArrowDown, faStar } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-stations-list',
@@ -29,6 +30,7 @@ export class StationsListComponent implements OnInit {
   faLocation = faLocationDot;
   faArrowUp = faArrowUp;
   faArrowDown = faArrowDown;
+  faStar = faStar;
   MagnifyingGlass = faMagnifyingGlass;
   ArrowRightLong = faArrowRightLong;
   uniqueCities: string[] = [];
@@ -36,7 +38,11 @@ export class StationsListComponent implements OnInit {
   currentSortKey: string = '';
   showOnlyWithImages: boolean = false;
 
-  constructor(private stationService: StationService, private biketripService: BiketripService) {}
+  constructor(
+    private stationService: StationService,
+    private biketripService: BiketripService,
+    public favoritesService: FavoritesService
+  ) {}
 
   ngOnInit(): void {
     this.stationService.getStations().subscribe((data: Station[]) => {
@@ -130,5 +136,15 @@ export class StationsListComponent implements OnInit {
 
   isCitySelected(city: string): boolean {
     return this.selectedCities.has(city);
+  }
+
+  toggleFavorite(station: any, event: Event): void {
+    event.stopPropagation();
+    event.preventDefault();
+    this.favoritesService.toggleFavorite({
+      id: station.id,
+      nimi: station.nimi,
+      kaupunki: station.kaupunki
+    });
   }
 }

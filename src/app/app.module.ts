@@ -30,6 +30,7 @@ import { MainpageComponent } from './mainpage/mainpage.component';
 import { StationDetailsComponent } from './station-details/station-details.component';
 import { LoadingComponent } from './loading/loading.component';
 import { StationsListComponent } from './stations-list/stations-list.component';
+import { FavoritesService } from './favorites.service';
 
 registerLocaleData(localeFi);
 
@@ -59,7 +60,10 @@ registerLocaleData(localeFi);
     FontAwesomeModule
 
   ],
-  providers: [{ provide: LOCALE_ID, useValue: 'fi' }], // this provides FIN
+  providers: [
+    { provide: LOCALE_ID, useValue: 'fi' },
+    FavoritesService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

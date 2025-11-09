@@ -7,7 +7,16 @@
             <p>{{ errorMessage }}</p>
         </div>
         <div *ngIf="stationdetail && !errorMessage">
-            <h1 class="text-3xl font-bold mb-4">{{ stationdetail.nimi }}, {{ stationdetail.kaupunki }}</h1>
+            <div class="station-header">
+                <h1 class="text-3xl font-bold mb-4">{{ stationdetail.nimi }}, {{ stationdetail.kaupunki }}</h1>
+                <button class="favorite-btn" 
+                        (click)="toggleFavorite()"
+                        [class.is-favorite]="favoritesService.isFavorite(stationdetail.id)"
+                        [title]="favoritesService.isFavorite(stationdetail.id) ? 'Poista suosikeista' : 'Lisää suosikkeihin'">
+                    <span class="star-icon">⭐</span>
+                    <span class="favorite-text">{{ favoritesService.isFavorite(stationdetail.id) ? 'Suosikki' : 'Lisää suosikkeihin' }}</span>
+                </button>
+            </div>
             <div class="bg-stone-700 p-4 rounded-lg mb-6">
                 <h4 class="text-xl font-semibold mb-2">Kapasiteetti: {{stationdetail.kapasiteet}} kpl</h4>
                 <div *ngIf="!averageDistance" class="text-red-500">

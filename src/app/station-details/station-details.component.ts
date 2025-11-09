@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StationService } from '../station.service';
 import { BiketripService } from '../biketrip.service';
+import { FavoritesService } from '../favorites.service';
 import { Journey } from '../models/journey.model';
 import { Station } from '../models/station.model';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -23,7 +24,8 @@ export class StationDetailsComponent implements OnInit {
     private actRoute: ActivatedRoute,
     private router: Router,
     private hpservice: StationService,
-    private tripservice: BiketripService
+    private tripservice: BiketripService,
+    public favoritesService: FavoritesService
   ) {}
 
   ngOnInit(): void {
@@ -219,5 +221,15 @@ export class StationDetailsComponent implements OnInit {
   
   deg2rad(deg: number): number {
     return deg * (Math.PI / 180);
+  }
+
+  toggleFavorite(): void {
+    if (this.stationdetail) {
+      this.favoritesService.toggleFavorite({
+        id: this.stationdetail.id,
+        nimi: this.stationdetail.nimi,
+        kaupunki: this.stationdetail.kaupunki
+      });
+    }
   }
 }
