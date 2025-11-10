@@ -12,6 +12,13 @@
 
 <section class="main font-mono bg-stone-900 text-white p-4 mb-20">
     <section class="kartta bg-stone-800 p-6 rounded-lg shadow-lg w-full lg:w-3/4 mb-4 lg:mb-0">
+        <!-- Map Search Box (will be moved to map by JS) -->
+        <input 
+            id="pac-input" 
+            type="text" 
+            placeholder="Etsi lähistöllä olevia asemia (esim. Ooppera)..."
+            class="map-search-input"
+        />
         <div id="map" class="rounded-lg mb-4" style="height: 600px;"></div>
     </section>
 
@@ -35,6 +42,14 @@
                 {{ name.station }}
             </span>
             <span class="trip-count">({{ name.count }})</span>
+            <button 
+                *ngIf="getStationIdByName(name.station)"
+                class="fav-btn-small" 
+                (click)="toggleFavoriteByName(name.station, $event)"
+                [class.is-favorite]="favoritesService.isFavorite(getStationIdByName(name.station)!)"
+                [title]="favoritesService.isFavorite(getStationIdByName(name.station)!) ? 'Poista suosikeista' : 'Lisää suosikkeihin'">
+                <fa-icon [icon]="faStar"></fa-icon>
+            </button>
         </div>
         <div class="mt-4">
             <hr class="border-t-2 border-stone-700 mb-1">
@@ -53,6 +68,14 @@
                 {{ name.station }}
             </span>
             <span class="trip-count">({{ name.count }})</span>
+            <button 
+                *ngIf="getStationIdByName(name.station)"
+                class="fav-btn-small" 
+                (click)="toggleFavoriteByName(name.station, $event)"
+                [class.is-favorite]="favoritesService.isFavorite(getStationIdByName(name.station)!)"
+                [title]="favoritesService.isFavorite(getStationIdByName(name.station)!) ? 'Poista suosikeista' : 'Lisää suosikkeihin'">
+                <fa-icon [icon]="faStar"></fa-icon>
+            </button>
         </div>
     </section>
 </section>

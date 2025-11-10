@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { StationService } from '../station.service';
 import { BiketripService } from '../biketrip.service';
+import { FavoritesService } from '../favorites.service';
 import { Journey } from '../models/journey.model';
-import { faRotateLeft, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faRotateLeft, faArrowRightFromBracket, faStar } from '@fortawesome/free-solid-svg-icons';
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
 
 @Component({
@@ -15,11 +16,16 @@ export class MapscreenComponent implements OnInit {
   stations: any;
   RotareLeft = faRotateLeft;
   ArrowRightFromBracket = faArrowRightFromBracket;
+  faStar = faStar;
   loading: boolean = true;
   topDepartureStations: any[] = [];
   topReturnStations: any[] = [];
 
-  constructor(private hpservice: StationService, private tripservice: BiketripService) {}
+  constructor(
+    private hpservice: StationService, 
+    private tripservice: BiketripService,
+    public favoritesService: FavoritesService
+  ) {}
 
   // googlemaps
   mapLoaded!: boolean;
@@ -198,6 +204,22 @@ export class MapscreenComponent implements OnInit {
     return station ? station.id : null;
   }
 
+  toggleFavoriteByName(stationName: string, event: Event): void {
+    event.stopPropagation();
+    event.preventDefault();
+    
+    if (!this.stations) return;
+    const station = this.stations.find((s: any) => s.nimi === stationName);
+    
+    if (station) {
+      this.favoritesService.toggleFavorite({
+        id: station.id,
+        nimi: station.nimi,
+        kaupunki: station.kaupunki
+      });
+    }
+  }
+
   // google maps configurations
   markers = [] as any;
   markerClusterer?: MarkerClusterer;
@@ -316,6 +338,140 @@ export class MapscreenComponent implements OnInit {
           }
         }
       });
+      
+      // Initialize search box
+      this.initializeSearchBox();
     });
+  }
+
+  initializeSearchBox(): void {
+    const input = document.getElementById('pac-input') as HTMLInputElement;
+    if (!input) return;
+
+    const searchBox = new google.maps.places.SearchBox(input);
+    
+    // Add the search box to the map controls
+    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+    
+    // Bias the SearchBox results towards current map's viewport
+    this.map.addListener('bounds_changed', () => {
+      searchBox.setBounds(this.map.getBounds() as google.maps.LatLngBounds);
+    });
+
+    let searchMarker: google.maps.Marker | null = null;
+
+    // Listen for the event fired when the user selects a prediction
+    searchBox.addListener('places_changed', () => {
+      const places = searchBox.getPlaces();
+
+      if (!places || places.length === 0) {
+        return;
+      }
+
+      // Clear previous search marker
+      if (searchMarker) {
+        searchMarker.setMap(null);
+      }
+
+      const place = places[0];
+      
+      if (!place.geometry || !place.geometry.location) {
+        console.log('Returned place contains no geometry');
+        return;
+      }
+
+      const searchLocation = place.geometry.location;
+
+      // Create a marker for the searched location
+      searchMarker = new google.maps.Marker({
+        map: this.map,
+        title: place.name,
+        position: searchLocation,
+        animation: google.maps.Animation.DROP,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 12,
+          fillColor: '#fbbf24',
+          fillOpacity: 1,
+          strokeColor: '#ffffff',
+          strokeWeight: 3
+        },
+        zIndex: 10000
+      });
+
+      // Create info window for search result
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div style="padding: 8px; color: #292524;">
+            <h3 style="margin: 0 0 4px 0; font-size: 14px; font-weight: bold;">${place.name}</h3>
+            <p style="margin: 0; font-size: 12px; color: #666;">${place.formatted_address || ''}</p>
+          </div>
+        `
+      });
+
+      searchMarker.addListener('click', () => {
+        infoWindow.open(this.map, searchMarker!);
+      });
+
+      // Filter and show only nearby stations (within 2km)
+      this.filterStationsByLocation(searchLocation);
+
+      // Center map on search location
+      this.map.setCenter(searchLocation);
+      this.map.setZoom(15);
+    });
+
+    // Add clear button functionality
+    input.addEventListener('input', (e) => {
+      if ((e.target as HTMLInputElement).value === '') {
+        // Show all stations when search is cleared
+        this.showAllStations();
+        if (searchMarker) {
+          searchMarker.setMap(null);
+          searchMarker = null;
+        }
+      }
+    });
+  }
+
+  filterStationsByLocation(location: google.maps.LatLng): void {
+    const radiusInMeters = 2000; // 2km radius
+
+    // Hide all markers first
+    this.markers.forEach((marker: google.maps.Marker) => {
+      const markerPosition = marker.getPosition();
+      if (markerPosition) {
+        const distance = google.maps.geometry.spherical.computeDistanceBetween(
+          location,
+          markerPosition
+        );
+
+        if (distance <= radiusInMeters) {
+          marker.setVisible(true);
+        } else {
+          marker.setVisible(false);
+        }
+      }
+    });
+
+    // Update marker clusterer
+    if (this.markerClusterer) {
+      this.markerClusterer.clearMarkers();
+      const visibleMarkers = this.markers.filter((m: google.maps.Marker) => m.getVisible());
+      this.markerClusterer.addMarkers(visibleMarkers);
+    }
+  }
+
+  showAllStations(): void {
+    // Show all markers
+    this.markers.forEach((marker: google.maps.Marker) => {
+      marker.setVisible(true);
+    });
+
+    // Update marker clusterer
+    if (this.markerClusterer) {
+      this.markerClusterer.clearMarkers();
+      this.markerClusterer.addMarkers(this.markers);
+    }
   }
 }
