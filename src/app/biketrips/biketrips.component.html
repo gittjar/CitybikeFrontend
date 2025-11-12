@@ -56,53 +56,121 @@
 
 <!-- Stats Modal -->
 <div *ngIf="showStats && stats" class="loading-modal-overlay" (click)="closeStats()">
-  <div class="stats-modal" (click)="$event.stopPropagation()">
+  <div class="stats-modal-large" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h2>📊 Matkatilastot</h2>
       <button (click)="closeStats()" class="close-btn">✕</button>
     </div>
     
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon">🚴</div>
-        <div class="stat-value">{{stats.totalTrips?.toLocaleString()}}</div>
-        <div class="stat-label">Matkoja yhteensä</div>
-      </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon">📍</div>
-        <div class="stat-value">{{stats.uniqueStations}}</div>
-        <div class="stat-label">Eri asemia</div>
-      </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon">⏱️</div>
-        <div class="stat-value">{{stats.duration?.averageMinutes?.toFixed(1)}} min</div>
-        <div class="stat-label">Keskimääräinen kesto</div>
-      </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon">📏</div>
-        <div class="stat-value">{{stats.distance?.averageKilometers?.toFixed(2)}} km</div>
-        <div class="stat-label">Keskimääräinen matka</div>
-      </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon">🏆</div>
-        <div class="stat-value">{{(stats.duration?.maxSeconds / 60)?.toFixed(0)}} min</div>
-        <div class="stat-label">Pisin matka (aika)</div>
-      </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon">🎯</div>
-        <div class="stat-value">{{(stats.distance?.maxMeters / 1000)?.toFixed(2)}} km</div>
-        <div class="stat-label">Pisin matka (km)</div>
+    <!-- Overview Stats -->
+    <div class="stats-section">
+      <h3 class="section-title">Yleiskatsaus</h3>
+      <div class="stats-grid">
+        <div class="stat-card highlight-card">
+          <div class="stat-icon">🚴</div>
+          <div class="stat-value">{{stats.totalTrips?.toLocaleString()}}</div>
+          <div class="stat-label">Matkoja yhteensä</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">📍</div>
+          <div class="stat-value">{{stats.uniqueStations}}</div>
+          <div class="stat-label">Eri asemia</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">🚀</div>
+          <div class="stat-value">{{stats.speed?.averageKmh?.toFixed(1)}} km/h</div>
+          <div class="stat-label">Keskinopeus</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-value">{{stats.speed?.maxKmh?.toFixed(1)}} km/h</div>
+          <div class="stat-label">Nopein matka</div>
+        </div>
       </div>
     </div>
 
-    <div class="date-range">
-      <p><strong>Aikajakso:</strong></p>
-      <p>{{stats.dateRange?.firstTrip | date:'dd.MM.yyyy HH:mm'}} - {{stats.dateRange?.lastTrip | date:'dd.MM.yyyy HH:mm'}}</p>
+    <!-- Distance Stats -->
+    <div class="stats-section">
+      <h3 class="section-title">📏 Matkat</h3>
+      <div class="stats-grid-three">
+        <div class="stat-card">
+          <div class="stat-value">{{stats.distance?.averageKilometers?.toFixed(2)}} km</div>
+          <div class="stat-label">Keskimääräinen matka</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-value">{{stats.distance?.totalKilometers?.toLocaleString('fi-FI', {maximumFractionDigits: 0})}} km</div>
+          <div class="stat-label">Yhteensä ajettuna</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-value">{{(stats.distance?.maxMeters / 1000)?.toFixed(2)}} km</div>
+          <div class="stat-label">Pisin matka</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Duration Stats -->
+    <div class="stats-section">
+      <h3 class="section-title">⏱️ Kesto</h3>
+      <div class="stats-grid-three">
+        <div class="stat-card">
+          <div class="stat-value">{{stats.duration?.averageMinutes?.toFixed(1)}} min</div>
+          <div class="stat-label">Keskimääräinen kesto</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-value">{{stats.duration?.totalHours?.toLocaleString('fi-FI', {maximumFractionDigits: 0})}} h</div>
+          <div class="stat-label">Yhteensä aikaa</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-value">{{(stats.duration?.maxSeconds / 60)?.toFixed(0)}} min</div>
+          <div class="stat-label">Pisin matka (aika)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Stations -->
+    <div class="stats-section">
+      <h3 class="section-title">🏆 Suosituimmat asemat</h3>
+      <div class="top-stations-grid">
+        <div class="top-list">
+          <h4>🚴 Lähtöasemat</h4>
+          <div class="station-list">
+            <div *ngFor="let station of stats.topDepartures; let i = index" class="station-item">
+              <span class="rank">{{i + 1}}.</span>
+              <span class="station-name">{{station.name}}</span>
+              <span class="station-count">{{station.count.toLocaleString()}}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="top-list">
+          <h4>🏁 Paluuasemat</h4>
+          <div class="station-list">
+            <div *ngFor="let station of stats.topReturns; let i = index" class="station-item">
+              <span class="rank">{{i + 1}}.</span>
+              <span class="station-name">{{station.name}}</span>
+              <span class="station-count">{{station.count.toLocaleString()}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Date Range -->
+    <div class="date-range-box">
+      <div class="date-icon">📅</div>
+      <div class="date-content">
+        <div class="date-label">Aikajakso</div>
+        <div class="date-value">
+          {{stats.dateRange?.firstTrip | date:'dd.MM.yyyy HH:mm'}} - {{stats.dateRange?.lastTrip | date:'dd.MM.yyyy HH:mm'}}
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -206,6 +274,7 @@
             <span class="trip-icon">🚴</span>
             <div class="trip-details">
               <div class="station-info">
+              
                 <strong>Lähtö:</strong> {{trip?.departure | date:'MMM d, y (HH:mm)'}} - {{trip?.departure_station_name}}
               </div>
               <div class="station-info">
@@ -229,6 +298,7 @@
         </article>
 
         <aside class="keskinopeus">
+          <div class="trip-id">ID: {{trip?.id}}</div>
           <div class="speed-label">Keskinopeus</div>
           <span *ngIf="(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) > 15" class="nopeus yli15">
             {{(trip?.covered_distance_m/1000) / (trip?.duration_sec / 3600) | number : '1.1-2'}}

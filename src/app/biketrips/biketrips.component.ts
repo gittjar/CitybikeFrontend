@@ -384,10 +384,19 @@ export class BiketripsComponent implements OnInit {
       });
     }
     
-    // If no ID field, don't remove anything - API should handle pagination correctly
-    // These are legitimate trips that happen to be similar
-    console.log('⚠️ No ID field found. Assuming all trips are unique (API handles pagination).');
-    return trips;
+    // No ID field - create a composite key from trip properties to detect duplicates
+    const seen = new Set();
+    return trips.filter(trip => {
+      // Create unique key from multiple properties
+      const key = `${trip.departure}-${trip.return}-${trip.departure_station_id}-${trip.departure_station_name}-${trip.return_station_id}-${trip.return_station_name}-${trip.duration_sec}-${trip.covered_distance_m}`;
+      
+      if (seen.has(key)) {
+        console.log('Duplicate detected and removed:', key);
+        return false;
+      }
+      seen.add(key);
+      return true;
+    });
   }
 
   sortByDistance(isAsc: boolean) {
@@ -476,17 +485,100 @@ export class BiketripsComponent implements OnInit {
   }
 
   loadStats(): void {
-    this.hpservice.GetTripsStats().subscribe(
-      (data: any) => {
-        this.stats = data;
-        this.showStats = true;
-        console.log('Stats loaded:', data);
+    // Calculate statistics from loaded trips
+    if (this.allTrips.length === 0) {
+      alert('Lataa ensin matkoja nähdäksesi tilastot');
+      return;
+    }
+
+    const trips = this.allTrips;
+    
+    // Basic counts
+    const totalTrips = trips.length;
+    
+    // Distance stats (in meters)
+    const distances = trips.map(t => t.covered_distance_m);
+    const totalDistance = distances.reduce((sum, d) => sum + d, 0);
+    const avgDistance = totalDistance / totalTrips;
+    const maxDistance = Math.max(...distances);
+    const minDistance = Math.min(...distances);
+    
+    // Duration stats (in seconds)
+    const durations = trips.map(t => t.duration_sec);
+    const totalDuration = durations.reduce((sum, d) => sum + d, 0);
+    const avgDuration = totalDuration / totalTrips;
+    const maxDuration = Math.max(...durations);
+    const minDuration = Math.min(...durations);
+    
+    // Speed stats (km/h)
+    const speeds = trips.map(t => (t.covered_distance_m / 1000) / (t.duration_sec / 3600));
+    const avgSpeed = speeds.reduce((sum, s) => sum + s, 0) / totalTrips;
+    const maxSpeed = Math.max(...speeds);
+    
+    // Date range
+    const departureDates = trips.map(t => new Date(t.departure).getTime());
+    const firstTrip = new Date(Math.min(...departureDates));
+    const lastTrip = new Date(Math.max(...departureDates));
+    
+    // Top stations
+    const departureStations: {[key: string]: number} = {};
+    const returnStations: {[key: string]: number} = {};
+    
+    trips.forEach(trip => {
+      const depStation = trip.departure_station_name || 'Unknown';
+      const retStation = trip.return_station_name || 'Unknown';
+      
+      departureStations[depStation] = (departureStations[depStation] || 0) + 1;
+      returnStations[retStation] = (returnStations[retStation] || 0) + 1;
+    });
+    
+    const topDepartures = Object.entries(departureStations)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([name, count]) => ({ name, count }));
+      
+    const topReturns = Object.entries(returnStations)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([name, count]) => ({ name, count }));
+    
+    // Unique stations
+    const allStationNames = new Set([
+      ...Object.keys(departureStations),
+      ...Object.keys(returnStations)
+    ]);
+    
+    this.stats = {
+      totalTrips,
+      uniqueStations: allStationNames.size,
+      dateRange: {
+        firstTrip,
+        lastTrip
       },
-      error => {
-        console.error('Error loading stats:', error);
-        alert('Virhe tilastojen lataamisessa');
-      }
-    );
+      duration: {
+        averageSeconds: avgDuration,
+        averageMinutes: avgDuration / 60,
+        maxSeconds: maxDuration,
+        minSeconds: minDuration,
+        totalHours: totalDuration / 3600
+      },
+      distance: {
+        averageMeters: avgDistance,
+        averageKilometers: avgDistance / 1000,
+        maxMeters: maxDistance,
+        minMeters: minDistance,
+        totalKilometers: totalDistance / 1000
+      },
+      speed: {
+        averageKmh: avgSpeed,
+        maxKmh: maxSpeed
+      },
+      topDepartures,
+      topReturns
+    };
+    
+    this.showStats = true;
+    console.log('Stats calculated:', this.stats);
   }
 
   closeStats(): void {
