@@ -9,7 +9,7 @@ import { Station } from './models/station.model';
 export class StationService {
   constructor(private http: HttpClient) { }
 
-  BASEURL = 'https://corsproxy.io/?url=https://citybikeapi.azurewebsites.net/api/Stations/';
+  BASEURL = 'https://citybikeapi.azurewebsites.net/api/Stations/';
   
   public getStations(): Observable<Station[]> {
     return this.http.get<Station[]>(this.BASEURL);
