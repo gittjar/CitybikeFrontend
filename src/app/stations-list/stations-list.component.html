@@ -86,24 +86,18 @@
     </button>
   </div>
 
-  <div class="view-options">
-    <label class="checkbox-label">
-      <input type="checkbox" [(ngModel)]="showOnlyWithImages" (change)="applyFilters()" />
-      <span>Näytä vain kuvalliset asemat</span>
-      <fa-icon [icon]="faBicycle" class="checkbox-icon"></fa-icon>
-    </label>
-  </div>
+  <!-- Kuvavalinta poistettu, koska kaikilla asemilla on kuva -->
 </section>
 
 <div class="stations-grid">
   <div *ngFor="let station of filteredStations" class="station-card">
     <div class="card-image">
-      <img *ngIf="station.kuva && station.kuva.trim() !== ''" 
-           [src]="station.kuva" 
+      <img *ngIf="!station.imageError" 
+           [src]="station.kuva && station.kuva.trim() !== '' ? station.kuva : 'https://source.unsplash.com/600x400/?bicycle,city,station,' + station.nimi" 
            [alt]="station.nimi"
            (error)="station.imageError = true"
            [style.display]="station.imageError ? 'none' : 'block'" />
-      <div *ngIf="!station.kuva || station.kuva.trim() === '' || station.imageError" class="no-image-placeholder">
+      <div *ngIf="station.imageError" class="no-image-placeholder">
         <fa-icon [icon]="faBicycle" class="placeholder-icon"></fa-icon>
         <p>Image should be here, but not uploaded!</p>
       </div>
@@ -152,6 +146,15 @@
         Näytä tiedot
         <fa-icon [icon]="ArrowRightLong"></fa-icon>
       </a>
+      <button class="footer-btn" (click)="openRouteInMaps(station)" title="Näytä reitti Google Mapsissa">
+        <fa-icon [icon]="faLocation"></fa-icon> Reitti
+      </button>
+      <button class="footer-btn" (click)="copyAddress(station)" title="Kopioi osoite">
+        <fa-icon [icon]="faLink"></fa-icon> Kopioi osoite
+      </button>
+      <button class="footer-btn" (click)="copyCoords(station)" title="Kopioi koordinaatit">
+        <fa-icon [icon]="faLocation"></fa-icon> Kopioi koordinaatit
+      </button>
     </div>
   </div>
 </div>

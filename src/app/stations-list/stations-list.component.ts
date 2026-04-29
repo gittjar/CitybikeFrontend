@@ -11,6 +11,25 @@ import { faSort, faLink, faMagnifyingGlass, faArrowRightLong, faBicycle, faFilte
   styleUrls: ['./stations-list.component.css']
 })
 export class StationsListComponent implements OnInit {
+    // Toimintopainikkeet
+    openRouteInMaps(station: any): void {
+      if (station.x && station.y) {
+        const url = `https://www.google.com/maps/dir/?api=1&destination=${station.y},${station.x}`;
+        window.open(url, '_blank');
+      }
+    }
+
+    copyAddress(station: any): void {
+      if (station.osoite) {
+        navigator.clipboard.writeText(station.osoite);
+      }
+    }
+
+    copyCoords(station: any): void {
+      if (station.x && station.y) {
+        navigator.clipboard.writeText(`${station.y},${station.x}`);
+      }
+    }
   stations: Station[] = [];
   sortedStations: any[] = [];
   displayedStations: any[] = [];
