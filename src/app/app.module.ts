@@ -31,6 +31,7 @@ import { StationDetailsComponent } from './station-details/station-details.compo
 import { LoadingComponent } from './loading/loading.component';
 import { StationsListComponent } from './stations-list/stations-list.component';
 import { FavoritesService } from './favorites.service';
+import { TripMapComponent } from './biketrips/trip-map.component';
 
 registerLocaleData(localeFi);
 
@@ -48,7 +49,9 @@ registerLocaleData(localeFi);
     LoadingComponent,
     StationsListComponent,
     
+    TripMapComponent,
   ],
+
   imports: [
     BrowserModule,
     AppRoutingModule,

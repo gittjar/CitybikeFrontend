@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.trip-map-container {
+  position: absolute;
+  inset: 0;
+}
+
+@media (max-width: 700px) {
+  :host {
+    display: none;
+  }
+}

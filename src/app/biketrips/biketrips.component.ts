@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BiketripService } from '../biketrip.service';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { StationService } from '../station.service';
+import { faMagnifyingGlass, faBicycle, faArrowRight, faLocationDot, faRuler, faClock, faGaugeHigh, faHashtag, faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-biketrips',
@@ -9,17 +10,27 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 })
 export class BiketripsComponent implements OnInit {
 
-  constructor(private hpservice: BiketripService) {}
+  constructor(private hpservice: BiketripService, private stationService: StationService) {}
 
   citybiketripsmay2021: any[] = [];
   allTrips: any[] = [];
   displayedTrips: any[] = [];
+  stationMap = new Map<number, any>();
   term = '';
   loading: boolean = true;
   loadingMore: boolean = false;
   loadingAll: boolean = false;
   // fontawesome
   MagnifyingGlass = faMagnifyingGlass;
+  faBicycle = faBicycle;
+  faArrowRight = faArrowRight;
+  faLocationDot = faLocationDot;
+  faRuler = faRuler;
+  faClock = faClock;
+  faGaugeHigh = faGaugeHigh;
+  faHashtag = faHashtag;
+  faCalendar = faCalendar;
+  isMobile = false;
 
   newPageNumber = 1;
   currentSortFunction: (() => void) | null = null;
@@ -46,6 +57,13 @@ export class BiketripsComponent implements OnInit {
   stats: any = null;
 
   ngOnInit(): void {
+    this.isMobile = window.innerWidth < 700;
+    window.addEventListener('resize', () => {
+      this.isMobile = window.innerWidth < 700;
+    });
+    this.stationService.getStations().subscribe((stations: any[]) => {
+      stations.forEach(s => this.stationMap.set(s.id, s));
+    });
     this.GetBikeTripsMay2021();
   }
 
