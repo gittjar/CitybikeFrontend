@@ -2,176 +2,223 @@
 <article class="colorbar bg-gradient-to-r from-amber-500 via-stone-900 to-lime-500"></article>
 <app-loading *ngIf="loading"></app-loading>
 
+<!-- Custom confirmation dialog -->
+<div *ngIf="showConfirmModal" class="confirm-overlay" (click)="onConfirmCancel()">
+  <div class="confirm-dialog" (click)="$event.stopPropagation()">
+    <div class="confirm-icon">⚡</div>
+    <h3 class="confirm-title">Lataa kaikki matkat?</h3>
+    <p class="confirm-body">Tämä lataa <strong>kaikki matkat</strong> kerralla. Se voi kestää useita minuutteja ja kuluttaa paljon muistia.</p>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-cancel" (click)="onConfirmCancel()">Peruuta</button>
+      <button class="confirm-btn confirm-ok" (click)="onConfirmOk()">Jatka lataaminen</button>
+    </div>
+  </div>
+</div>
+
 <!-- Loading Modal for "Load All" -->
 <div *ngIf="showLoadingModal" class="loading-modal-overlay">
   <div class="loading-modal">
-    <h2>🚴 Ladataan kaikkia matkoja...</h2>
-    
-    <div class="loading-stats">
-      <div class="stat-box">
-        <div class="stat-number">{{tripsLoadedSoFar.toLocaleString()}}</div>
-        <div class="stat-label">Matkoja ladattu</div>
+
+    <div class="lm-header">
+      <fa-icon [icon]="faBicycle" class="lm-icon spin-icon"></fa-icon>
+      <h2 class="lm-title">
+        <span *ngIf="loadingPercentage < 100">Ladataan kaikkia matkoja…</span>
+        <span *ngIf="loadingPercentage === 100">Viimeistellään…</span>
+      </h2>
+    </div>
+
+    <div class="lm-counters">
+      <div class="lm-counter lm-counter-blue">
+        <div class="lm-counter-value">{{tripsLoadedSoFar.toLocaleString()}}</div>
+        <div class="lm-counter-lbl">Ladattu</div>
       </div>
-      <div class="stat-box">
-        <div class="stat-number">
-          {{estimatedTotalTrips > 0 ? estimatedTotalTrips.toLocaleString() : '...'}}
-        </div>
-        <div class="stat-label">
-          Arvioitu yhteensä
-        </div>
+      <div class="lm-counter lm-counter-purple">
+        <div class="lm-counter-value">{{estimatedTotalTrips > 0 ? estimatedTotalTrips.toLocaleString() : '…'}}</div>
+        <div class="lm-counter-lbl">Arvioitu yhteensä</div>
       </div>
     </div>
 
-    <div class="progress-bar-container">
-      <div class="progress-bar" [style.width.%]="loadingPercentage">
-        <span class="progress-text">{{loadingPercentage}}%</span>
+    <div class="lm-progress-wrap">
+      <div class="lm-progress-bar" [style.width.%]="loadingPercentage">
+        <span class="lm-progress-text">{{loadingPercentage}}%</span>
       </div>
     </div>
 
-    <div class="time-info">
-      <div class="time-box">
-        <span class="time-label">Kulunut aika:</span>
-        <span class="time-value">{{formatTime(elapsedTime)}}</span>
+    <div class="lm-times">
+      <div class="lm-time-item">
+        <fa-icon [icon]="faClock" class="lm-time-icon"></fa-icon>
+        <span class="lm-time-lbl">Kulunut</span>
+        <span class="lm-time-val">{{formatTime(elapsedTime)}}</span>
       </div>
-      <div class="time-box" *ngIf="estimatedTimeRemaining > 0 && loadingPercentage < 99">
-        <span class="time-label">Arvioitu jäljellä:</span>
-        <span class="time-value">{{formatTime(estimatedTimeRemaining)}}</span>
+      <div class="lm-time-item" *ngIf="estimatedTimeRemaining > 0 && loadingPercentage < 99">
+        <fa-icon [icon]="faCalendar" class="lm-time-icon"></fa-icon>
+        <span class="lm-time-lbl">Jäljellä</span>
+        <span class="lm-time-val">{{formatTime(estimatedTimeRemaining)}}</span>
       </div>
     </div>
 
-    <p class="loading-message">
-      <span *ngIf="loadingPercentage < 100">Odota hetki, ladataan sivua {{newPageNumber}}...</span>
-      <span *ngIf="loadingPercentage === 100">Viimeistellään...</span>
-    </p>
-    
-    <div class="loading-spinner">
-      <div class="spinner"></div>
-    </div>
+    <p class="lm-page-info">Ladataan sivua <strong>{{newPageNumber}}</strong>…</p>
 
-    <button (click)="abortLoading()" class="abort-button" *ngIf="loadingPercentage < 100">
-      ⛔ Keskeytä lataaminen
+    <button (click)="requestAbort()" class="lm-abort-btn" *ngIf="loadingPercentage < 100">
+      <fa-icon [icon]="faXmark"></fa-icon> Keskeytä lataaminen
     </button>
+  </div>
+</div>
+
+<!-- Abort confirm dialog -->
+<div *ngIf="showAbortConfirmModal" class="confirm-overlay" (click)="onAbortCancel()">
+  <div class="confirm-dialog" (click)="$event.stopPropagation()">
+    <div class="confirm-icon-wrap warn-icon">
+      <fa-icon [icon]="faXmark"></fa-icon>
+    </div>
+    <h3 class="confirm-title">Keskeytä lataaminen?</h3>
+    <p class="confirm-body">Tähän mennessä ladatut <strong>{{tripsLoadedSoFar.toLocaleString()}} matkaa</strong> säilytetään.</p>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-cancel" (click)="onAbortCancel()">Jatka lataamista</button>
+      <button class="confirm-btn confirm-warn" (click)="onAbortOk()">Keskeytä</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification (success / aborted / error) -->
+<div *ngIf="showToastModal" class="confirm-overlay" (click)="closeToast()">
+  <div class="confirm-dialog" (click)="$event.stopPropagation()">
+    <div class="confirm-icon-wrap" [ngClass]="toastIsSuccess ? 'success-icon' : (toastIsError ? 'error-icon' : 'warn-icon')">
+      <fa-icon [icon]="toastIsSuccess ? faBicycle : faXmark"></fa-icon>
+    </div>
+    <h3 class="confirm-title">{{toastTitle}}</h3>
+    <p class="confirm-body">{{toastMessage}}</p>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-ok" (click)="closeToast()">OK</button>
+    </div>
   </div>
 </div>
 
 <!-- Stats Modal -->
 <div *ngIf="showStats && stats" class="loading-modal-overlay" (click)="closeStats()">
   <div class="stats-modal-large" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>📊 Matkatilastot</h2>
-      <button (click)="closeStats()" class="close-btn">✕</button>
+
+    <div class="sm-header">
+      <div class="sm-title-row">
+        <fa-icon [icon]="faBicycle" class="sm-title-icon"></fa-icon>
+        <h2 class="sm-title">Matkatilastot</h2>
+      </div>
+      <button (click)="closeStats()" class="sm-close">
+        <fa-icon [icon]="faXmark"></fa-icon>
+      </button>
     </div>
-    
-    <!-- Overview Stats -->
-    <div class="stats-section">
-      <h3 class="section-title">Yleiskatsaus</h3>
-      <div class="stats-grid">
-        <div class="stat-card highlight-card">
-          <div class="stat-icon">🚴</div>
-          <div class="stat-value">{{stats.totalTrips?.toLocaleString()}}</div>
-          <div class="stat-label">Matkoja yhteensä</div>
+
+    <!-- Overview -->
+    <div class="sm-section">
+      <div class="sm-section-label">
+        <fa-icon [icon]="faBicycle"></fa-icon> Yleiskatsaus
+      </div>
+      <div class="sm-grid-4">
+        <div class="sm-card sm-card-blue">
+          <fa-icon [icon]="faBicycle" class="sm-card-icon"></fa-icon>
+          <div class="sm-card-value">{{stats.totalTrips?.toLocaleString()}}</div>
+          <div class="sm-card-lbl">Matkoja yhteensä</div>
         </div>
-        
-        <div class="stat-card">
-          <div class="stat-icon">📍</div>
-          <div class="stat-value">{{stats.uniqueStations}}</div>
-          <div class="stat-label">Eri asemia</div>
+        <div class="sm-card sm-card-purple">
+          <fa-icon [icon]="faLocationDot" class="sm-card-icon"></fa-icon>
+          <div class="sm-card-value">{{stats.uniqueStations}}</div>
+          <div class="sm-card-lbl">Eri asemia</div>
         </div>
-        
-        <div class="stat-card">
-          <div class="stat-icon">🚀</div>
-          <div class="stat-value">{{stats.speed?.averageKmh?.toFixed(1)}} km/h</div>
-          <div class="stat-label">Keskinopeus</div>
+        <div class="sm-card sm-card-green">
+          <fa-icon [icon]="faGaugeHigh" class="sm-card-icon"></fa-icon>
+          <div class="sm-card-value">{{stats.speed?.averageKmh?.toFixed(1)}} km/h</div>
+          <div class="sm-card-lbl">Keskinopeus</div>
         </div>
-        
-        <div class="stat-card">
-          <div class="stat-icon">⚡</div>
-          <div class="stat-value">{{stats.speed?.maxKmh?.toFixed(1)}} km/h</div>
-          <div class="stat-label">Nopein matka</div>
+        <div class="sm-card sm-card-amber">
+          <fa-icon [icon]="faBolt" class="sm-card-icon"></fa-icon>
+          <div class="sm-card-value">{{stats.speed?.maxKmh?.toFixed(1)}} km/h</div>
+          <div class="sm-card-lbl">Nopein matka</div>
         </div>
       </div>
     </div>
 
-    <!-- Distance Stats -->
-    <div class="stats-section">
-      <h3 class="section-title">📏 Matkat</h3>
-      <div class="stats-grid-three">
-        <div class="stat-card">
-          <div class="stat-value">{{stats.distance?.averageKilometers?.toFixed(2)}} km</div>
-          <div class="stat-label">Keskimääräinen matka</div>
+    <!-- Distance -->
+    <div class="sm-section">
+      <div class="sm-section-label">
+        <fa-icon [icon]="faRuler"></fa-icon> Matkat
+      </div>
+      <div class="sm-grid-3">
+        <div class="sm-card sm-card-blue">
+          <div class="sm-card-value">{{stats.distance?.averageKilometers?.toFixed(2)}} km</div>
+          <div class="sm-card-lbl">Keskimääräinen matka</div>
         </div>
-        
-        <div class="stat-card">
-          <div class="stat-value">{{stats.distance?.totalKilometers?.toLocaleString('fi-FI', {maximumFractionDigits: 0})}} km</div>
-          <div class="stat-label">Yhteensä ajettuna</div>
+        <div class="sm-card sm-card-blue">
+          <div class="sm-card-value">{{stats.distance?.totalKilometers?.toLocaleString('fi-FI', {maximumFractionDigits: 0})}} km</div>
+          <div class="sm-card-lbl">Yhteensä ajettuna</div>
         </div>
-        
-        <div class="stat-card">
-          <div class="stat-value">{{(stats.distance?.maxMeters / 1000)?.toFixed(2)}} km</div>
-          <div class="stat-label">Pisin matka</div>
+        <div class="sm-card sm-card-blue">
+          <div class="sm-card-value">{{(stats.distance?.maxMeters / 1000)?.toFixed(2)}} km</div>
+          <div class="sm-card-lbl">Pisin matka</div>
         </div>
       </div>
     </div>
 
-    <!-- Duration Stats -->
-    <div class="stats-section">
-      <h3 class="section-title">⏱️ Kesto</h3>
-      <div class="stats-grid-three">
-        <div class="stat-card">
-          <div class="stat-value">{{stats.duration?.averageMinutes?.toFixed(1)}} min</div>
-          <div class="stat-label">Keskimääräinen kesto</div>
+    <!-- Duration -->
+    <div class="sm-section">
+      <div class="sm-section-label">
+        <fa-icon [icon]="faClock"></fa-icon> Kesto
+      </div>
+      <div class="sm-grid-3">
+        <div class="sm-card sm-card-amber">
+          <div class="sm-card-value">{{stats.duration?.averageMinutes?.toFixed(1)}} min</div>
+          <div class="sm-card-lbl">Keskimääräinen kesto</div>
         </div>
-        
-        <div class="stat-card">
-          <div class="stat-value">{{stats.duration?.totalHours?.toLocaleString('fi-FI', {maximumFractionDigits: 0})}} h</div>
-          <div class="stat-label">Yhteensä aikaa</div>
+        <div class="sm-card sm-card-amber">
+          <div class="sm-card-value">{{stats.duration?.totalHours?.toLocaleString('fi-FI', {maximumFractionDigits: 0})}} h</div>
+          <div class="sm-card-lbl">Yhteensä aikaa</div>
         </div>
-        
-        <div class="stat-card">
-          <div class="stat-value">{{(stats.duration?.maxSeconds / 60)?.toFixed(0)}} min</div>
-          <div class="stat-label">Pisin matka (aika)</div>
+        <div class="sm-card sm-card-amber">
+          <div class="sm-card-value">{{(stats.duration?.maxSeconds / 60)?.toFixed(0)}} min</div>
+          <div class="sm-card-lbl">Pisin matka (aika)</div>
         </div>
       </div>
     </div>
 
     <!-- Top Stations -->
-    <div class="stats-section">
-      <h3 class="section-title">🏆 Suosituimmat asemat</h3>
-      <div class="top-stations-grid">
-        <div class="top-list">
-          <h4>🚴 Lähtöasemat</h4>
-          <div class="station-list">
-            <div *ngFor="let station of stats.topDepartures; let i = index" class="station-item">
-              <span class="rank">{{i + 1}}.</span>
-              <span class="station-name">{{station.name}}</span>
-              <span class="station-count">{{station.count.toLocaleString()}}</span>
-            </div>
+    <div class="sm-section">
+      <div class="sm-section-label">
+        <fa-icon [icon]="faTrophy"></fa-icon> Suosituimmat asemat
+      </div>
+      <div class="sm-grid-2">
+        <div class="sm-top-list">
+          <div class="sm-top-list-header">
+            <fa-icon [icon]="faArrowRight" class="header-icon-green"></fa-icon> Lähtöasemat
+          </div>
+          <div *ngFor="let station of stats.topDepartures; let i = index" class="sm-station-item">
+            <span class="sm-rank">{{i + 1}}</span>
+            <span class="sm-station-name">{{station.name}}</span>
+            <span class="sm-badge badge-dist">{{station.count.toLocaleString()}}</span>
           </div>
         </div>
-        
-        <div class="top-list">
-          <h4>🏁 Paluuasemat</h4>
-          <div class="station-list">
-            <div *ngFor="let station of stats.topReturns; let i = index" class="station-item">
-              <span class="rank">{{i + 1}}.</span>
-              <span class="station-name">{{station.name}}</span>
-              <span class="station-count">{{station.count.toLocaleString()}}</span>
-            </div>
+        <div class="sm-top-list">
+          <div class="sm-top-list-header">
+            <fa-icon [icon]="faArrowLeft" class="header-icon-red"></fa-icon> Palautusasemat
+          </div>
+          <div *ngFor="let station of stats.topReturns; let i = index" class="sm-station-item">
+            <span class="sm-rank">{{i + 1}}</span>
+            <span class="sm-station-name">{{station.name}}</span>
+            <span class="sm-badge badge-dist">{{station.count.toLocaleString()}}</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Date Range -->
-    <div class="date-range-box">
-      <div class="date-icon">📅</div>
-      <div class="date-content">
-        <div class="date-label">Aikajakso</div>
-        <div class="date-value">
-          {{stats.dateRange?.firstTrip | date:'dd.MM.yyyy HH:mm'}} - {{stats.dateRange?.lastTrip | date:'dd.MM.yyyy HH:mm'}}
+    <!-- Date range -->
+    <div class="sm-date-row">
+      <fa-icon [icon]="faCalendar" class="sm-date-icon"></fa-icon>
+      <div>
+        <div class="sm-date-label">Aikajakso</div>
+        <div class="sm-date-value">
+          {{stats.dateRange?.firstTrip | date:'dd.MM.yyyy HH:mm'}} – {{stats.dateRange?.lastTrip | date:'dd.MM.yyyy HH:mm'}}
         </div>
       </div>
     </div>
+
   </div>
 </div>
 

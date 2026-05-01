@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BiketripService } from '../biketrip.service';
 import { StationService } from '../station.service';
-import { faMagnifyingGlass, faBicycle, faArrowRight, faLocationDot, faRuler, faClock, faGaugeHigh, faHashtag, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faBicycle, faArrowRight, faArrowLeft, faLocationDot, faRuler, faClock, faGaugeHigh, faHashtag, faCalendar, faTrophy, faXmark, faBolt } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-biketrips',
@@ -24,12 +25,16 @@ export class BiketripsComponent implements OnInit {
   MagnifyingGlass = faMagnifyingGlass;
   faBicycle = faBicycle;
   faArrowRight = faArrowRight;
+  faArrowLeft = faArrowLeft;
   faLocationDot = faLocationDot;
   faRuler = faRuler;
   faClock = faClock;
   faGaugeHigh = faGaugeHigh;
   faHashtag = faHashtag;
   faCalendar = faCalendar;
+  faTrophy = faTrophy;
+  faXmark = faXmark;
+  faBolt = faBolt;
   isMobile = false;
 
   newPageNumber = 1;
@@ -105,12 +110,28 @@ export class BiketripsComponent implements OnInit {
     });
   }
 
-  loadAllTrips(): void {
-    // Show confirmation
-    if (!confirm('⚠️ Tämä lataa KAIKKI matkat kerralla. Se voi kestää useita minuutteja ja kuluttaa paljon muistia. Jatketaanko?')) {
-      return;
-    }
+  showConfirmModal = false;
+  showAbortConfirmModal = false;
+  showToastModal = false;
+  toastTitle = '';
+  toastMessage = '';
+  toastIsSuccess = false;
+  toastIsError = false;
 
+  loadAllTrips(): void {
+    this.showConfirmModal = true;
+  }
+
+  onConfirmCancel(): void {
+    this.showConfirmModal = false;
+  }
+
+  onConfirmOk(): void {
+    this.showConfirmModal = false;
+    this.startLoadAllTrips();
+  }
+
+  startLoadAllTrips(): void {
     this.loadingAll = true;
     this.showLoadingModal = true;
     this.loadingAborted = false;
@@ -251,7 +272,7 @@ export class BiketripsComponent implements OnInit {
           setTimeout(() => this.loadAllPagesRecursively(startPage, retryCount + 1), retryDelay);
         } else {
           console.error(`❌ Failed to load page ${startPage} after ${maxRetries} retries. Stopping.`);
-          alert(`Lataaminen keskeytetty sivulla ${startPage}. Ladattu ${this.allTrips.length} matkaa.\n\nVirhe: ${error.message || 'CORS-proxy rate limit'}`);
+          this.showToast('Latausvirhe', `Lataaminen keskeytyi sivulla ${startPage}. Ladattu ${this.allTrips.length} matkaa. Virhe: ${error.message || 'Yhteysongelma'}`, false, true);
           this.finishLoadingAll(false);
         }
       }
@@ -273,17 +294,40 @@ export class BiketripsComponent implements OnInit {
       }
       
       if (wasAborted) {
-        alert(`⚠️ Lataaminen keskeytetty käyttäjän toimesta.\nLadattu: ${this.allTrips.length.toLocaleString()} matkaa`);
+        this.showToast('Lataaminen keskeytetty', `Ladattu ${this.allTrips.length.toLocaleString()} matkaa. Voit jatkaa lataamista milloin tahansa.`, false);
       } else {
-        alert(`✅ Kaikki matkat ladattu! Yhteensä: ${this.allTrips.length.toLocaleString()} matkaa`);
+        this.showToast('Kaikki matkat ladattu!', `Yhteensä ${this.allTrips.length.toLocaleString()} matkaa ladattu onnistuneesti.`, true);
       }
     }, 500);
   }
 
+  showToast(title: string, message: string, success: boolean, isError = false): void {
+    this.toastTitle = title;
+    this.toastMessage = message;
+    this.toastIsSuccess = success;
+    this.toastIsError = isError;
+    this.showToastModal = true;
+  }
+
+  closeToast(): void {
+    this.showToastModal = false;
+  }
+
+  requestAbort(): void {
+    this.showAbortConfirmModal = true;
+  }
+
+  onAbortCancel(): void {
+    this.showAbortConfirmModal = false;
+  }
+
+  onAbortOk(): void {
+    this.showAbortConfirmModal = false;
+    this.loadingAborted = true;
+  }
+
   abortLoading(): void {
-    if (confirm('⚠️ Haluatko varmasti keskeyttää lataamisen?\n\nTähän mennessä ladatut matkat säilytetään.')) {
-      this.loadingAborted = true;
-    }
+    this.showAbortConfirmModal = true;
   }
 
   formatTime(seconds: number): string {
@@ -505,7 +549,7 @@ export class BiketripsComponent implements OnInit {
   loadStats(): void {
     // Calculate statistics from loaded trips
     if (this.allTrips.length === 0) {
-      alert('Lataa ensin matkoja nähdäksesi tilastot');
+      this.showToast('Ei matkoja', 'Lataa ensin matkoja nähdäksesi tilastot.', false);
       return;
     }
 
